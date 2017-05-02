@@ -1,0 +1,588 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video, textarea {
+    border: 0;
+    box-sizing: border-box;
+    font: 100% 'Open Sans', sans-serif, Symbola;
+    margin: 0;
+    padding: 0;
+    vertical-align: baseline
+}
+html, body {
+    background: #4f517d;
+    height: 100%;
+    min-height: 100%
+}
+ol, ul, li {
+    list-style: none
+}
+a {
+    color: #999;
+    text-decoration: none
+}
+a:hover {
+    text-decoration: underline
+}
+.chirp-row:after, .chirp-row:before {
+    clear: both;
+    content: "";
+    display: table
+}
+.chirp-col, .chirp-half, .chirp-third, .chirp-twothird, .chirp-threequarter, .chirp-quarter {
+    float: left;
+    width: 100%
+}
+.chirp-quarter, .chirp-half {
+    width: 100%
+}
+@media (min-width:601px) {
+    .chirp-quarter {
+        width: 24%
+    }
+    .chirp-half {
+        width: 49%
+    }
+}
+.wrapper {
+    background: #f8f5ee;
+    margin: 0 auto;
+    max-width: 1200px;
+    min-height: 100%;
+    padding: 10px 7px 15px;
+    position: relative;
+    z-index: 1
+}
+@media screen and (max-width:1280px) {
+    .wrapper {
+        max-width: 900px
+    }
+}
+.userMenu {
+    background: #45474d;
+    height: 40px;
+    margin: auto;
+    max-width: 1200px;
+    position: relative;
+    z-index: 2
+}
+@media screen and (max-width:1280px) {
+    .userMenu {
+        max-width: 900px
+    }
+}
+.userMenu:after {
+    
+    background: url("#{resource['images/plane.png']}") no-repeat center center;
+    background-size: 100px 73px;
+    content: "";
+    height: 55px;
+    position: absolute;
+    right: -25px;
+    width: 60px
+}
+.userMenu > ul > li {
+    float: left;
+    height: 40px;
+    margin: 0
+}
+.userMenu > ul > li > a {
+    color: #fff;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 700;
+    height: 40px;
+    line-height: 40px;
+    opacity: .7;
+    padding: 0 20px 0 45px;
+    position: relative;
+    transition: padding .5s linear
+}
+.userMenu li:hover, .userMenu li:active {
+    background-color: rgba(0, 0, 0, .4)
+}
+.userMenu li:hover > a, .userMenu li:active > a {
+    opacity: 1;
+    text-decoration: none
+}
+.userMenu li.current {
+    background-color: #B43E34
+}
+.userMenu li.current > a {
+    color: #fff;
+    opacity: 1
+}
+.userMenu li.userMenu-home > a {
+    background: url("#{resource['images/home.png']}") no-repeat 5px center
+}
+.userMenu li.userMenu-connections > a {
+    background: url("#{resource['images/connections.png']}") no-repeat 5px center;
+    opacity: 1;
+    padding: 0 24px
+}
+.userMenu li.userMenu-network > a {
+    background: url("#{resource['images/network.png']}") no-repeat 5px center
+}
+.userMenu li.userMenu-messages > a {
+    background: url("#{resource['images/messages.png']}") no-repeat center center;
+    opacity: 1;
+    padding: 0 24px
+}
+.userMenu li.userMenu-groupmessages > a {
+    background: url("#{resource['images/groupmessages.png']}") no-repeat center center;
+    background-size: 22px 22px;
+    opacity: .9;
+    padding: 0 24px
+}
+.userMenu li.userMenu-profile > a {
+    background: url("#{resource['images/profile.png']}") no-repeat 5px center
+}
+.userMenu li.userMenu-config {
+    float: right;
+    margin-right: 40px;
+    position: relative
+}
+.userMenu li.userMenu-search {
+    float: right;
+    position: relative
+}
+.userMenu li.userMenu-search:hover {
+    background-color: transparent
+}
+.userMenu li.userMenu-search:focus {
+    outline: none
+}
+.userMenu li.userMenu-config > a {
+    background: url("#{resource['images/config.png']}") no-repeat 5px center;
+    padding: 0 30px 0 45px;
+    cursor: pointer;
+}
+.userMenu li.userMenu-config > a:after {
+    content: "▼";
+    font-size: 10px;
+    position: absolute;
+    transition: all .2s linear
+}
+.messages-qtd {
+    background: #b43e34;
+    color: #fff;
+    font-size: 8px;
+    line-height: 12px;
+    margin-top: 4px;
+    padding: 3px;
+    position: absolute
+}
+.userMenu-connections .messages-qtd {
+    margin: 4px 0 0 10px
+}
+.dialog-modal {
+    background: rgba(255, 255, 255, 1);
+    border: solid 1px rgba(69, 71, 77, .1);
+    border-right: solid 6px rgba(227, 79, 66, .82);
+    box-shadow: 8px 10px 15px 0 rgba(0, 0, 0, .3);
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 45px;
+    width: 250px
+}
+.dialog-modal:after {
+    background: transparent;
+    border-bottom: solid 10px rgba(255, 255, 255, 1);
+    border-left: solid 10px transparent;
+    border-right: solid 10px transparent;
+    content: "";
+    position: absolute;
+    right: 30px;
+    top: -10px;
+    width: 1px
+}
+.userMenu-search .dialog-modal:after {
+    left: 80px;
+    right: auto
+}
+.dropdown-menu-item {
+    border-top: solid 1px rgba(69, 71, 77, .1);
+    color: rgba(0, 0, 0, .7);
+    display: block;
+    font-size: 12px;
+    padding: 10px
+}
+.dropdown-menu-item, .dropdown-menu-item:hover {
+    text-decoration: none
+}
+.dropdown-menu-item:hover, .userMenu-search-sugestions a:hover, .userMenu-search-profiles li:hover a {
+    background: #FEFEDF
+}
+/*.userMenu-search-profiles button {
+    background: #fff;
+    bottom: 5px;
+    position: absolute;
+    right: 5px;
+    z-index: 2
+}*/
+.userMenu-search input[type="text"] {
+    border: none;
+    border-radius: 10px;
+    float: right;
+    font-size: 13px;
+    height: 16px;
+    margin: 9px 20px 0 0;
+    padding: 3px 10px
+}
+.userMenu-search-sugestions {
+    border-bottom: solid 1px rgba(69, 71, 77, .1)
+}
+.userMenu-search-sugestions a {
+    color: rgba(0, 0, 0, .7);
+    display: block;
+    font-size: 12px;
+    padding: 5px 20px
+}
+/*.userMenu-search-profiles a {
+    display: block;
+    padding: 7px 4px;
+    position: relative;
+    z-index: 1
+}
+.userMenu-search-profiles .mini-profile-info {
+    padding: 0
+}
+.userMenu-search-profiles .mini-profile-photo {
+    height: 36px;
+    margin: 0 5px;
+    width: 36px
+}
+.userMenu-search-profiles .mini-profile-name {
+    color: rgba(0, 0, 0, .7);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 0 75px 0 15px
+}*/
+.dashboard {
+    position: fixed;
+    top: 55px;
+    width: 320px
+}
+.dashboard.right {
+    margin-left: 864px
+}
+.module {
+    background: #fff;
+    border: solid 1px rgba(69, 71, 77, .1)
+}
+.dashboard .module {
+    margin: 0 0 3%
+}
+.mini-profile {
+    margin-bottom: 10px
+}
+.mini-profile-info {
+    padding: 5px;
+    position: relative
+}
+.mini-profile-view {
+    color: rgba(0, 0, 0, .5);
+    display: block;
+    font-size: 12px;
+    left: 65px;
+    position: absolute;
+    top: 32px;
+    z-index: 1
+}
+.mini-profile-name {
+    display: block;
+    padding: 10px 5px 30px;
+    position: relative;
+    z-index: 2
+}
+.profile-data {
+    border-left: none;
+    border-right: none;
+    display: table;
+    height: 60px;
+    width: 100%
+}
+.profile-data li {
+    border-right: solid 1px rgba(69, 71, 77, .1);
+    display: table-cell;
+    height: 100%;
+    padding: 10px 15px 2px 10px
+}
+.profile-data li:last-child {
+    border-right: none
+}
+.profile-data li a {
+    color: rgba(0, 0, 0, .5);
+    font-size: 13px
+}
+.profile-data li a:hover {
+    color: #b43e34
+}
+.profile-data li a span.posts-count, .profile-data li a span.following-count, .profile-data li a span.followers-count {
+    display: block;
+    font-size: 16px;
+    font-weight: 700
+}
+.post-area-new, .post-area-reply {
+    padding-bottom: 4px
+}
+.post-area-new textarea, .post-area-reply textarea {
+    border: solid 1px rgba(0, 0, 0, .3);
+    border-radius: 3px;
+    display: block;
+    font-size: 13px;
+    height: 28px;
+    margin-left: 55px;
+    outline: none;
+    padding: 4px;
+    resize: none;
+    transition: height .3s linear;
+    width: 445px
+}
+.post-area-new textarea:focus, .post-area-reply textarea:focus {
+    border: solid 1px rgba(227, 79, 66, .5)
+}
+.post-area-extras {
+    height: 0;
+    overflow: hidden;
+    overflow: hidden;
+    text-align: right;
+    text-align: right
+}
+.mini-profile .post-area-new {
+    padding: 9px
+}
+.mini-profile .post-area-new textarea {
+    margin-left: 0;
+    width: 100%
+}
+.post-area-new.open textarea, .post-area-reply.open textarea {
+    height: 80px
+}
+textarea.splited-post {
+    box-shadow: none !important;
+    height: 28px
+}
+.post-area-new.open .post-area-extras, .post-area-reply.open .post-area-extras {
+    height: 35px;
+    transition: all .6s linear
+}
+.post-submit {
+    background: #45474d;
+    border: none;
+    color: rgba(255, 255, 255, .8);
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 4px;
+    padding: 5px 10px
+}
+.post-submit:hover {
+    background: #b43e34
+}
+.post-area-remaining {
+    font-size: 13px
+}
+.postboard {
+    background: rgba(255, 255, 255, .5);
+    border: solid 1px rgba(69, 71, 77, .05);
+    margin: 0 1%;
+    padding: 10px
+}
+.postboard h2 {
+    background: #e34f42;
+    border-bottom: solid 1px rgba(69, 71, 77, .1);
+    color: rgba(255, 255, 255, 1);
+    font-variant: small-caps;
+    font-weight: 700;
+    line-height: 40px;
+    margin: 0 0 5px;
+    padding-left: 10px;
+    width: 100%
+}
+.postboard-posts > .post.open {
+    border: none
+}
+.postboard-posts > .post:after {
+    background: #e34f42;
+    content: "";
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: all .2s linear;
+    width: 0
+}
+.postboard-posts > .post.open:after {
+    width: 5px
+}
+.post, .post .post, .post .original.post, .post .post.open {
+    -moz-transition: background .1s linear;
+    background: #fff;
+    margin: 0 0 1px;
+    position: relative;
+    transition: background .1s linear
+}
+.post.new {
+    background-color: #FFFFED
+}
+.post.open {
+    margin: 10px 0
+}
+.post:hover {
+    background: #fefedf;
+    cursor: pointer
+}
+.post .expanded-post .original {
+    background: #fefedf
+}
+.post-photo, .mini-profile-photo {
+    border-radius: 20%;
+    display: inline-block;
+    float: left;
+    height: 48px;
+    margin: 6px;
+    overflow: hidden;
+    vertical-align: middle;
+    width: 48px
+}
+.post-photo img, .mini-profile-photo img {
+    height: auto;
+    width: 48px
+}
+.post-info span {
+    vertical-align: top
+}
+.post-info-name, .mini-profile-name {
+    color: #e34f42;
+    font-size: 14px;
+    font-weight: 700;
+    padding-left: 2px;
+    text-decoration: none
+}
+.post-info-tag {
+    display: inline-block;
+    font-size: 12px;
+    font-style: italic;
+    letter-spacing: 0;
+    margin-top: 4px;
+    opacity: .6
+}
+.post-info-time {
+    float: right;
+    font-size: 12px;
+    margin: 4px 8px 0;
+    opacity: .5;
+    text-decoration: none
+}
+.post-text {
+    font-size: 14px;
+    margin: 5px 16px 4px 60px;
+    word-wrap: break-word
+}
+.post-context {
+    font-size: 11px;
+    margin: 2px 16px 4px 60px
+}
+.confirm-popup .message a, .post-text a, .post-context a, .mini-screen-name {
+    color: #E34F42
+}
+.mini-screen-name {
+    font-size: 13px;
+    top: 40px
+}
+.post-rt-by div {
+    display: inline
+}
+.post-rt-by .prep:before, .post-rt-by .prep:after {
+    content: ' '
+}
+.post-rt-icon {
+    background: url("#{resource['images/repost.png']}") no-repeat left center;
+    display: inline-block;
+    height: 16px;
+    margin: 2px;
+    vertical-align: middle;
+    width: 16px
+}
+.post-interactions {
+    height: 23px;
+    margin: 2px 10px 10px 60px;
+    text-align: right
+}
+.post-interactions span, .post-expand, .prompt-wrapper .switch-mode {
+    color: #e34f42;
+    cursor: pointer;
+    font-size: 11px
+}
+.post-expand {
+    left: 60px;
+    padding-top: 3px;
+    position: absolute
+}
+.related .post-expand {
+    display: none
+}
+.post-reply, .post-propagate, .post-favorite {
+    background: url("#{resource['images/reply.png']}") no-repeat left center;
+    display: none;
+    margin-right: 3px;
+    opacity: .7;
+    padding-left: 18px
+}
+.post:hover .post-reply, .post:hover .post-propagate, .post:hover .post-favorite, .original.open .post-interactions .post-reply, .original.open .post-interactions .post-propagate, .original.open .post-interactions .post-favorite, .post:hover .original .post-interactions .post-reply, .post:hover .original .post-interactions .post-propagate, .post:hover .original .post-interactions .post-favorite {
+    display: inline-block
+}
+.related.post:hover .post-reply, .related.post:hover .post-propagate, .related.post:hover .post-favorite {
+    display: inline-block
+}
+.open .related .post-reply, .open .related .post-propagate, .open .related .post-favorite {
+    display: none !important
+}
+.open .related:hover .post-reply, .open .related:hover .post-propagate, .open .related:hover .post-favorite {
+    display: inline-block !important
+}
+.post-propagate {
+    background: url("#{resource['images/repost.png']}") no-repeat left center
+}
+.post-favorite {
+    background: none;
+    padding-left: 0
+}
+.post-favorite:before {
+    content: "★"
+}
+.post-reply:hover, .post-propagate:hover, .post-favorite:hover {
+    opacity: 1;
+    text-decoration: underline
+}
+.expanded-content {
+    display: none;
+    padding: 5px 5px 0
+}
+.post-stats {
+    border-bottom: solid 1px rgba(69, 71, 77, .1);
+    border-top: solid 1px rgba(69, 71, 77, .1);
+    margin: 0 10px 0 55px
+}
+.post-stats li {
+    display: inline-block
+}
+.post-stats li.stat-count {
+    border-right: solid 1px rgba(69, 71, 77, .1);
+    padding-right: 10px
+}
+.post-stats li.stat-count span {
+    color: rgba(0, 0, 0, .5);
+    display: block;
+    font-size: 13px;
+    font-weight: 700
+}
+.post-stats li.stat-count span:last-child {
+    font-weight: 400
+}
+.post-stats a {
+    position: relative
+}
+.post-stats a img {
+    border-radius: 100%;
+    height: 24px;
+    width: 24px
+}

@@ -1,0 +1,39 @@
+<ui:composition template="/WEB-INF/templates/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+  
+    <ui:define name="content">
+        <div class="wrapper">
+            <p:panel rendered="#{not empty homePage.perfil}">
+
+            <h1>Hola, <h:outputText value="#{homePage.username}" /></h1>
+            <ul>
+                <li>Email: <h:outputText value="#{homePage.perfil.email}" /></li>
+                <li>Numero de Mensajes: <h:outputText value="#{homePage.perfil.numPosts}" /></li>
+                <li>Ubicacion: <h:outputText value="#{homePage.perfil.ubicacion}" /></li>
+            </ul>
+            <table>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Mensaje</th>
+                </tr>
+                <ui:repeat value="#{homePage.perfil.postCollection}" var="post">
+                <tr>
+                    <td>#{post.pubDate}</td>
+                    <td>#{post.post}</td>
+                </tr>
+                </ui:repeat>
+            </table>
+
+            </p:panel>
+            <p:panel rendered="#{empty homePage.perfil}">            
+                <p>El usuario <strong><h:outputText value="#{homePage.username}" /></strong> no existe.</p>
+            </p:panel>
+        </div>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,89 @@
+<ui:composition template="/WEB-INF/templates/login-layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="login-form">
+        
+        <p:fragment autoUpdate="true">
+            <section>
+                <h:form>
+                    <p:messages globalOnly="true" autoUpdate="true" closable="true" showDetail="true"/>
+                    
+                    <div class="field half first">
+                        <p:outputLabel  for="username" value="Username" />
+                        <p:inputText id="username" value="#{loginManager.username}" required="true"
+                            requiredMessage="Please enter your username." />
+                        <p:message for="username"/>
+                    </div>
+                    <div class="field half">
+                        <p:outputLabel for="password" value="Password" />
+                        <p:password id="password" value="#{loginManager.password}" required="true"
+                            requiredMessage="Please enter your password." />
+                        <p:message for="password" />
+                    </div>
+                    <ul class="actions">
+                        <li><p:commandButton value="Sign In" styleClass="button submit" actionListener="#{loginManager.login}" /></li>
+                    </ul>                    
+                </h:form>
+            </section>
+            <section>
+                <ul class="contact">
+                    <li>
+                        <h3>Social Login</h3>
+                        <ul class="icons">
+                            <li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>
+                            <li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+        </p:fragment>
+        
+    </ui:define>
+    
+    <ui:define name="signup-form">
+        
+        <p:fragment autoUpdate="true">
+            <section>
+                <h:form>
+                    <p:messages globalOnly="true" autoUpdate="true" closable="true" showDetail="true"/>
+                    
+                    <div class="field half first">
+                        <p:outputLabel for="username2" value="Username" />
+                        <p:inputText id="username2" value="#{loginManager.username}" required="true"
+                            requiredMessage="Please enter your username."/>
+                        <p:message for="username2" />
+                    </div>                    
+                    <div class="field half">
+                        <p:outputLabel for="password2" value="Password" />
+                        <p:password id="password2" value="#{loginManager.password}" required="true" feedback="true"
+                            requiredMessage="Please enter your password."
+                            validatorMessage="Minimum length of 5 is required.">
+                            <f:validateLength minimum="5" ></f:validateLength>
+                        </p:password>
+                        <p:message for="password2" />
+                    </div>
+                    <div class="field half first">
+                        <p:outputLabel for="email" value="Email" />
+                        <p:inputText id="email" required="true" size="40"
+                            requiredMessage="Please enter your email address."
+                            validatorMessage="Invalid email format"
+                            value="#{loginManager.email}">
+                            <f:validateRegex
+                                pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                         </p:inputText>
+                        <p:message for="email" />
+                    </div>
+                    <ul class="actions">
+                        <li><p:commandButton styleClass="button submit" value="Sign Up" actionListener="#{loginManager.signup}" /></li>
+                    </ul>
+                </h:form>
+            </section>	
+        </p:fragment>
+        
+    </ui:define>
+
+</ui:composition>

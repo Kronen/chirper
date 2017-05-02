@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    
+    <h:head>
+        <title><ui:insert name="title">Chirper</ui:insert></title>
+        
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <link href="https://fonts.googleapis.com/css?family=Play|Rubik" rel="stylesheet" />
+    </h:head>
+    <h:body>
+        <h:outputStylesheet library="css" name="normalize.css" />
+        <h:outputStylesheet library="css" name="easy-responsive-tabs.css" />
+        <h:outputStylesheet library="css" name="login.css" />
+        <section id="sidebar">
+            <div class="contenido">
+                <nav>
+                    <ul>
+                        <li><a href="#intro">Welcome</a></li>
+                        <li><a href="#one">What we do?</a></li>
+                        <li><a href="#two">Let me in</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </section>
+        <!-- Wrapper -->
+        <div id="wrapper">
+            <!-- Intro -->
+            <section id="intro" class="wrapper estilo1 fullscreen fade-up">
+                <div class="contenido">
+                    <h:graphicImage name="images/proyect.png" alt="Logo"/>
+                    <h1>Proyect: Microblogging</h1>
+                    <p>People communication for the 21st century.</p>
+                    <ul class="actions">
+                        <li><a href="#two" class="button scrolly">Let me in</a></li>
+                    </ul>
+                </div>
+            </section>
+            <!-- Two -->
+            <section id="one" class="wrapper estilo2 fade-up">
+                <div class="contenido">
+                    <h2>What we do</h2>
+                    <p>We are a social networking service that allow our users, called PROYECTERS, to read and write short messages of up to 256 characters </p>
+                    <div class="funciones">
+                        <section>
+                            <span class="icon major fa-paper-plane-o"></span>
+                            <h3>Posts</h3>
+                            <p>You can publish 256 characters long posts. You’ll also see there is an archive of every Tweet you’ve ever made. You can see both your own Tweets and other users' Tweets.</p>
+                        </section>
+                        <section>
+                            <span class="icon major fa-home"></span>
+                            <h3>Home or Feed</h3>
+                            <p>A chronological collection of Posts made by PROYECT users you follow. Catch up on the day and see what people are saying. Find interesting, timely conversations and jump in.</p>
+                        </section>
+                        <section>
+                            <span class="icon major fa-comments"></span>
+                            <h3>Direct Messages</h3>
+                            <p>This is your inbox for direct messages. Direct messages are 256 characters long and can be sent privately to PROYECT users who are following your account. Think of them as private Posts.</p>
+                        </section>
+                        <section>
+                            <span class="icon major fa-forward"></span>
+                            <h3>Following</h3>
+                            <p>This is the list of people who follow you. While your Posts are public for everyone to find, your followers will see your Posts in their feed.</p>
+                        </section>
+                        <section>
+                            <span class="icon major fa-chain"></span>
+                            <h3>Followers</h3>
+                            <p>This is the list of people who follow you. While your Posts are public for everyone to find, your followers will see your Posts in their feed.</p>
+                        </section>
+                        <section>
+                            <span class="icon major fa-thumbs-up"></span>
+                            <h3>Likes</h3>
+                            <p>This shows all the Posts you have liked. You like a Tweet by click the small heart icon. Liking a Post is a great way to acknowledge another user’s message.</p>
+                        </section>
+                    </div>
+                    <ul class="actions">
+                        <li><a href="#" class="button">Learn more</a></li>
+                    </ul>
+                </div>
+            </section>
+            <!-- Three -->
+            <section id="two" class="wrapper estilo3 fade-up">
+                <div class="contenido">
+                    <h2>Connect with thousand of users</h2>
+                    <p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus, lacus eget hendrerit bibendum, urna est aliquam sem, sit amet imperdiet est velit quis lorem.</p>
+                    <div id="demoTab">          
+                        <ul class="resp-tabs-list">
+                            <li>Login</li>
+                            <li>Sign up</li>
+                        </ul> 
+
+                        <div class="resp-tabs-container">
+                            <div>
+                                <div class="split estilo1">
+                                    <ui:insert name="login-form">Contenido del formulario de Login</ui:insert>
+                                    						
+                                </div>
+                            </div>                                                       
+                            <div>
+                                <div class="split estilo1">
+                                    <ui:insert name="signup-form">Contenido del formulario de Sign Up</ui:insert>                                    			
+                                </div>
+                            </div>
+                        </div>
+                    </div>    
+
+                </div>
+            </section>
+        </div>
+        <!-- Footer -->
+        <footer id="footer" class="wrapper">
+            <div class="contenido">
+                <ul class="menu">
+                    <li>Proyecto Final. Grado Superior Desarrollo de Aplicaciones Web.</li><li><a href="http://kronen.github.io">Alberto González Lagos</a></li>
+                </ul>
+            </div>
+        </footer>
+        <!-- Vendor Scripts -->
+        <h:outputScript library="js" name="jquery.min.js"/>
+        <h:outputScript library="js" name="jquery.scrollex.min.js"/>
+        <h:outputScript library="js" name="jquery.scrolly.min.js"/>
+        <h:outputScript library="js" name="easyResponsiveTabs.js"/>
+        
+        <!-- Mis Scripts -->
+        <h:outputScript library="js" name="login.js"/>
+    </h:body>
+</html>
