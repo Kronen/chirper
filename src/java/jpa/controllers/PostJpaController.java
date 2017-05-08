@@ -229,5 +229,9 @@ public class PostJpaController implements Serializable {
             em.close();
         }
     }
+
+    public List getPostCountByAuthor(Integer id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

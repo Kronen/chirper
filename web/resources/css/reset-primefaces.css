@@ -1,0 +1,8 @@
+/* Reset Primefaces Theme */
+.ui-button-text-only .ui-button-text {
+    padding: 0;
+}
+.ui-button .ui-button-text {
+    display: inline-block;
+    line-height: 0;
+}

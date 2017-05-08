@@ -124,7 +124,8 @@ public class LoginManager implements Serializable {
             /*
              * The ServletException is thrown if the configured login mechanism does not support
              * username password authentication, or if a non-null caller identity had already been
-             * established (prior to the call to login), or if validation of the provided username and password fails.
+             * established (prior to the call to login), or if validation of the provided username
+             * and password fails.
              */
             MessageHandler.addErrorMessage("The password you introduced for user " + username + " is incorrect.", null);
         }
@@ -139,7 +140,7 @@ public class LoginManager implements Serializable {
         } catch (PreexistingEntityException ex) {
             MessageHandler.addErrorMessage("This username is already in use. Try another username.", null);
         } catch (Exception e) {
-            MessageHandler.addErrorMessage("Failed To Create Account: " + e.getLocalizedMessage(), null);
+            MessageHandler.addErrorMessage("Failed to create account: " + e.getLocalizedMessage(), null);
             e.printStackTrace();
         }
     }
@@ -192,6 +193,12 @@ public class LoginManager implements Serializable {
         return externalContext.isUserInRole(role);
     }
     
+    /**
+     * Decides which is the next page to redirect the user depending on successful/unsuccessful login. If the user 
+     * is logged in he will be redirected to the home page, otherwise he will stay in login page.
+     *
+     * @return the url the user will be redirected to.
+     */
     public String getViewPath() {
         if(isUserLoggedIn())
             return "/faces/home/home.xhtml";

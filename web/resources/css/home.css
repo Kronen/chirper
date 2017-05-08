@@ -337,15 +337,20 @@ a:hover {
     transition: height .3s linear;
     width: 445px
 }
+.post-area-new.open textarea, .post-area-reply.open textarea {
+    height: 80px
+}
 .post-area-new textarea:focus, .post-area-reply textarea:focus {
     border: solid 1px rgba(227, 79, 66, .5)
 }
 .post-area-extras {
     height: 0;
     overflow: hidden;
-    overflow: hidden;
-    text-align: right;
     text-align: right
+}
+.post-area-new.open .post-area-extras, .post-area-reply.open .post-area-extras {
+    height: 35px;
+    transition: all .6s linear
 }
 .mini-profile .post-area-new {
     padding: 9px
@@ -354,24 +359,13 @@ a:hover {
     margin-left: 0;
     width: 100%
 }
-.post-area-new.open textarea, .post-area-reply.open textarea {
-    height: 80px
-}
-textarea.splited-post {
-    box-shadow: none !important;
-    height: 28px
-}
-.post-area-new.open .post-area-extras, .post-area-reply.open .post-area-extras {
-    height: 35px;
-    transition: all .6s linear
-}
 .post-submit {
     background: #45474d;
     border: none;
     color: rgba(255, 255, 255, .8);
     cursor: pointer;
     display: inline-block;
-    margin-top: 4px;
+    margin: 4px 0 0 8px;
     padding: 5px 10px
 }
 .post-submit:hover {
@@ -469,7 +463,7 @@ textarea.splited-post {
     float: right;
     font-size: 12px;
     margin: 4px 8px 0;
-    opacity: .5;
+    opacity: .8;
     text-decoration: none
 }
 .post-text {

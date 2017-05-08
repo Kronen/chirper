@@ -1,14 +1,14 @@
-<ui:composition template="/WEB-INF/templates/home-layout.xhtml"
+<ui:composition template="/WEB-INF/templates/main-layout.xhtml"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
-
+    
+    <ui:define name="title">Chirper</ui:define>
   
     <ui:define name="content">
-        
-        <div class="wrapper">
+        <div class="wrapper">            
             <div class="chirp-row">
                 <div class="chirp-quarter">
                     <!-- THEME NIN added sub-menu (mentions, messages and edit profile) 
@@ -27,7 +27,7 @@
                             <div class="mini-profile-photo">                                
                                 <h:graphicImage value="http://lorempixel.com/48/48/people" alt="user photo"/>                                
                             </div>
-                            <p:link href="/faces/user/#{homePage.user.userName}" styleClass="mini-profile-name" 
+                            <p:link href="/user/#{homePage.user.userName}" styleClass="mini-profile-name" 
                                 value="#{homePage.perfil.fullName != null ? homePage.perfil.fullName : homePage.user.userName}" />
                             <span class="mini-profile-view">@#{homePage.user.userName}</span>
                         </div>
@@ -52,16 +52,22 @@
                             </li>
                         </ul>
                         <div class="post-area">
-                            <form class="post-area-new"> <!-- Añadir clase open en focus quitar si no hay texto !-->
-                                <textarea placeholder="New Post..."></textarea>
+                            
+                            <h:form id="form-new-post" styleClass="post-area-new">
+                                <p:inputTextarea id="new-post-text" value="#{homePage.newPost.text}" placeholder="New Post..." 
+                                    maxlength="256" />
+                                <h:inputHidden id="new-post-lat" value="#{homePage.newPost.latitude}" />
+                                <h:inputHidden id="new-post-lng" value="#{homePage.newPost.longitude}" />
+                                
                                 <div class="post-area-extras">
                                     <span class="post-area-attach" style="display: none;">
                                         <input type="file" id="fileInputAttach" style="font-size: 10px; width: 135px;"/>
                                     </span>
                                     <span class="post-area-remaining">256</span>
-                                    <button class="post-submit">post</button>
+                                    <p:commandButton id="post-publish" value="post" class="post-submit" 
+                                                     actionListener="#{homePage.publish}" oncomplete="handlePostSubmited()"/>                                    
                                 </div>
-                            </form>
+                            </h:form>
                         </div>
                     </div>
                 </div>
@@ -79,11 +85,11 @@
                                  data-screen-name="" data-id="" data-text="" data-text-mentions="">
                                 <div class="post-photo"><img class="avatar" src="http://lorempixel.com/48/48/people" alt="user-photo"/></div>
                                 <div class="post-info">
-                                    <a href="#" class="post-info-name">#{post.followee}</a>
+                                    <p:link href="/user/#{post.followee}" styleClass="post-info-name" value="#{post.followee}" />
                                     <span class="post-info-tag">@#{post.followee}</span>
                                     <a class="post-info-time">
                                         <h:outputText value="#{homePage.elapsed(post.pubDate)}" />
-                                        <span>InfoSentPlace</span>
+                                        <span class="post-location" data-lat="#{post.latitude}" data-lng="#{post.longitude}"></span>
                                     </a>
                                 </div>
                                 <p class="post-text"><h:outputText value="#{post.text}" /></p>

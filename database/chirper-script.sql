@@ -16,8 +16,8 @@ CREATE TABLE `profile` (
   location varchar(40) DEFAULT NULL,
   website varchar(256) DEFAULT NULL,
   num_posts int(11) DEFAULT '0',
-  full_name varchar(60) DEFAULT NULL,
-  photo varchar(25) DEFAULT NULL
+  full_name varchar(50) DEFAULT NULL,
+  photo varchar(40) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `profile` (id, user_name, email, location, website, num_posts, full_name, photo) VALUES
@@ -79,15 +79,16 @@ CREATE TABLE post (
   id_author int(11) NOT NULL,
   original_post_id int(11) DEFAULT NULL,
   text varchar(256) NOT NULL,
-  pub_date date NOT NULL,
+  pub_date datetime NOT NULL,
   latitude decimal(9,6) DEFAULT NULL,
   longitude decimal(9,6) DEFAULT NULL,
   likes int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO post (id, id_author, original_post_id, `text`, pub_date, latitude, longitude, likes) VALUES
-(1, 1, NULL, 'Esto es un mensaje', '2017-03-26', NULL, NULL, 0),
-(2, 1, NULL, 'Este fue el primer post de todos los tiempos.', '2017-03-25', NULL, NULL, 0);
+(1, 1, NULL, 'Si la depuración es el proceso de eliminar errores, entonces la programación debe ser el proceso de introducirlos
+-- Edsger W. Dijkstra', '2017-03-26', NULL, NULL, 0),
+(2, 1, NULL, 'Este fue el primer post de todos los tiempos. #PrimerPost #Chirper', '2017-03-25', NULL, NULL, 0);
 
 CREATE TABLE `private` (
   id int(11) NOT NULL,

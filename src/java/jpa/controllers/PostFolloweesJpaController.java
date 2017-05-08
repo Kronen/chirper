@@ -146,7 +146,7 @@ public class PostFolloweesJpaController implements Serializable {
     public List findPostFollowees(int id_follower) {
         EntityManager em = getEntityManager();
         try {
-            TypedQuery<PostFollowees> tq = em.createNamedQuery("PostFollowees.findByIdFollower", PostFollowees.class)
+            TypedQuery<PostFollowees> tq = em.createNamedQuery("PostFollowees.findByIdFollowerOrdered", PostFollowees.class)
                     .setParameter("idFollower", id_follower);
 
             return tq.getResultList();

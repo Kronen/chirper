@@ -1,13 +1,5 @@
 @import url(css/font-awesome.min.css);
 
-/* Reset Primefaces Theme */
-.ui-button-text-only .ui-button-text {
-    padding: 0 3.75em;
-}
-.ui-button .ui-button-text {
-    display: inline-block;
-}
-
 /* Box Model */
 *, *:before, *:after {
     box-sizing: border-box;

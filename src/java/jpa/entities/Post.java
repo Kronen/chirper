@@ -58,7 +58,7 @@ public class Post implements Serializable {
     private String text;
     @Basic(optional = false)
     @Column(name = "pub_date")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date pubDate;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "latitude")

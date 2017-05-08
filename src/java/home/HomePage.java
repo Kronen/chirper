@@ -1,7 +1,9 @@
 package home;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +15,9 @@ import javax.faces.context.FacesContext;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import jpa.controllers.PostFolloweesJpaController;
+import jpa.controllers.PostJpaController;
 import jpa.controllers.ProfileJpaController;
+import jpa.entities.Post;
 import jpa.entities.Profile;
 import jpa.entities.User;
 
@@ -24,9 +28,11 @@ public class HomePage implements Serializable {
     private final EntityManagerFactory emf;
     private User user;
     private Profile profile;
+    private Post newPost;
+    
 
     public HomePage() {
-        emf = Persistence.createEntityManagerFactory("ProyectChirperPU");
+        emf = Persistence.createEntityManagerFactory("ProyectChirperPU");  
     }
     
     @PostConstruct
@@ -34,6 +40,7 @@ public class HomePage implements Serializable {
        ExternalContext externalContext = externalContext();
        user = (User)externalContext.getSessionMap().get("user");
        cargaPerfil(user.getUserName());
+       newPost = new Post();
     }
     
     private ExternalContext externalContext() {
@@ -52,8 +59,16 @@ public class HomePage implements Serializable {
         return profile;
     }
 
-    public void setPerfil(Profile perfil) {
+    public void setPerfil(Profile profile) {
         this.profile = profile;
+    }
+
+    public Post getNewPost() {
+        return newPost;
+    }
+
+    public void setNewPost(Post post) {
+        this.newPost = post;
     }
     
     public void cargaPerfil(String username) {        
@@ -66,17 +81,35 @@ public class HomePage implements Serializable {
         return pfC.findPostFollowees(profile.getId());
     }
     
+    public List countPosts() {
+        PostJpaController postC = new PostJpaController(emf);
+        return postC.getPostCountByAuthor(profile.getId());
+    }
+    
     public String elapsed(Date date) {
-        LocalDateTime fromDateTime = LocalDateTime.of(2016, 12, 16, 7, 45, 55);
-        LocalDateTime toDateTime = LocalDateTime.of(2017, 4, 28, 21, 16, 34);
+        
+        LocalDateTime fromDateTime = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+        LocalDateTime toDateTime = LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault());
         
         String diff = "";
         long days = fromDateTime.until(toDateTime, ChronoUnit.DAYS);
         long hours = fromDateTime.until(toDateTime, ChronoUnit.HOURS);
+        long minutes = fromDateTime.until(toDateTime, ChronoUnit.MINUTES);
 
         if(days > 0) diff = days + " d"; 
-            else diff = hours + " h";
-        
+        else if(hours > 0) diff = hours + " h";
+        else diff = minutes + " m";
+            
         return diff;
+    }
+    
+    public void publish() {
+        newPost.setIdAuthor(profile);
+         
+        // La version de JPA es anterior a Java8 y no soporta las nuevas clases Date, Time, LocalDateTime, etc... 
+        // Habría que añadir un conversor a la entidad para usarlas.        
+        newPost.setPubDate(new Date());
+        PostJpaController postC = new PostJpaController(emf);
+        postC.create(newPost);
     }
 }

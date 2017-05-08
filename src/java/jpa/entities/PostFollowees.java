@@ -37,7 +37,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "PostFollowees.findByPubDate", query = "SELECT p FROM PostFollowees p WHERE p.pubDate = :pubDate")
     , @NamedQuery(name = "PostFollowees.findByLatitude", query = "SELECT p FROM PostFollowees p WHERE p.latitude = :latitude")
     , @NamedQuery(name = "PostFollowees.findByLongitude", query = "SELECT p FROM PostFollowees p WHERE p.longitude = :longitude")
-    , @NamedQuery(name = "PostFollowees.findByLikes", query = "SELECT p FROM PostFollowees p WHERE p.likes = :likes")})
+    , @NamedQuery(name = "PostFollowees.findByLikes", query = "SELECT p FROM PostFollowees p WHERE p.likes = :likes")
+    , @NamedQuery(name = "PostFollowees.findByIdFollowerOrdered", query = "SELECT p FROM PostFollowees p WHERE p.idFollower = :idFollower ORDER BY p.pubDate DESC")})
 public class PostFollowees implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -60,7 +61,7 @@ public class PostFollowees implements Serializable {
     private Integer originalPostId;
     @Basic(optional = false)
     @Column(name = "pub_date")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date pubDate;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "latitude")

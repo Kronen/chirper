@@ -16,37 +16,37 @@ import jpa.entities.Profile;
  */
 @ManagedBean
 @ViewScoped
-@URLMapping(id="viewUser", pattern="/user/#{ username : userPage.username}", viewId="/faces/user/user-view.xhtml")
+@URLMapping(id="viewUser", pattern="/user/#{ username : userPage.userName}", viewId="/faces/user/user-view.xhtml")
 public class UserPage implements Serializable {
     
     private final EntityManagerFactory emf;
-    private String username;
-    private Profile perfil;
+    private String userName;
+    private Profile profile;
 
     public UserPage() {
         emf = Persistence.createEntityManagerFactory("ProyectChirperPU");
     }
 
-    public String getUsername() {      
-        return username;        
+    public String getUserName() {      
+        return userName;        
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String username) {
+        this.userName = username;
     }
 
     public Profile getProfile() {
-        return perfil;
+        return profile;
     }
 
-    public void setProfile(Profile perfil) {
-        this.perfil = perfil;
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
     
     @URLAction
     public String cargaDatosUsuario() {        
         ProfileJpaController pC = new ProfileJpaController(emf);
-        perfil = pC.findProfileByUserName(username);
+        profile = pC.findProfileByUserName(userName);
         return null;
     }
 }

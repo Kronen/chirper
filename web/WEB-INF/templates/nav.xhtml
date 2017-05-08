@@ -6,9 +6,9 @@
     
     <nav class="userMenu">
         <ul>
-            <li class="userMenu-home current"><a href="home.html">Home</a></li>
+            <li class="userMenu-home current"><p:link value="Home" href="/"/></li>
             <li class="userMenu-network"><a class="label" href="network.html">Network</a></li>
-            <li class="userMenu-profile"><a class="label" href="profile-edit.html">Profile</a></li>
+            <li class="userMenu-profile"><p:link value="Profile" href="/user/#{homePage.user.userName}"/></li>
             <li class="userMenu-config">
                 <a class="userMenu-config-dropdown">
                     <div class="config-menu dialog-modal">
@@ -16,8 +16,9 @@
                             <div class="mini-profile-photo">
                                 <img src="http://lorempixel.com/48/48/people" alt="user-photo"/>
                             </div>
-                            <a href="#" class="mini-profile-name">Fulano da Silva</a>
-                            <span class="mini-profile-view">View</span>
+                            <p:link href="user/#{homePage.user.userName}" styleClass="mini-profile-name"
+                                    value="#{homePage.perfil.fullName != null ? homePage.perfil.fullName : homePage.user.userName}"/>
+                            <span class="mini-profile-view">@#{homePage.user.userName}</span>
                         </div>
                         <h:form>
                             <a class="dropdown-menu-item uri-shortener">URI shortener</a>
@@ -49,7 +50,6 @@
                     <span class="messages-qtd" style="display:none;">0</span>
                 </a>
             </li>
-            <li class="userMenu-dhtindicator selectable_theme theme_calm"><a href="network.html"></a></li>
             <!-- BUSQUEDA -->
             <li class="userMenu-search">
                 <input type="text" class="userMenu-search-field" placeholder="search"/>
@@ -65,21 +65,3 @@
         </ul>
     </nav>
 </ui:composition>
-
-<!--<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui">
-
-    <h:form>
-        <p:outputPanel rendered="#{!loginManager.userLoggedIn}">
-            <p:button  value="Log In" icon="ui-icon-gear" outcome="/authentication/login"/>
-        </p:outputPanel>
-        <p:outputPanel rendered="#{loginManager.userLoggedIn}">
-            <h:outputText style="margin-right:15px" value="Hello, #{loginManager.user.userName}."/>
-            <p:commandLink value="Log Out" icon="ui-icon-gear" actionListener="#{loginManager.logout}" ajax="false"/>
-        </p:outputPanel>
-    </h:form>
-
-</ui:composition>-->
