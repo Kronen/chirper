@@ -1,7 +1,6 @@
 package home;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -39,7 +38,7 @@ public class HomePage implements Serializable {
     public void init() {
        ExternalContext externalContext = externalContext();
        user = (User)externalContext.getSessionMap().get("user");
-       cargaPerfil(user.getUserName());
+       loadProfile(user.getUserName());
        newPost = new Post();
     }
     
@@ -55,11 +54,11 @@ public class HomePage implements Serializable {
         return user;        
     }
 
-    public Profile getPerfil() {
+    public Profile getProfile() {
         return profile;
     }
 
-    public void setPerfil(Profile profile) {
+    public void setProfile(Profile profile) {
         this.profile = profile;
     }
 
@@ -71,7 +70,7 @@ public class HomePage implements Serializable {
         this.newPost = post;
     }
     
-    public void cargaPerfil(String username) {        
+    public void loadProfile(String username) {        
         ProfileJpaController profileC = new ProfileJpaController(emf);
         profile = profileC.findProfileByUserName(username);
     }

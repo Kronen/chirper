@@ -3,10 +3,12 @@ package users;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import java.io.Serializable;
+import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import jpa.controllers.PostJpaController;
 import jpa.controllers.ProfileJpaController;
 import jpa.entities.Profile;
 
@@ -44,9 +46,14 @@ public class UserPage implements Serializable {
     }
     
     @URLAction
-    public String cargaDatosUsuario() {        
+    public String loadUserData() {        
         ProfileJpaController pC = new ProfileJpaController(emf);
         profile = pC.findProfileByUserName(userName);
         return null;
+    }
+    
+    public List getChirpsFromUser() {
+        PostJpaController pfC = new PostJpaController(emf);
+        return pfC.findPostsByAuthor(profile.getId());
     }
 }

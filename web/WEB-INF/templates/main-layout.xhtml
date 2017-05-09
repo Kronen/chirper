@@ -17,8 +17,6 @@
         <h:outputStylesheet library="css" name="reset-primefaces.css" />
         <h:outputStylesheet library="css" name="home.css" />
 
-        <ui:include src="nav.xhtml" />
-
         <ui:insert name="content">Error loading content</ui:insert> 
 
         <h:outputScript library="js" name="jquery-3.2.0.min.js" />
@@ -28,10 +26,11 @@
         <script>
             //<![CDATA[
             var geocoder;
-            var city, state;
+            var city, country;
             
-            function codeLatLng($elem, lat, lng) {
+            function codeLatLng(lat, lng, callback) {
                 var latlng = new google.maps.LatLng(lat, lng);
+                var result = "";
                 geocoder.geocode({'latLng': latlng}, function(results, status) {
                     if(status === google.maps.GeocoderStatus.OK) {
                         if(results[1]) {
@@ -48,37 +47,47 @@
                             // Find the state name
                             for(var i = 0; i < results[0].address_components.length; i++) {
                               for(var b = 0; b < results[0].address_components[i].types.length; b++) {
-                                if(results[0].address_components[i].types[b] === "administrative_area_level_1") {
-                                    state = results[0].address_components[i];
+                                if(results[0].address_components[i].types[b] === "country") {
+                                    country = results[0].address_components[i];
                                     break;
                                 }
                               }
                             }
-                            $elem.text(" · " + city.long_name +", "+ state.long_name);
+                            
+                            callback(city.long_name + ", " + country.long_name);
                         }
                     }
-                });    
+                });
+                console.log('u' + result);
+                return result;
             }
 
             $(function () {
                 navigator.geolocation.getCurrentPosition(
-                        function (position) {
-                            $(PrimeFaces.escapeClientId('form-new-post:new-post-lat')).val(position.coords.latitude);
-                            $(PrimeFaces.escapeClientId('form-new-post:new-post-lng')).val(position.coords.longitude);
-                        },
-                        function (error) {
-                            alert(error.message);
-                        },
-                        {enableHighAccuracy: true}
+                    function (position) {
+                        $(PrimeFaces.escapeClientId('form-new-post:new-post-lat')).val(position.coords.latitude);
+                        $(PrimeFaces.escapeClientId('form-new-post:new-post-lng')).val(position.coords.longitude);
+                        
+                        geocoder = new google.maps.Geocoder();
+                        // User Location
+                        $elem = $('#user-location');
+                        var userLocation = codeLatLng(position.coords.latitude, position.coords.longitude,
+                                function(loc) { $elem.text(loc);});
+                        
+                        // Posts locations
+                        $('.post-location').each(function() {
+                            var $elem = $(this);
+                            var lat = $elem.data('lat');
+                            var lng = $elem.data('lng');
+                            codeLatLng(lat, lng, function(loc) { $elem.text(' · ' + loc);});                            
+                        });
+                    },
+                    function(error) {
+                        // no hacer nada
+                    },
+                    {enableHighAccuracy: true}
                 );
-                geocoder = new google.maps.Geocoder();
-
-                $('.post-location').each(function() {
-                    var lat = $(this).data('lat');
-                    var lng = $(this).data('lng');
-
-                    codeLatLng($(this), lat, lng);
-                });
+                
             });
             //]]>
         </script>

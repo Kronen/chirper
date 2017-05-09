@@ -21,6 +21,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -74,6 +75,7 @@ public class Profile implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "receiverId")
     private Collection<Private> privateCollection1;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idAuthor")
+    @OrderBy("pubDate DESC")
     private Collection<Post> postCollection;
     @JoinColumn(name = "user_name", referencedColumnName = "user_name")
     @OneToOne(optional = false)

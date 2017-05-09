@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 import jpa.controllers.exceptions.IllegalOrphanException;
 import jpa.controllers.exceptions.NonexistentEntityException;
 import jpa.entities.Post;
@@ -234,4 +236,17 @@ public class PostJpaController implements Serializable {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    public List findPostsByAuthor(int id_author) {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Post> tq = em.createNamedQuery("Post.findByAuthor", Post.class)
+                    .setParameter("idAuthor", id_author);
+
+            return tq.getResultList();
+        } catch(NoResultException e) {
+            return null;
+        } finally {
+            em.close();
+        }
+    }
 }

@@ -4,36 +4,133 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
+    
     <ui:define name="title">#{userPage.profile.fullName}(@#{userPage.userName}) | Chirper</ui:define>
   
     <ui:define name="content">
-        <div class="wrapper">
-            <p:panel rendered="#{not empty userPage.profile}">
+        <ui:include src="/WEB-INF/templates/nav2.xhtml" />
+        
+        <div class="wrapper">            
+            <div class="chirp-row">
+                <p:panel rendered="#{not empty userPage.profile}">
+                <div class="chirp-quarter">
+                    <!-- sub-menu (mentions, messages and edit profile) 
+                    <ul class="mini-profile-indicators selectable_theme theme_nin">
+                        <li class="userMenu-connections">
+                            <a href="#" title="Mentions"><span class="messages-qtd" style="display:none;">0</span><span>Mentions</span></a>
+                        </li>
+                        <li class="userMenu-messages">
+                            <a href="#" title="Direct Messages"><span class="messages-qtd" style="display:none;">0</span><span>Messages</span></a>
+                        </li>
+                    </ul>
+                    -->
+                    
+                        <!-- PROFILE -->
+                        <div class="module mini-profile">
+                            <div class="mini-profile-info">
+                                <div class="mini-profile-photo">                                
+                                    <h:graphicImage value="http://lorempixel.com/48/48/people" alt="user photo"/>                                
+                                </div>
+                                <p:link href="/user/#{userPage.userName}" styleClass="mini-profile-name" 
+                                    value="#{userPage.profile.fullName != null ? userPage.profile.fullName : userPage.username}" />
+                                <span class="mini-profile-view">@#{userPage.userName}</span>
+                                <span id="user-location"></span>
+                            </div>
+                            <ul class="module profile-data">
+                                <li>
+                                    <a href="#" class="open-profile-modal">
+                                        <span class="posts-count"><h:outputText value="&#160;" /></span>
+                                        <span class="label">Posts</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#following" class="open-following-page">
+                                        <span class="following-count"><h:outputText value="&#160;" /></span>
+                                        <span class="label">Following</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="open-followers">
+                                        <span class="followers-count"><h:outputText value="&#160;" /></span>
+                                        <span class="label">Followers</span>
+                                    </a>
+                                </li>
+                            </ul>                            
+                        </div>
+                </div>
 
-            <h1>Hola, <h:outputText value="#{userPage.userName}" /></h1>
-            <ul>
-                <li>Email: <h:outputText value="#{userPage.profile.email}" /></li>
-                <li>Numero de Mensajes: <h:outputText value="#{userPage.profile.numPosts}" /></li>
-                <li>Ubicacion: <h:outputText value="#{userPage.profile.location}" /></li>
-            </ul>
-            <table>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Mensaje</th>
-                </tr>
-                <ui:repeat value="#{userPage.profile.postCollection}" var="post">
-                <tr>
-                    <td>#{post.pubDate}</td>
-                    <td>#{post.text}</td>
-                </tr>
-                </ui:repeat>
-            </table>
+                <div class="postboard chirp-half">
+                        <h2>
+                            <span>Chirpboard</span>
+                        </h2>
 
+                        <ol id="posts" class="postboard-posts">
+                            <ui:repeat value="#{userPage.profile.postCollection}" var="chirp">
+                            <!-- use "post-template" here -->
+                            <li id="post-template" class="module post" data-time="">
+                                <div class="post-data" data-userpost="" data-content_to_rt="" data-content_to_sigrt=""
+                                     data-screen-name="" data-id="" data-text="" data-text-mentions="">
+                                    <div class="post-photo"><img class="avatar" src="http://lorempixel.com/48/48/people" alt="user-photo"/></div>
+                                    <div class="post-info">
+                                        <p:link href="/user/#{chirp.idAuthor.userName.userName}" styleClass="post-info-name" value="#{chirp.idAuthor.fullName}" />
+                                        <span class="post-info-tag">@#{chirp.idAuthor.userName.userName}</span>
+                                        <a class="post-info-time">
+                                            <h:outputText value="#{homePage.elapsed(chirp.pubDate)}" />
+                                            <span class="post-location" data-lat="#{chirp.latitude}" data-lng="#{chirp.longitude}"></span>
+                                        </a>
+                                    </div>
+                                    <p class="post-text"><h:outputText value="#{chirp.text}" /></p>
+                                    <div class="post-context" style="display: none;"></div>
+                                    <span class="post-expand">Expand</span>
+
+                                    <div class="post-interactions">
+                                        <span class="post-reply">Reply</span>
+                                        <span class="post-propagate">Retransmit</span>
+                                        <!--span class="post-favorite">Favorite</span-->
+                                    </div>
+                                    <div class="expanded-content">
+                                        <ul class="post-stats">
+                                            <li class="stat-count">
+                                                    <span class="stat-count-value">55</span>
+                                                    <span>Retransmits</span>
+                                            </li>
+                                            <li class="stat-count">
+                                                    <span class="stat-count-value">7</span>
+                                                    <span>Favs</span>
+                                            </li>
+                                            <li class="avatar-row">
+                                                <!-- use "avatar-row-template" here -->
+                                                <a id="avatar-row-template" class="open-profile-modal" href="">
+                                                   <img class="size24" src="http://lorempixel.com/48/48/people" alt="user-photo"/>
+                                                   <span class="user-name-tooltip"></span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="post-reply-content" style="display: block;">
+                                            <form class="post-area-reply">
+                                                <textarea placeholder="Reply..."></textarea>
+                                                <div class="post-area-extras">
+                                                    <span class="post-area-remaining">256</span>
+                                                    <button class="undo-unicode">undo</button>
+                                                    <button class="post-submit">post</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div> <!-- expanded-content -->
+                                </div> <!-- post-data -->
+                            </li> <!-- post-template -->
+                            </ui:repeat>
+                        </ol>
+                </div>
+                <div class="chirp-quarter">
+                        <div class="module mini-profile">
+                            <div style="text-align: center">Some content here</div>
+                        </div>                   
+                </div>
             </p:panel>
-            <p:panel rendered="#{empty userPage.profile}">            
-                <p>El usuario <strong><h:outputText value="#{userPage.username}" /></strong> no existe.</p>
-            </p:panel>
+            </div>            
         </div>
+              
     </ui:define>
 
 </ui:composition>

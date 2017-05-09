@@ -8,10 +8,12 @@
     <ui:define name="title">Chirper</ui:define>
   
     <ui:define name="content">
+        <ui:include src="/WEB-INF/templates/nav.xhtml" />
+        
         <div class="wrapper">            
             <div class="chirp-row">
                 <div class="chirp-quarter">
-                    <!-- THEME NIN added sub-menu (mentions, messages and edit profile) 
+                    <!-- sub-menu (mentions, messages and edit profile) 
                     <ul class="mini-profile-indicators selectable_theme theme_nin">
                         <li class="userMenu-connections">
                             <a href="#" title="Mentions"><span class="messages-qtd" style="display:none;">0</span><span>Mentions</span></a>
@@ -28,8 +30,9 @@
                                 <h:graphicImage value="http://lorempixel.com/48/48/people" alt="user photo"/>                                
                             </div>
                             <p:link href="/user/#{homePage.user.userName}" styleClass="mini-profile-name" 
-                                value="#{homePage.perfil.fullName != null ? homePage.perfil.fullName : homePage.user.userName}" />
+                                value="#{homePage.profile.fullName != null ? homePage.profile.fullName : homePage.user.userName}" />
                             <span class="mini-profile-view">@#{homePage.user.userName}</span>
+                            <span id="user-location"></span>
                         </div>
                         <ul class="module profile-data">
                             <li>
@@ -95,7 +98,6 @@
                                 <p class="post-text"><h:outputText value="#{post.text}" /></p>
                                 <div class="post-context" style="display: none;"></div>
                                 <span class="post-expand">Expand</span>
-                                <!-- elementos de interação com o post que são exibidos no hover -->
 
                                 <div class="post-interactions">
                                     <span class="post-reply">Reply</span>
