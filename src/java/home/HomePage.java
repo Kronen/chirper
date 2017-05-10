@@ -70,20 +70,26 @@ public class HomePage implements Serializable {
         this.newPost = post;
     }
     
-    public void loadProfile(String username) {        
-        ProfileJpaController profileC = new ProfileJpaController(emf);
-        profile = profileC.findProfileByUserName(username);
-    }
+    
     
     public List getPostsFromFollowees() {
         PostFolloweesJpaController pfC = new PostFolloweesJpaController(emf);
         return pfC.findPostsFollowees(profile.getId());
     }
     
+    public String getTheme() {
+        return "blue-theme";
+    }
+    
 //    public List countPosts() {
 //        PostJpaController postC = new PostJpaController(emf);
 //        return postC.getPostCountByAuthor(profile.getId());
 //    }
+    
+    public void loadProfile(String username) {        
+        ProfileJpaController profileC = new ProfileJpaController(emf);
+        profile = profileC.findProfileByUserName(username);
+    }
     
     public String elapsed(Date date) {
         

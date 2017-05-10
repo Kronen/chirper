@@ -1,4 +1,25 @@
+// Notifica al usuario cuando ha enviado un chirp (mensaje)
+function handlePostSubmited(area) {
+    $('.post-area-new textarea').val('');
+    if (area === 'new-post')
+        $('.post-area-new').removeClass('open');
+    $.notify("¡Tu Chirp ha sido enviado!",
+            {
+                clickToHide: true,
+                autoHide: true,
+                autoHideDelay: 5000,
+                position: 'top center',
+                className: 'success',
+                showAnimation: 'slideDown',
+                showDuration: 400,
+                hideAnimation: 'slideUp',
+                hideDuration: 200
+            }
+    );
+}
+
 $(function () {
+    $('.post-location, .post-info-time').hide();
 
     $('.userMenu-config').click(function(e) {
         e.stopPropagation();
@@ -49,24 +70,4 @@ $(function () {
                 break;
         }
     });
-    
-    // Notifica al usuario cuando ha enviado un chirp (mensaje)
-    function handlePostSubmited(area) {
-        $('.post-area-new textarea').val('');
-        if (area === 'new-post')
-            $('.post-area-new').removeClass('open');
-        $.notify("¡Tu Chirp ha sido enviado!",
-                {
-                    clickToHide: true,
-                    autoHide: true,
-                    autoHideDelay: 5000,
-                    position: 'top center',
-                    className: 'success',
-                    showAnimation: 'slideDown',
-                    showDuration: 400,
-                    hideAnimation: 'slideUp',
-                    hideDuration: 200
-                }
-        );
-    }
 });

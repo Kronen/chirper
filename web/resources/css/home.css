@@ -460,6 +460,7 @@ a:hover {
     opacity: .6
 }
 .post-info-time {
+    display: none;
     float: right;
     font-size: 12px;
     margin: 4px 8px 0;

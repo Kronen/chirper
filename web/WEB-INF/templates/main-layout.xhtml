@@ -15,7 +15,6 @@
     <h:body>    
         <h:outputStylesheet library="css" name="normalize.css" />
         <h:outputStylesheet library="css" name="reset-primefaces.css" />
-        <h:outputStylesheet library="css" name="home.css" />
 
         <ui:insert name="content">Error loading content</ui:insert> 
 
@@ -79,8 +78,12 @@
                             var $elem = $(this);
                             var lat = $elem.data('lat');
                             var lng = $elem.data('lng');
-                            codeLatLng(lat, lng, function(loc) { $elem.text(' · ' + loc);});                            
+                            codeLatLng(lat, lng, function(loc) { 
+                                $elem.text(' · ' + loc);                                
+                            });                            
                         });
+                        $('.post-location, .post-info-time').fadeIn();
+                        
                     },
                     function(error) {
                         // no hacer nada

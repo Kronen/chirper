@@ -1,0 +1,34 @@
+html, body {
+	background: #d2dbf1;
+}
+
+.userMenu {
+	box-shadow: 0px 0px 5px 2px rgba(200,200,200,1);
+}
+.wrapper {
+    background: #e0e6f5;
+    box-shadow: 0px 0px 8px 0px rgba(200,200,200,1);
+}
+.userMenu li.current {
+    background-color: #7691ce;
+}
+
+.postboard {
+	background: rgba(255, 255, 255, .5);
+}
+
+.postboard h2 {
+    background: #7691ce;
+}
+
+.post-info-name, .mini-profile-name {
+    color: #7691ce;
+}
+
+.post-interactions span, .post-expand, .prompt-wrapper .switch-mode {
+    color: #5e72a4;
+}
+
+.post-expand:hover {
+	font-weight: bold !important;
+}
