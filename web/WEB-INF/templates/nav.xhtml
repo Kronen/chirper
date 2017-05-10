@@ -17,7 +17,7 @@
                                 <img src="http://lorempixel.com/48/48/people" alt="user-photo"/>
                             </div>
                             <p:link href="user/#{homePage.user.userName}" styleClass="mini-profile-name"
-                                    value="#{homePage.profile.fullName != null ? homePage.profile.fullName : homePage.profile.userName}"/>
+                                    value="#{homePage.profile.fullName != null ? homePage.profile.fullName : homePage.user.userName}"/>
                             <span class="mini-profile-view">@#{homePage.user.userName}</span>
                         </div>
                         <h:form>
@@ -56,8 +56,8 @@
                 <div class="search-results dialog-modal">
                     <ul class="userMenu-search-sugestions" style="display: none;">
                         <li><a href="#">Fulano</a></li>
-                        <li><a href="#">Outro Fulano</a></li>
-                        <li><a href="#">Mais outro</a></li>
+                        <li><a href="#">Otro Fulano</a></li>
+                        <li><a href="#">Y otro</a></li>
                     </ul>
                     <ul class="userMenu-search-profiles"></ul>
                 </div>

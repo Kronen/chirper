@@ -45,12 +45,12 @@ public class Private implements Serializable {
     @Basic(optional = false)
     @Column(name = "marked_read")
     private boolean markedRead;
-    @JoinColumn(name = "sender_id", referencedColumnName = "id")
+    @JoinColumn(name = "sender", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Profile senderId;
-    @JoinColumn(name = "receiver_id", referencedColumnName = "id")
+    private Profile sender;
+    @JoinColumn(name = "receiver", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Profile receiverId;
+    private Profile receiver;
 
     public Private() {
     }
@@ -89,20 +89,20 @@ public class Private implements Serializable {
         this.markedRead = markedRead;
     }
 
-    public Profile getSenderId() {
-        return senderId;
+    public Profile getSender() {
+        return sender;
     }
 
-    public void setSenderId(Profile senderId) {
-        this.senderId = senderId;
+    public void setSender(Profile sender) {
+        this.sender = sender;
     }
 
-    public Profile getReceiverId() {
-        return receiverId;
+    public Profile getReceiver() {
+        return receiver;
     }
 
-    public void setReceiverId(Profile receiverId) {
-        this.receiverId = receiverId;
+    public void setReceiver(Profile receiver) {
+        this.receiver = receiver;
     }
 
     @Override

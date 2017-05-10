@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "PostFollowees.findByFollower", query = "SELECT p FROM PostFollowees p WHERE p.follower = :follower")
     , @NamedQuery(name = "PostFollowees.findByFollowee", query = "SELECT p FROM PostFollowees p WHERE p.followee = :followee")
     , @NamedQuery(name = "PostFollowees.findByText", query = "SELECT p FROM PostFollowees p WHERE p.text = :text")
-    , @NamedQuery(name = "PostFollowees.findByOriginalPostId", query = "SELECT p FROM PostFollowees p WHERE p.originalPostId = :originalPostId")
+    , @NamedQuery(name = "PostFollowees.findByOriginalPost", query = "SELECT p FROM PostFollowees p WHERE p.originalPost = :originalPost")
     , @NamedQuery(name = "PostFollowees.findByPubDate", query = "SELECT p FROM PostFollowees p WHERE p.pubDate = :pubDate")
     , @NamedQuery(name = "PostFollowees.findByLatitude", query = "SELECT p FROM PostFollowees p WHERE p.latitude = :latitude")
     , @NamedQuery(name = "PostFollowees.findByLongitude", query = "SELECT p FROM PostFollowees p WHERE p.longitude = :longitude")
@@ -57,8 +57,8 @@ public class PostFollowees implements Serializable {
     @Basic(optional = false)
     @Column(name = "text")
     private String text;
-    @Column(name = "original_post_id")
-    private Integer originalPostId;
+    @Column(name = "original_post")
+    private Integer originalPost;
     @Basic(optional = false)
     @Column(name = "pub_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -115,12 +115,12 @@ public class PostFollowees implements Serializable {
         this.text = text;
     }
 
-    public Integer getOriginalPostId() {
-        return originalPostId;
+    public Integer getOriginalPost() {
+        return originalPost;
     }
 
-    public void setOriginalPostId(Integer originalPostId) {
-        this.originalPostId = originalPostId;
+    public void setOriginalPost(Integer originalPost) {
+        this.originalPost = originalPost;
     }
 
     public Date getPubDate() {

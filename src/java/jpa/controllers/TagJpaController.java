@@ -6,15 +6,17 @@
 package jpa.controllers;
 
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import jpa.controllers.exceptions.NonexistentEntityException;
 import jpa.entities.Post;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import jpa.controllers.exceptions.NonexistentEntityException;
 import jpa.entities.Tag;
 
 /**
@@ -33,19 +35,23 @@ public class TagJpaController implements Serializable {
     }
 
     public void create(Tag tag) {
+        if (tag.getPostCollection() == null) {
+            tag.setPostCollection(new ArrayList<Post>());
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Post idPost = tag.getIdPost();
-            if (idPost != null) {
-                idPost = em.getReference(idPost.getClass(), idPost.getId());
-                tag.setIdPost(idPost);
+            Collection<Post> attachedPostCollection = new ArrayList<Post>();
+            for (Post postCollectionPostToAttach : tag.getPostCollection()) {
+                postCollectionPostToAttach = em.getReference(postCollectionPostToAttach.getClass(), postCollectionPostToAttach.getId());
+                attachedPostCollection.add(postCollectionPostToAttach);
             }
+            tag.setPostCollection(attachedPostCollection);
             em.persist(tag);
-            if (idPost != null) {
-                idPost.getTagCollection().add(tag);
-                idPost = em.merge(idPost);
+            for (Post postCollectionPost : tag.getPostCollection()) {
+                postCollectionPost.getTagCollection().add(tag);
+                postCollectionPost = em.merge(postCollectionPost);
             }
             em.getTransaction().commit();
         } finally {
@@ -61,20 +67,27 @@ public class TagJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Tag persistentTag = em.find(Tag.class, tag.getId());
-            Post idPostOld = persistentTag.getIdPost();
-            Post idPostNew = tag.getIdPost();
-            if (idPostNew != null) {
-                idPostNew = em.getReference(idPostNew.getClass(), idPostNew.getId());
-                tag.setIdPost(idPostNew);
+            Collection<Post> postCollectionOld = persistentTag.getPostCollection();
+            Collection<Post> postCollectionNew = tag.getPostCollection();
+            Collection<Post> attachedPostCollectionNew = new ArrayList<Post>();
+            for (Post postCollectionNewPostToAttach : postCollectionNew) {
+                postCollectionNewPostToAttach = em.getReference(postCollectionNewPostToAttach.getClass(), postCollectionNewPostToAttach.getId());
+                attachedPostCollectionNew.add(postCollectionNewPostToAttach);
             }
+            postCollectionNew = attachedPostCollectionNew;
+            tag.setPostCollection(postCollectionNew);
             tag = em.merge(tag);
-            if (idPostOld != null && !idPostOld.equals(idPostNew)) {
-                idPostOld.getTagCollection().remove(tag);
-                idPostOld = em.merge(idPostOld);
+            for (Post postCollectionOldPost : postCollectionOld) {
+                if (!postCollectionNew.contains(postCollectionOldPost)) {
+                    postCollectionOldPost.getTagCollection().remove(tag);
+                    postCollectionOldPost = em.merge(postCollectionOldPost);
+                }
             }
-            if (idPostNew != null && !idPostNew.equals(idPostOld)) {
-                idPostNew.getTagCollection().add(tag);
-                idPostNew = em.merge(idPostNew);
+            for (Post postCollectionNewPost : postCollectionNew) {
+                if (!postCollectionOld.contains(postCollectionNewPost)) {
+                    postCollectionNewPost.getTagCollection().add(tag);
+                    postCollectionNewPost = em.merge(postCollectionNewPost);
+                }
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -105,10 +118,10 @@ public class TagJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The tag with id " + id + " no longer exists.", enfe);
             }
-            Post idPost = tag.getIdPost();
-            if (idPost != null) {
-                idPost.getTagCollection().remove(tag);
-                idPost = em.merge(idPost);
+            Collection<Post> postCollection = tag.getPostCollection();
+            for (Post postCollectionPost : postCollection) {
+                postCollectionPost.getTagCollection().remove(tag);
+                postCollectionPost = em.merge(postCollectionPost);
             }
             em.remove(tag);
             em.getTransaction().commit();

@@ -39,7 +39,7 @@ public class ProfileJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Profile profile) throws IllegalOrphanException {
+    public void create(Profile profile) {
         if (profile.getProfileCollection() == null) {
             profile.setProfileCollection(new ArrayList<Profile>());
         }
@@ -55,28 +55,14 @@ public class ProfileJpaController implements Serializable {
         if (profile.getPostCollection() == null) {
             profile.setPostCollection(new ArrayList<Post>());
         }
-        List<String> illegalOrphanMessages = null;
-        User userNameOrphanCheck = profile.getUserName();
-        if (userNameOrphanCheck != null) {
-            Profile oldProfileOfUserName = userNameOrphanCheck.getProfile();
-            if (oldProfileOfUserName != null) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("The User " + userNameOrphanCheck + " already has an item of type Profile whose userName column cannot be null. Please make another selection for the userName field.");
-            }
-        }
-        if (illegalOrphanMessages != null) {
-            throw new IllegalOrphanException(illegalOrphanMessages);
-        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            User userName = profile.getUserName();
-            if (userName != null) {
-                userName = em.getReference(userName.getClass(), userName.getUserName());
-                profile.setUserName(userName);
+            User user = profile.getUser();
+            if (user != null) {
+                user = em.getReference(user.getClass(), user.getUserName());
+                profile.setUser(user);
             }
             Collection<Profile> attachedProfileCollection = new ArrayList<Profile>();
             for (Profile profileCollectionProfileToAttach : profile.getProfileCollection()) {
@@ -109,9 +95,9 @@ public class ProfileJpaController implements Serializable {
             }
             profile.setPostCollection(attachedPostCollection);
             em.persist(profile);
-            if (userName != null) {
-                userName.setProfile(profile);
-                userName = em.merge(userName);
+            if (user != null) {
+                user.getProfileCollection().add(profile);
+                user = em.merge(user);
             }
             for (Profile profileCollectionProfile : profile.getProfileCollection()) {
                 profileCollectionProfile.getProfileCollection().add(profile);
@@ -122,30 +108,30 @@ public class ProfileJpaController implements Serializable {
                 profileCollection1Profile = em.merge(profileCollection1Profile);
             }
             for (Private privateCollectionPrivate : profile.getPrivateCollection()) {
-                Profile oldSenderIdOfPrivateCollectionPrivate = privateCollectionPrivate.getSenderId();
-                privateCollectionPrivate.setSenderId(profile);
+                Profile oldSenderOfPrivateCollectionPrivate = privateCollectionPrivate.getSender();
+                privateCollectionPrivate.setSender(profile);
                 privateCollectionPrivate = em.merge(privateCollectionPrivate);
-                if (oldSenderIdOfPrivateCollectionPrivate != null) {
-                    oldSenderIdOfPrivateCollectionPrivate.getPrivateCollection().remove(privateCollectionPrivate);
-                    oldSenderIdOfPrivateCollectionPrivate = em.merge(oldSenderIdOfPrivateCollectionPrivate);
+                if (oldSenderOfPrivateCollectionPrivate != null) {
+                    oldSenderOfPrivateCollectionPrivate.getPrivateCollection().remove(privateCollectionPrivate);
+                    oldSenderOfPrivateCollectionPrivate = em.merge(oldSenderOfPrivateCollectionPrivate);
                 }
             }
             for (Private privateCollection1Private : profile.getPrivateCollection1()) {
-                Profile oldReceiverIdOfPrivateCollection1Private = privateCollection1Private.getReceiverId();
-                privateCollection1Private.setReceiverId(profile);
+                Profile oldReceiverOfPrivateCollection1Private = privateCollection1Private.getReceiver();
+                privateCollection1Private.setReceiver(profile);
                 privateCollection1Private = em.merge(privateCollection1Private);
-                if (oldReceiverIdOfPrivateCollection1Private != null) {
-                    oldReceiverIdOfPrivateCollection1Private.getPrivateCollection1().remove(privateCollection1Private);
-                    oldReceiverIdOfPrivateCollection1Private = em.merge(oldReceiverIdOfPrivateCollection1Private);
+                if (oldReceiverOfPrivateCollection1Private != null) {
+                    oldReceiverOfPrivateCollection1Private.getPrivateCollection1().remove(privateCollection1Private);
+                    oldReceiverOfPrivateCollection1Private = em.merge(oldReceiverOfPrivateCollection1Private);
                 }
             }
             for (Post postCollectionPost : profile.getPostCollection()) {
-                Profile oldIdAuthorOfPostCollectionPost = postCollectionPost.getIdAuthor();
-                postCollectionPost.setIdAuthor(profile);
+                Profile oldAuthorOfPostCollectionPost = postCollectionPost.getAuthor();
+                postCollectionPost.setAuthor(profile);
                 postCollectionPost = em.merge(postCollectionPost);
-                if (oldIdAuthorOfPostCollectionPost != null) {
-                    oldIdAuthorOfPostCollectionPost.getPostCollection().remove(postCollectionPost);
-                    oldIdAuthorOfPostCollectionPost = em.merge(oldIdAuthorOfPostCollectionPost);
+                if (oldAuthorOfPostCollectionPost != null) {
+                    oldAuthorOfPostCollectionPost.getPostCollection().remove(postCollectionPost);
+                    oldAuthorOfPostCollectionPost = em.merge(oldAuthorOfPostCollectionPost);
                 }
             }
             em.getTransaction().commit();
@@ -162,8 +148,8 @@ public class ProfileJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Profile persistentProfile = em.find(Profile.class, profile.getId());
-            User userNameOld = persistentProfile.getUserName();
-            User userNameNew = profile.getUserName();
+            User userOld = persistentProfile.getUser();
+            User userNew = profile.getUser();
             Collection<Profile> profileCollectionOld = persistentProfile.getProfileCollection();
             Collection<Profile> profileCollectionNew = profile.getProfileCollection();
             Collection<Profile> profileCollection1Old = persistentProfile.getProfileCollection1();
@@ -175,21 +161,12 @@ public class ProfileJpaController implements Serializable {
             Collection<Post> postCollectionOld = persistentProfile.getPostCollection();
             Collection<Post> postCollectionNew = profile.getPostCollection();
             List<String> illegalOrphanMessages = null;
-            if (userNameNew != null && !userNameNew.equals(userNameOld)) {
-                Profile oldProfileOfUserName = userNameNew.getProfile();
-                if (oldProfileOfUserName != null) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("The User " + userNameNew + " already has an item of type Profile whose userName column cannot be null. Please make another selection for the userName field.");
-                }
-            }
             for (Private privateCollectionOldPrivate : privateCollectionOld) {
                 if (!privateCollectionNew.contains(privateCollectionOldPrivate)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Private " + privateCollectionOldPrivate + " since its senderId field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Private " + privateCollectionOldPrivate + " since its sender field is not nullable.");
                 }
             }
             for (Private privateCollection1OldPrivate : privateCollection1Old) {
@@ -197,7 +174,7 @@ public class ProfileJpaController implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Private " + privateCollection1OldPrivate + " since its receiverId field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Private " + privateCollection1OldPrivate + " since its receiver field is not nullable.");
                 }
             }
             for (Post postCollectionOldPost : postCollectionOld) {
@@ -205,15 +182,15 @@ public class ProfileJpaController implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Post " + postCollectionOldPost + " since its idAuthor field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Post " + postCollectionOldPost + " since its author field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            if (userNameNew != null) {
-                userNameNew = em.getReference(userNameNew.getClass(), userNameNew.getUserName());
-                profile.setUserName(userNameNew);
+            if (userNew != null) {
+                userNew = em.getReference(userNew.getClass(), userNew.getUserName());
+                profile.setUser(userNew);
             }
             Collection<Profile> attachedProfileCollectionNew = new ArrayList<Profile>();
             for (Profile profileCollectionNewProfileToAttach : profileCollectionNew) {
@@ -251,13 +228,13 @@ public class ProfileJpaController implements Serializable {
             postCollectionNew = attachedPostCollectionNew;
             profile.setPostCollection(postCollectionNew);
             profile = em.merge(profile);
-            if (userNameOld != null && !userNameOld.equals(userNameNew)) {
-                userNameOld.setProfile(null);
-                userNameOld = em.merge(userNameOld);
+            if (userOld != null && !userOld.equals(userNew)) {
+                userOld.getProfileCollection().remove(profile);
+                userOld = em.merge(userOld);
             }
-            if (userNameNew != null && !userNameNew.equals(userNameOld)) {
-                userNameNew.setProfile(profile);
-                userNameNew = em.merge(userNameNew);
+            if (userNew != null && !userNew.equals(userOld)) {
+                userNew.getProfileCollection().add(profile);
+                userNew = em.merge(userNew);
             }
             for (Profile profileCollectionOldProfile : profileCollectionOld) {
                 if (!profileCollectionNew.contains(profileCollectionOldProfile)) {
@@ -285,34 +262,34 @@ public class ProfileJpaController implements Serializable {
             }
             for (Private privateCollectionNewPrivate : privateCollectionNew) {
                 if (!privateCollectionOld.contains(privateCollectionNewPrivate)) {
-                    Profile oldSenderIdOfPrivateCollectionNewPrivate = privateCollectionNewPrivate.getSenderId();
-                    privateCollectionNewPrivate.setSenderId(profile);
+                    Profile oldSenderOfPrivateCollectionNewPrivate = privateCollectionNewPrivate.getSender();
+                    privateCollectionNewPrivate.setSender(profile);
                     privateCollectionNewPrivate = em.merge(privateCollectionNewPrivate);
-                    if (oldSenderIdOfPrivateCollectionNewPrivate != null && !oldSenderIdOfPrivateCollectionNewPrivate.equals(profile)) {
-                        oldSenderIdOfPrivateCollectionNewPrivate.getPrivateCollection().remove(privateCollectionNewPrivate);
-                        oldSenderIdOfPrivateCollectionNewPrivate = em.merge(oldSenderIdOfPrivateCollectionNewPrivate);
+                    if (oldSenderOfPrivateCollectionNewPrivate != null && !oldSenderOfPrivateCollectionNewPrivate.equals(profile)) {
+                        oldSenderOfPrivateCollectionNewPrivate.getPrivateCollection().remove(privateCollectionNewPrivate);
+                        oldSenderOfPrivateCollectionNewPrivate = em.merge(oldSenderOfPrivateCollectionNewPrivate);
                     }
                 }
             }
             for (Private privateCollection1NewPrivate : privateCollection1New) {
                 if (!privateCollection1Old.contains(privateCollection1NewPrivate)) {
-                    Profile oldReceiverIdOfPrivateCollection1NewPrivate = privateCollection1NewPrivate.getReceiverId();
-                    privateCollection1NewPrivate.setReceiverId(profile);
+                    Profile oldReceiverOfPrivateCollection1NewPrivate = privateCollection1NewPrivate.getReceiver();
+                    privateCollection1NewPrivate.setReceiver(profile);
                     privateCollection1NewPrivate = em.merge(privateCollection1NewPrivate);
-                    if (oldReceiverIdOfPrivateCollection1NewPrivate != null && !oldReceiverIdOfPrivateCollection1NewPrivate.equals(profile)) {
-                        oldReceiverIdOfPrivateCollection1NewPrivate.getPrivateCollection1().remove(privateCollection1NewPrivate);
-                        oldReceiverIdOfPrivateCollection1NewPrivate = em.merge(oldReceiverIdOfPrivateCollection1NewPrivate);
+                    if (oldReceiverOfPrivateCollection1NewPrivate != null && !oldReceiverOfPrivateCollection1NewPrivate.equals(profile)) {
+                        oldReceiverOfPrivateCollection1NewPrivate.getPrivateCollection1().remove(privateCollection1NewPrivate);
+                        oldReceiverOfPrivateCollection1NewPrivate = em.merge(oldReceiverOfPrivateCollection1NewPrivate);
                     }
                 }
             }
             for (Post postCollectionNewPost : postCollectionNew) {
                 if (!postCollectionOld.contains(postCollectionNewPost)) {
-                    Profile oldIdAuthorOfPostCollectionNewPost = postCollectionNewPost.getIdAuthor();
-                    postCollectionNewPost.setIdAuthor(profile);
+                    Profile oldAuthorOfPostCollectionNewPost = postCollectionNewPost.getAuthor();
+                    postCollectionNewPost.setAuthor(profile);
                     postCollectionNewPost = em.merge(postCollectionNewPost);
-                    if (oldIdAuthorOfPostCollectionNewPost != null && !oldIdAuthorOfPostCollectionNewPost.equals(profile)) {
-                        oldIdAuthorOfPostCollectionNewPost.getPostCollection().remove(postCollectionNewPost);
-                        oldIdAuthorOfPostCollectionNewPost = em.merge(oldIdAuthorOfPostCollectionNewPost);
+                    if (oldAuthorOfPostCollectionNewPost != null && !oldAuthorOfPostCollectionNewPost.equals(profile)) {
+                        oldAuthorOfPostCollectionNewPost.getPostCollection().remove(postCollectionNewPost);
+                        oldAuthorOfPostCollectionNewPost = em.merge(oldAuthorOfPostCollectionNewPost);
                     }
                 }
             }
@@ -351,29 +328,29 @@ public class ProfileJpaController implements Serializable {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Profile (" + profile + ") cannot be destroyed since the Private " + privateCollectionOrphanCheckPrivate + " in its privateCollection field has a non-nullable senderId field.");
+                illegalOrphanMessages.add("This Profile (" + profile + ") cannot be destroyed since the Private " + privateCollectionOrphanCheckPrivate + " in its privateCollection field has a non-nullable sender field.");
             }
             Collection<Private> privateCollection1OrphanCheck = profile.getPrivateCollection1();
             for (Private privateCollection1OrphanCheckPrivate : privateCollection1OrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Profile (" + profile + ") cannot be destroyed since the Private " + privateCollection1OrphanCheckPrivate + " in its privateCollection1 field has a non-nullable receiverId field.");
+                illegalOrphanMessages.add("This Profile (" + profile + ") cannot be destroyed since the Private " + privateCollection1OrphanCheckPrivate + " in its privateCollection1 field has a non-nullable receiver field.");
             }
             Collection<Post> postCollectionOrphanCheck = profile.getPostCollection();
             for (Post postCollectionOrphanCheckPost : postCollectionOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Profile (" + profile + ") cannot be destroyed since the Post " + postCollectionOrphanCheckPost + " in its postCollection field has a non-nullable idAuthor field.");
+                illegalOrphanMessages.add("This Profile (" + profile + ") cannot be destroyed since the Post " + postCollectionOrphanCheckPost + " in its postCollection field has a non-nullable author field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            User userName = profile.getUserName();
-            if (userName != null) {
-                userName.setProfile(null);
-                userName = em.merge(userName);
+            User user = profile.getUser();
+            if (user != null) {
+                user.getProfileCollection().remove(profile);
+                user = em.merge(user);
             }
             Collection<Profile> profileCollection = profile.getProfileCollection();
             for (Profile profileCollectionProfile : profileCollection) {

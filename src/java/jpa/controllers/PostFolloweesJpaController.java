@@ -143,11 +143,12 @@ public class PostFolloweesJpaController implements Serializable {
         }
     }
     
-    public List findPostFollowees(int id_follower) {
+    public List findPostsFollowees(int id_follower) {
         EntityManager em = getEntityManager();
         try {
             TypedQuery<PostFollowees> tq = em.createNamedQuery("PostFollowees.findByIdFollowerOrdered", PostFollowees.class)
-                    .setParameter("idFollower", id_follower);
+                    .setParameter("idFollower", id_follower)
+                    .setMaxResults(10);
 
             return tq.getResultList();
         } catch(NoResultException e) {

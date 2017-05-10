@@ -6,6 +6,7 @@
 package jpa.entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,9 +14,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -38,8 +40,8 @@ public class User implements Serializable {
     @Basic(optional = false)
     @Column(name = "password")
     private String password;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "userName")
-    private Profile profile;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Collection<Profile> profileCollection;
 
     public User() {
     }
@@ -69,12 +71,13 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Profile getProfile() {
-        return profile;
+    @XmlTransient
+    public Collection<Profile> getProfileCollection() {
+        return profileCollection;
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public void setProfileCollection(Collection<Profile> profileCollection) {
+        this.profileCollection = profileCollection;
     }
 
     @Override

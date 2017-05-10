@@ -17,9 +17,6 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
-import jpa.controllers.exceptions.IllegalOrphanException;
 import jpa.controllers.exceptions.NonexistentEntityException;
 import jpa.entities.Post;
 
@@ -46,10 +43,10 @@ public class PostJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Profile idAuthor = post.getIdAuthor();
-            if (idAuthor != null) {
-                idAuthor = em.getReference(idAuthor.getClass(), idAuthor.getId());
-                post.setIdAuthor(idAuthor);
+            Profile author = post.getAuthor();
+            if (author != null) {
+                author = em.getReference(author.getClass(), author.getId());
+                post.setAuthor(author);
             }
             Collection<Tag> attachedTagCollection = new ArrayList<Tag>();
             for (Tag tagCollectionTagToAttach : post.getTagCollection()) {
@@ -58,18 +55,13 @@ public class PostJpaController implements Serializable {
             }
             post.setTagCollection(attachedTagCollection);
             em.persist(post);
-            if (idAuthor != null) {
-                idAuthor.getPostCollection().add(post);
-                idAuthor = em.merge(idAuthor);
+            if (author != null) {
+                author.getPostCollection().add(post);
+                author = em.merge(author);
             }
             for (Tag tagCollectionTag : post.getTagCollection()) {
-                Post oldIdPostOfTagCollectionTag = tagCollectionTag.getIdPost();
-                tagCollectionTag.setIdPost(post);
+                tagCollectionTag.getPostCollection().add(post);
                 tagCollectionTag = em.merge(tagCollectionTag);
-                if (oldIdPostOfTagCollectionTag != null) {
-                    oldIdPostOfTagCollectionTag.getTagCollection().remove(tagCollectionTag);
-                    oldIdPostOfTagCollectionTag = em.merge(oldIdPostOfTagCollectionTag);
-                }
             }
             em.getTransaction().commit();
         } finally {
@@ -79,31 +71,19 @@ public class PostJpaController implements Serializable {
         }
     }
 
-    public void edit(Post post) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(Post post) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             Post persistentPost = em.find(Post.class, post.getId());
-            Profile idAuthorOld = persistentPost.getIdAuthor();
-            Profile idAuthorNew = post.getIdAuthor();
+            Profile authorOld = persistentPost.getAuthor();
+            Profile authorNew = post.getAuthor();
             Collection<Tag> tagCollectionOld = persistentPost.getTagCollection();
             Collection<Tag> tagCollectionNew = post.getTagCollection();
-            List<String> illegalOrphanMessages = null;
-            for (Tag tagCollectionOldTag : tagCollectionOld) {
-                if (!tagCollectionNew.contains(tagCollectionOldTag)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Tag " + tagCollectionOldTag + " since its idPost field is not nullable.");
-                }
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            if (idAuthorNew != null) {
-                idAuthorNew = em.getReference(idAuthorNew.getClass(), idAuthorNew.getId());
-                post.setIdAuthor(idAuthorNew);
+            if (authorNew != null) {
+                authorNew = em.getReference(authorNew.getClass(), authorNew.getId());
+                post.setAuthor(authorNew);
             }
             Collection<Tag> attachedTagCollectionNew = new ArrayList<Tag>();
             for (Tag tagCollectionNewTagToAttach : tagCollectionNew) {
@@ -113,23 +93,24 @@ public class PostJpaController implements Serializable {
             tagCollectionNew = attachedTagCollectionNew;
             post.setTagCollection(tagCollectionNew);
             post = em.merge(post);
-            if (idAuthorOld != null && !idAuthorOld.equals(idAuthorNew)) {
-                idAuthorOld.getPostCollection().remove(post);
-                idAuthorOld = em.merge(idAuthorOld);
+            if (authorOld != null && !authorOld.equals(authorNew)) {
+                authorOld.getPostCollection().remove(post);
+                authorOld = em.merge(authorOld);
             }
-            if (idAuthorNew != null && !idAuthorNew.equals(idAuthorOld)) {
-                idAuthorNew.getPostCollection().add(post);
-                idAuthorNew = em.merge(idAuthorNew);
+            if (authorNew != null && !authorNew.equals(authorOld)) {
+                authorNew.getPostCollection().add(post);
+                authorNew = em.merge(authorNew);
+            }
+            for (Tag tagCollectionOldTag : tagCollectionOld) {
+                if (!tagCollectionNew.contains(tagCollectionOldTag)) {
+                    tagCollectionOldTag.getPostCollection().remove(post);
+                    tagCollectionOldTag = em.merge(tagCollectionOldTag);
+                }
             }
             for (Tag tagCollectionNewTag : tagCollectionNew) {
                 if (!tagCollectionOld.contains(tagCollectionNewTag)) {
-                    Post oldIdPostOfTagCollectionNewTag = tagCollectionNewTag.getIdPost();
-                    tagCollectionNewTag.setIdPost(post);
+                    tagCollectionNewTag.getPostCollection().add(post);
                     tagCollectionNewTag = em.merge(tagCollectionNewTag);
-                    if (oldIdPostOfTagCollectionNewTag != null && !oldIdPostOfTagCollectionNewTag.equals(post)) {
-                        oldIdPostOfTagCollectionNewTag.getTagCollection().remove(tagCollectionNewTag);
-                        oldIdPostOfTagCollectionNewTag = em.merge(oldIdPostOfTagCollectionNewTag);
-                    }
                 }
             }
             em.getTransaction().commit();
@@ -149,7 +130,7 @@ public class PostJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -161,21 +142,15 @@ public class PostJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The post with id " + id + " no longer exists.", enfe);
             }
-            List<String> illegalOrphanMessages = null;
-            Collection<Tag> tagCollectionOrphanCheck = post.getTagCollection();
-            for (Tag tagCollectionOrphanCheckTag : tagCollectionOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Post (" + post + ") cannot be destroyed since the Tag " + tagCollectionOrphanCheckTag + " in its tagCollection field has a non-nullable idPost field.");
+            Profile author = post.getAuthor();
+            if (author != null) {
+                author.getPostCollection().remove(post);
+                author = em.merge(author);
             }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            Profile idAuthor = post.getIdAuthor();
-            if (idAuthor != null) {
-                idAuthor.getPostCollection().remove(post);
-                idAuthor = em.merge(idAuthor);
+            Collection<Tag> tagCollection = post.getTagCollection();
+            for (Tag tagCollectionTag : tagCollection) {
+                tagCollectionTag.getPostCollection().remove(post);
+                tagCollectionTag = em.merge(tagCollectionTag);
             }
             em.remove(post);
             em.getTransaction().commit();
@@ -231,22 +206,5 @@ public class PostJpaController implements Serializable {
             em.close();
         }
     }
-
-    public List getPostCountByAuthor(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
-    public List findPostsByAuthor(int id_author) {
-        EntityManager em = getEntityManager();
-        try {
-            TypedQuery<Post> tq = em.createNamedQuery("Post.findByAuthor", Post.class)
-                    .setParameter("idAuthor", id_author);
-
-            return tq.getResultList();
-        } catch(NoResultException e) {
-            return null;
-        } finally {
-            em.close();
-        }
-    }
 }

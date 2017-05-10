@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/Chirper">
-  <Realm className="org.apache.catalina.realm.JDBCRealm" connectionName="proyecto" connectionPassword="proyecto" connectionURL="jdbc:mysql://localhost/proyecto" driverName="com.mysql.jdbc.Driver" roleNameCol="role_name" userCredCol="password" userNameCol="user_name" userRoleTable="user_role" userTable="user"/>
+  <Realm className="org.apache.catalina.realm.JDBCRealm" 
+         connectionName="proyecto" 
+         connectionPassword="proyecto" 
+         connectionURL="jdbc:mysql://localhost/chirper_db" 
+         driverName="com.mysql.jdbc.Driver" 
+         roleNameCol="role_name" 
+         userCredCol="password" 
+         userNameCol="user_name" 
+         userRoleTable="user_role" 
+         userTable="user"/>
 </Context>

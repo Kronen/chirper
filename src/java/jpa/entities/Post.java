@@ -10,17 +10,17 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -37,13 +37,12 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Post.findAll", query = "SELECT p FROM Post p")
     , @NamedQuery(name = "Post.findById", query = "SELECT p FROM Post p WHERE p.id = :id")
-    , @NamedQuery(name = "Post.findByOriginalPostId", query = "SELECT p FROM Post p WHERE p.originalPostId = :originalPostId")
+    , @NamedQuery(name = "Post.findByOriginalPost", query = "SELECT p FROM Post p WHERE p.originalPost = :originalPost")
     , @NamedQuery(name = "Post.findByText", query = "SELECT p FROM Post p WHERE p.text = :text")
     , @NamedQuery(name = "Post.findByPubDate", query = "SELECT p FROM Post p WHERE p.pubDate = :pubDate")
     , @NamedQuery(name = "Post.findByLatitude", query = "SELECT p FROM Post p WHERE p.latitude = :latitude")
     , @NamedQuery(name = "Post.findByLongitude", query = "SELECT p FROM Post p WHERE p.longitude = :longitude")
-    , @NamedQuery(name = "Post.findByLikes", query = "SELECT p FROM Post p WHERE p.likes = :likes")
-    , @NamedQuery(name = "Post.findByAuthor", query = "SELECT p FROM Post p WHERE p.idAuthor.id = :idAuthor ORDER BY p.pubDate DESC")})
+    , @NamedQuery(name = "Post.findByLikes", query = "SELECT p FROM Post p WHERE p.likes = :likes")})
 public class Post implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,8 +51,8 @@ public class Post implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Column(name = "original_post_id")
-    private Integer originalPostId;
+    @Column(name = "original_post")
+    private Integer originalPost;
     @Basic(optional = false)
     @Column(name = "text")
     private String text;
@@ -69,11 +68,14 @@ public class Post implements Serializable {
     @Basic(optional = false)
     @Column(name = "likes")
     private int likes;
-    @JoinColumn(name = "id_author", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Profile idAuthor;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPost")
+    @JoinTable(name = "post_tag", joinColumns = {
+        @JoinColumn(name = "post", referencedColumnName = "id")}, inverseJoinColumns = {
+        @JoinColumn(name = "tag", referencedColumnName = "id")})
+    @ManyToMany
     private Collection<Tag> tagCollection;
+    @JoinColumn(name = "author", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Profile author;
 
     public Post() {
     }
@@ -97,12 +99,12 @@ public class Post implements Serializable {
         this.id = id;
     }
 
-    public Integer getOriginalPostId() {
-        return originalPostId;
+    public Integer getOriginalPost() {
+        return originalPost;
     }
 
-    public void setOriginalPostId(Integer originalPostId) {
-        this.originalPostId = originalPostId;
+    public void setOriginalPost(Integer originalPost) {
+        this.originalPost = originalPost;
     }
 
     public String getText() {
@@ -145,14 +147,6 @@ public class Post implements Serializable {
         this.likes = likes;
     }
 
-    public Profile getIdAuthor() {
-        return idAuthor;
-    }
-
-    public void setIdAuthor(Profile idAuthor) {
-        this.idAuthor = idAuthor;
-    }
-
     @XmlTransient
     public Collection<Tag> getTagCollection() {
         return tagCollection;
@@ -160,6 +154,14 @@ public class Post implements Serializable {
 
     public void setTagCollection(Collection<Tag> tagCollection) {
         this.tagCollection = tagCollection;
+    }
+
+    public Profile getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Profile author) {
+        this.author = author;
     }
 
     @Override

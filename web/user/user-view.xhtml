@@ -72,8 +72,8 @@
                                      data-screen-name="" data-id="" data-text="" data-text-mentions="">
                                     <div class="post-photo"><img class="avatar" src="http://lorempixel.com/48/48/people" alt="user-photo"/></div>
                                     <div class="post-info">
-                                        <p:link href="/user/#{chirp.idAuthor.userName.userName}" styleClass="post-info-name" value="#{chirp.idAuthor.fullName}" />
-                                        <span class="post-info-tag">@#{chirp.idAuthor.userName.userName}</span>
+                                        <p:link href="/user/#{chirp.author.user.userName}" styleClass="post-info-name" value="#{chirp.author.fullName}" />
+                                        <span class="post-info-tag">@#{chirp.author.user.userName}</span>
                                         <a class="post-info-time">
                                             <h:outputText value="#{homePage.elapsed(chirp.pubDate)}" />
                                             <span class="post-location" data-lat="#{chirp.latitude}" data-lng="#{chirp.longitude}"></span>

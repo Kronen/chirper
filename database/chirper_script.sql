@@ -1,4 +1,7 @@
+SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -6,21 +9,102 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-CREATE DATABASE IF NOT EXISTS proyect_chirper DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE proyect_chirper;
+CREATE DATABASE IF NOT EXISTS chirper_db DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE chirper_db;
 
+DROP TABLE IF EXISTS role;
+CREATE TABLE `role` (
+  role_name varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO role (role_name) VALUES
+('admin'),
+('autorizado');
+
+DROP TABLE IF EXISTS user;
+CREATE TABLE `user` (
+  user_name varchar(25) NOT NULL,
+  password varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `user` (user_name, `password`) VALUES
+('admin', 'c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a'),
+('aweldont', '41fec74d6b0ca68c21965619ff46e326d0316ea9'),
+('bdavidovicsu', 'fed1b357326c1bcd372e656286c8147af5484f0f'),
+('bdrury1b', '4b6d63667ccfa865849dc446d9ebecb506845016'),
+('bkidgello', 'eecb14cc415ab8689314e7efa20a4387787daf43'),
+('blathee1d', '71ca18e5107b74e9468b89bc920e41bb75258d12'),
+('bpardyn', '122f9c158fbb3f9313ec0346465d541abba53ad4'),
+('ckilty15', '72344218403b7de78f558c43234febdace5bc943'),
+('clethardyp', 'e9eced6c9c816aeab0cf1399a76547621e9cb8bf'),
+('crosberg8', 'f314093befc87bf7cf56f0f338de6810c028b736'),
+('dbennison9', 'a65aad993fcce27e0d1a224600c3ca157dde8e36'),
+('dchoulesm', 'ad38cc678f5beda93c873174892ccd2265845401'),
+('diddendena', '9f2c4ee5cae147c5c83054255d5686926c3593e7'),
+('dmountstephen4', 'f077098819356e198bd0323f4c96dcf4433642ad'),
+('dskewis7', 'cc754bbf45725386dbf511bc441bfd4ace241572'),
+('ehardesk', '01d42aad1004e741bae1098b729076e69451e48d'),
+('fjoiner19', 'b16495111c8574d2483aff9e99e86e0350332b49'),
+('ggrinawayw', 'da3d6e712eb1c5a8504d6f479ecaf3e3389f2cc7'),
+('gwoolrich17', '470134de85a5e7fafd4a770b97118d8fb8a3c0ec'),
+('hbampfieldh', '2c8880d7736561dbb4bcfc375f6f6e89e79f1834'),
+('jmcvee1', 'f55254391f98752b016499259eed71da769caf09'),
+('jsturleyq', 'dcc89923c47b5a748e0aa6501273507ee2147303'),
+('kbaff14', '62b2ee6a175d0d06c2bf723d40847e8d184c4e2f'),
+('kronen', 'cbbd65d1f05fd994d8f3e8a5479777535e0ff299'),
+('ksimkovichb', 'd3629ed7b9c7dd33a3f5b66e48bcc76daa2143f6'),
+('lgayton18', '01b3ca0710d9e4fe347ba1233936ac68926ee04c'),
+('lgoldby11', 'a7cad65e755d4f62d9aab808a177a25fce1a40aa'),
+('lvosseg', '69d262e91b507a8a44c1ea46618043dd6842a71a'),
+('mcracknallz', '7db672e9d211ddcee3b196da2ab884c8e4bf6969'),
+('mmorefieldv', '09ef752165fa51121312730bbcf0ed1009364949'),
+('mpountney2', '1e26e05a65883b190247a69e1c9939b53102bba1'),
+('mpoxon10', '6060a4f040e147b5374c2f0ca3a5d3c9ce00028d'),
+('myepiskopov0', 'c82cb47d521b417599fca5d1312b2fd0960eba19'),
+('nbernardot16', 'de14474fd336b9839eb2ad452bb779a4f3e7165a'),
+('ncornilll', '4d34d6f6d851b2a17432f632b2a5bfb2e14759c0'),
+('nsabey13', '4cfecf4be7fde0da353389959052fa7f6c964926'),
+('pblewmenc', 'f1a4082861a36ffd8fa5d0c2382ace6acfafe71c'),
+('pcovills', '376163a05b73a7d0aca4603004bc80ad11e2ce18'),
+('pvarnsf', '30f6c7b35a4b66866532738f90bd02aa51d3adbd'),
+('pwoodruffed', '5fdbc254aa7c6367128f2c449de745b2540684f3'),
+('qmcgeaney1c', '6472304a301d27fccac2dcdb2935cffdc7095e2b'),
+('rmurkus5', '7f6e7e1cd6bce1c8db73c9867ed310ce57f239a6'),
+('rvaillanty', '8ce2d3d4dc38f0d57afb340fc9db66fa46cdd4fd'),
+('sciciari3', '4265bcf647f7b56d98ead9a731c719eec43ea479'),
+('scirlosj', 'eb272ec38ee3f52629cbbf83139189cdc2ec88a4'),
+('scodringtone', '274ac62f03ad4e0b4050260ce8e6fe882e4da7d8'),
+('sdu1a', '8ff706d37d856d161b67ea9cf9010aa59c12a69f'),
+('tbloorer', '4438445f9c3cdede0d6b446bd45ab184b410ff51'),
+('test', 'ee26b0dd4af7e749aa1a8ee3c10ae9923f618980'),
+('tmanfordx', 'cba9b13231ba6f7f7d141b53aa7da7c0cda50569'),
+('vjedrysik6', '49b9505a541fd3793a4f1614fedc986bf1ebfae0'),
+('wlipyeati', '822ecb6483e263b29e761323b87307b02606e8d0'),
+('wtopley12', '632b2e261f9a6c3daee2e41cb6844177cfe48a4d');
+
+DROP TABLE IF EXISTS user_role;
+CREATE TABLE user_role (
+  user_name varchar(25) NOT NULL,
+  role_name varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO user_role (user_name, role_name) VALUES
+('admin', 'admin'),
+('test', 'autorizado');
+
+DROP TABLE IF EXISTS `profile`;
 CREATE TABLE `profile` (
   id int(11) NOT NULL,
-  user_name varchar(25) NOT NULL,
+  user varchar(25) NOT NULL,
   email varchar(256) DEFAULT NULL,
   location varchar(40) DEFAULT NULL,
   website varchar(256) DEFAULT NULL,
-  num_posts int(11) DEFAULT '0',
-  full_name varchar(50) DEFAULT NULL,
-  photo varchar(40) DEFAULT NULL
+  full_name varchar(60) DEFAULT NULL,
+  num_posts int(11) NOT NULL DEFAULT '0',
+  photo varchar(25) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `profile` (id, user_name, email, location, website, num_posts, full_name, photo) VALUES
+INSERT INTO `profile` (id, user, email, location, website, num_posts, full_name, photo) VALUES
 (1, 'test', 'test@test.com', 'Malaga', NULL, 1, 'Test User', NULL),
 (2, 'kronen', 'kronenr@gmail.com', 'España', 'http://kronen.github.io', 0, 'Alberto G. Lagos', 'kronen.jpg'),
 (52, 'myepiskopov0', 'myepiskopov0@shinystat.com', 'myepiskopov0@dropbox.com', 'https://pbs.org/nisi/at/nibh/in/hac/habitasse/platea.jpg', 0, 'Maudie Yepiskopov', 'ac_tellus_semper.tiff'),
@@ -74,10 +158,21 @@ INSERT INTO `profile` (id, user_name, email, location, website, num_posts, full_
 (100, 'qmcgeaney1c', 'qmcgeaney1c@gravatar.com', 'qmcgeaney1c@instagram.com', 'http://opensource.org/in/hac/habitasse/platea/dictumst/etiam.jpg', 0, 'Queenie McGeaney', 'enim.png'),
 (101, 'blathee1d', 'blathee1d@ebay.com', 'blathee1d@sohu.com', 'http://scientificamerican.com/pretium/quis.html', 0, 'Berny Lathee', 'dis_parturient.tiff');
 
+
+DROP TABLE IF EXISTS follower_followee;
+CREATE TABLE follower_followee (
+  follower int(11) NOT NULL,
+  followee int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO follower_followee (follower, followee) VALUES
+(2, 1);
+
+DROP TABLE IF EXISTS post;
 CREATE TABLE post (
   id int(11) NOT NULL,
-  id_author int(11) NOT NULL,
-  original_post_id int(11) DEFAULT NULL,
+  author int(11) NOT NULL,
+  original_post int(11) DEFAULT NULL,
   text varchar(256) NOT NULL,
   pub_date datetime NOT NULL,
   latitude decimal(9,6) DEFAULT NULL,
@@ -85,145 +180,45 @@ CREATE TABLE post (
   likes int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO post (id, id_author, original_post_id, `text`, pub_date, latitude, longitude, likes) VALUES
-(1, 1, NULL, 'Si la depuración es el proceso de eliminar errores, entonces la programación debe ser el proceso de introducirlos
--- Edsger W. Dijkstra', '2017-03-26', NULL, NULL, 0),
-(2, 1, NULL, 'Este fue el primer post de todos los tiempos. #PrimerPost #Chirper', '2017-03-25', NULL, NULL, 0);
+INSERT INTO post (id, author, original_post, `text`, pub_date, latitude, longitude, likes) VALUES
+(1, 1, NULL, 'Esto es un mensaje', '2017-03-26 00:00:00', NULL, NULL, 0),
+(2, 1, NULL, 'Este fue el primer post de todos los tiempos.', '2017-03-25 00:00:00', NULL, NULL, 0),
+(3, 1, NULL, 'Primer post creado dinámicamente.', '2017-05-07 23:48:43', '36.725047', '-4.452898', 0),
+(4, 1, NULL, 'Segundo Post dinámico.', '2017-05-08 00:18:49', '36.725067', '-4.452899', 0),
+(5, 1, NULL, 'Otra prueba mas', '2017-05-08 00:23:42', '36.725084', '-4.452899', 0);
 
-CREATE TABLE `private` (
+DROP TABLE IF EXISTS private;
+CREATE TABLE private (
   id int(11) NOT NULL,
-  sender_id int(11) NOT NULL,
-  receiver_id int(11) NOT NULL,
+  sender int(11) NOT NULL,
+  receiver int(11) NOT NULL,
   text varchar(256) NOT NULL,
   marked_read tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `role` (
-  role_name varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO role (role_name) VALUES
-('admin'),
-('autorizado');
-
-CREATE TABLE follower_followee (
-  id_follower int(11) NOT NULL,
-  id_followee int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO follower_followee (id_follower, id_followee) VALUES
-(2, 1);
-
+DROP TABLE IF EXISTS tag;
 CREATE TABLE tag (
   id int(11) NOT NULL,
-  id_post int(11) NOT NULL,
-  tag varchar(256) NOT NULL
+  tag_name varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `user` (
-  user_name varchar(25) NOT NULL,
-  password varchar(40) NOT NULL
+DROP TABLE IF EXISTS post_tag;
+CREATE TABLE post_tag (
+  post int(11) NOT NULL,
+  tag int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `user` (user_name, `password`) VALUES
-('admin', 'admin'),
-('aweldont', 'aweldont'),
-('bdavidovicsu', 'bdavidovicsu'),
-('bdrury1b', 'bdrury1b'),
-('bkidgello', 'bkidgello'),
-('blathee1d', 'blathee1d'),
-('bpardyn', 'bpardyn'),
-('ckilty15', 'ckilty15'),
-('clethardyp', 'clethardyp'),
-('crosberg8', 'crosberg8'),
-('dbennison9', 'dbennison9'),
-('dchoulesm', 'dchoulesm'),
-('diddendena', 'diddendena'),
-('dmountstephen4', 'dmountstephen4'),
-('dskewis7', 'dskewis7'),
-('ehardesk', 'ehardesk'),
-('fjoiner19', 'fjoiner19'),
-('ggrinawayw', 'ggrinawayw'),
-('gwoolrich17', 'gwoolrich17'),
-('hbampfieldh', 'hbampfieldh'),
-('jmcvee1', 'jmcvee1'),
-('jsturleyq', 'jsturleyq'),
-('kbaff14', 'kbaff14'),
-('kronen', 'kronen'),
-('ksimkovichb', 'ksimkovichb'),
-('lgayton18', 'lgayton18'),
-('lgoldby11', 'lgoldby11'),
-('lvosseg', 'lvosseg'),
-('mcracknallz', 'mcracknallz'),
-('mmorefieldv', 'mmorefieldv'),
-('mpountney2', 'mpountney2'),
-('mpoxon10', 'mpoxon10'),
-('myepiskopov0', 'myepiskopov0'),
-('nbernardot16', 'nbernardot16'),
-('ncornilll', 'ncornilll'),
-('nsabey13', 'nsabey13'),
-('pblewmenc', 'pblewmenc'),
-('pcovills', 'pcovills'),
-('pvarnsf', 'pvarnsf'),
-('pwoodruffed', 'pwoodruffed'),
-('qmcgeaney1c', 'qmcgeaney1c'),
-('rmurkus5', 'rmurkus5'),
-('rvaillanty', 'rvaillanty'),
-('sciciari3', 'sciciari3'),
-('scirlosj', 'scirlosj'),
-('scodringtone', 'scodringtone'),
-('sdu1a', 'sdu1a'),
-('tbloorer', 'tbloorer'),
-('test', 'test'),
-('tmanfordx', 'tmanfordx'),
-('vjedrysik6', 'vjedrysik6'),
-('wlipyeati', 'wlipyeati'),
-('wtopley12', 'wtopley12');
-
-DROP TABLE IF EXISTS user_role;
-CREATE TABLE user_role (
-  user_name varchar(25) NOT NULL,
-  role_name varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO user_role (user_name, role_name) VALUES
-('admin', 'admin'),
-('test', 'autorizado');
 
 DROP VIEW IF EXISTS `post_followees`;
-CREATE ALGORITHM=UNDEFINED DEFINER=proyecto@localhost SQL SECURITY DEFINER VIEW proyect_chirper.post_followees  AS  (
-  select uuid() AS `id`, p1.`id` AS `id_follower`,p1.`user_name` AS `follower`,p2.`user_name` AS `followee`,p.`text` AS `text`,
-    p.`original_post_id` AS `original_post_id`,p.`pub_date` AS `pub_date`,p.`latitude` AS `latitude`,p.`longitude` AS `longitude`,
-    p.`likes` AS `likes` 
-    from (((`proyect_chirper`.`profile` p1 
-      join `proyect_chirper`.`follower_followee` f on((p1.`id` = f.`id_follower`))) 
-      join `proyect_chirper`.`profile` p2 on((p2.`id` = f.`id_followee`))) 
-      join `proyect_chirper`.`post` p on((p.`id_author` = p2.`id`)))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=proyecto@localhost SQL SECURITY DEFINER VIEW chirper_db.post_followees  AS  (
+  select uuid() AS `id`,p1.`id` AS id_follower,p1.user AS follower,p2.user AS followee,p.`text` AS `text`,
+    p.original_post AS original_post,p.pub_date AS pub_date,p.latitude AS latitude,p.longitude AS longitude,p.likes AS likes 
+    from (((`chirper_db`.`profile` p1 
+      join `chirper_db`.follower_followee f on((p1.`id` = f.follower))) 
+      join `chirper_db`.`profile` p2 on((p2.`id` = f.followee))) 
+      join `chirper_db`.post p on((p.author = p2.`id`))));
 
-
-ALTER TABLE `profile`
-  ADD PRIMARY KEY (id),
-  ADD UNIQUE KEY user_name (user_name);
-
-ALTER TABLE post
-  ADD PRIMARY KEY (id),
-  ADD KEY id_profile (id_author);
-
-ALTER TABLE private
-  ADD PRIMARY KEY (id),
-  ADD KEY sender_id (sender_id),
-  ADD KEY receiver_id (receiver_id);
-
-ALTER TABLE role
-  ADD PRIMARY KEY (role_name);
-
-ALTER TABLE follower_followee
-  ADD PRIMARY KEY (id_follower,id_followee),
-  ADD KEY siguiendo_ibfk_2 (id_followee);
-
-ALTER TABLE tag
-  ADD PRIMARY KEY (id),
-  ADD KEY id_post (id_post);
 
 ALTER TABLE `user`
   ADD PRIMARY KEY (user_name);
@@ -231,32 +226,64 @@ ALTER TABLE `user`
 ALTER TABLE user_role
   ADD PRIMARY KEY (user_name,role_name);
 
-
-ALTER TABLE `profile`
-  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
-ALTER TABLE post
-  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-ALTER TABLE private
-  MODIFY id int(11) NOT NULL AUTO_INCREMENT;
-ALTER TABLE tag
-  MODIFY id int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `profile`
-  ADD CONSTRAINT profile_ibfk_1 FOREIGN KEY (user_name) REFERENCES `user` (user_name) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE post
-  ADD CONSTRAINT post_ibfk_1 FOREIGN KEY (id_author) REFERENCES `profile` (id) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE private
-  ADD CONSTRAINT private_ibfk_1 FOREIGN KEY (sender_id) REFERENCES `profile` (id),
-  ADD CONSTRAINT private_ibfk_2 FOREIGN KEY (receiver_id) REFERENCES `profile` (id);
+ALTER TABLE role
+  ADD PRIMARY KEY (role_name);
 
 ALTER TABLE follower_followee
-  ADD CONSTRAINT follower_ibfk_1 FOREIGN KEY (id_follower) REFERENCES `profile` (id),
-  ADD CONSTRAINT followee_ibfk_2 FOREIGN KEY (id_followee) REFERENCES `profile` (id);
+  ADD PRIMARY KEY (follower,followee),
+  ADD KEY followee (followee);
+
+ALTER TABLE post
+  ADD PRIMARY KEY (id),
+  ADD KEY author (author);
+
+ALTER TABLE private
+  ADD PRIMARY KEY (id),
+  ADD KEY sender (sender),
+  ADD KEY receiver (receiver);
+
+ALTER TABLE `profile`
+  ADD PRIMARY KEY (id),
+  ADD KEY user (user);
 
 ALTER TABLE tag
-  ADD CONSTRAINT tag_ibfk_1 FOREIGN KEY (id_post) REFERENCES post (id) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD PRIMARY KEY (id);
+
+ALTER TABLE post_tag
+  ADD PRIMARY KEY (post,tag),
+  ADD KEY tag (tag);
+
+
+ALTER TABLE post
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+ALTER TABLE private
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `profile`
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
+ALTER TABLE tag
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE follower_followee
+  ADD CONSTRAINT followee_ibfk_2 FOREIGN KEY (followee) REFERENCES profile (id),
+  ADD CONSTRAINT follower_ibfk_1 FOREIGN KEY (follower) REFERENCES profile (id);
+
+ALTER TABLE post
+  ADD CONSTRAINT post_ibfk_1 FOREIGN KEY (author) REFERENCES profile (id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE private
+  ADD CONSTRAINT private_ibfk_1 FOREIGN KEY (sender) REFERENCES profile (id),
+  ADD CONSTRAINT private_ibfk_2 FOREIGN KEY (receiver) REFERENCES profile (id);
+
+ALTER TABLE `profile`
+  ADD CONSTRAINT profile_ibfk_1 FOREIGN KEY (user) REFERENCES `user` (user_name) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE post_tag
+  ADD CONSTRAINT tag_ibfk_1 FOREIGN KEY (tag) REFERENCES tag(id),
+  ADD CONSTRAINT post_ibfk_2 FOREIGN KEY (post) REFERENCES post(id);
+
+COMMIT;
+
+SET FOREIGN_KEY_CHECKS=1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

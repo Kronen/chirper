@@ -26,7 +26,7 @@ public class UserPage implements Serializable {
     private Profile profile;
 
     public UserPage() {
-        emf = Persistence.createEntityManagerFactory("ProyectChirperPU");
+        emf = Persistence.createEntityManagerFactory("ChirperDbPU");
     }
 
     public String getUserName() {      
@@ -52,8 +52,8 @@ public class UserPage implements Serializable {
         return null;
     }
     
-    public List getChirpsFromUser() {
-        PostJpaController pfC = new PostJpaController(emf);
-        return pfC.findPostsByAuthor(profile.getId());
-    }
+//    public List getChirpsFromUser() {
+//        PostJpaController pfC = new PostJpaController(emf);
+//        return pfC.findPostsByAuthor(profile.getId());
+//    }
 }

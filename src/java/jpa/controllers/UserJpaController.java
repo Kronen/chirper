@@ -12,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import jpa.entities.Profile;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -36,24 +37,28 @@ public class UserJpaController implements Serializable {
     }
 
     public void create(User user) throws PreexistingEntityException, Exception {
+        if (user.getProfileCollection() == null) {
+            user.setProfileCollection(new ArrayList<Profile>());
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Profile profile = user.getProfile();
-            if (profile != null) {
-                profile = em.getReference(profile.getClass(), profile.getId());
-                user.setProfile(profile);
+            Collection<Profile> attachedProfileCollection = new ArrayList<Profile>();
+            for (Profile profileCollectionProfileToAttach : user.getProfileCollection()) {
+                profileCollectionProfileToAttach = em.getReference(profileCollectionProfileToAttach.getClass(), profileCollectionProfileToAttach.getId());
+                attachedProfileCollection.add(profileCollectionProfileToAttach);
             }
+            user.setProfileCollection(attachedProfileCollection);
             em.persist(user);
-            if (profile != null) {
-                User oldUserNameOfProfile = profile.getUserName();
-                if (oldUserNameOfProfile != null) {
-                    oldUserNameOfProfile.setProfile(null);
-                    oldUserNameOfProfile = em.merge(oldUserNameOfProfile);
+            for (Profile profileCollectionProfile : user.getProfileCollection()) {
+                User oldUserOfProfileCollectionProfile = profileCollectionProfile.getUser();
+                profileCollectionProfile.setUser(user);
+                profileCollectionProfile = em.merge(profileCollectionProfile);
+                if (oldUserOfProfileCollectionProfile != null) {
+                    oldUserOfProfileCollectionProfile.getProfileCollection().remove(profileCollectionProfile);
+                    oldUserOfProfileCollectionProfile = em.merge(oldUserOfProfileCollectionProfile);
                 }
-                profile.setUserName(user);
-                profile = em.merge(profile);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -74,31 +79,38 @@ public class UserJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             User persistentUser = em.find(User.class, user.getUserName());
-            Profile profileOld = persistentUser.getProfile();
-            Profile profileNew = user.getProfile();
+            Collection<Profile> profileCollectionOld = persistentUser.getProfileCollection();
+            Collection<Profile> profileCollectionNew = user.getProfileCollection();
             List<String> illegalOrphanMessages = null;
-            if (profileOld != null && !profileOld.equals(profileNew)) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
+            for (Profile profileCollectionOldProfile : profileCollectionOld) {
+                if (!profileCollectionNew.contains(profileCollectionOldProfile)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Profile " + profileCollectionOldProfile + " since its user field is not nullable.");
                 }
-                illegalOrphanMessages.add("You must retain Profile " + profileOld + " since its userName field is not nullable.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            if (profileNew != null) {
-                profileNew = em.getReference(profileNew.getClass(), profileNew.getId());
-                user.setProfile(profileNew);
+            Collection<Profile> attachedProfileCollectionNew = new ArrayList<Profile>();
+            for (Profile profileCollectionNewProfileToAttach : profileCollectionNew) {
+                profileCollectionNewProfileToAttach = em.getReference(profileCollectionNewProfileToAttach.getClass(), profileCollectionNewProfileToAttach.getId());
+                attachedProfileCollectionNew.add(profileCollectionNewProfileToAttach);
             }
+            profileCollectionNew = attachedProfileCollectionNew;
+            user.setProfileCollection(profileCollectionNew);
             user = em.merge(user);
-            if (profileNew != null && !profileNew.equals(profileOld)) {
-                User oldUserNameOfProfile = profileNew.getUserName();
-                if (oldUserNameOfProfile != null) {
-                    oldUserNameOfProfile.setProfile(null);
-                    oldUserNameOfProfile = em.merge(oldUserNameOfProfile);
+            for (Profile profileCollectionNewProfile : profileCollectionNew) {
+                if (!profileCollectionOld.contains(profileCollectionNewProfile)) {
+                    User oldUserOfProfileCollectionNewProfile = profileCollectionNewProfile.getUser();
+                    profileCollectionNewProfile.setUser(user);
+                    profileCollectionNewProfile = em.merge(profileCollectionNewProfile);
+                    if (oldUserOfProfileCollectionNewProfile != null && !oldUserOfProfileCollectionNewProfile.equals(user)) {
+                        oldUserOfProfileCollectionNewProfile.getProfileCollection().remove(profileCollectionNewProfile);
+                        oldUserOfProfileCollectionNewProfile = em.merge(oldUserOfProfileCollectionNewProfile);
+                    }
                 }
-                profileNew.setUserName(user);
-                profileNew = em.merge(profileNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -130,12 +142,12 @@ public class UserJpaController implements Serializable {
                 throw new NonexistentEntityException("The user with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Profile profileOrphanCheck = user.getProfile();
-            if (profileOrphanCheck != null) {
+            Collection<Profile> profileCollectionOrphanCheck = user.getProfileCollection();
+            for (Profile profileCollectionOrphanCheckProfile : profileCollectionOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Profile " + profileOrphanCheck + " in its profile field has a non-nullable userName field.");
+                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Profile " + profileCollectionOrphanCheckProfile + " in its profileCollection field has a non-nullable user field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

@@ -49,7 +49,7 @@ public class LoginManager implements Serializable {
     private UserPage userPage;
 
     public LoginManager() {
-        emf = Persistence.createEntityManagerFactory("ProyectChirperPU");
+        emf = Persistence.createEntityManagerFactory("ChirperDbPU");
     }
 
     public String getUsername() {
@@ -115,7 +115,8 @@ public class LoginManager implements Serializable {
         ExternalContext externalContext = externalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
         try {
-            request.login(username, DigestUtils.sha256Hex(password));
+            String hashed_pass = DigestUtils.sha256Hex(password);
+            request.login(username, hashed_pass);
             UserJpaController uC = new UserJpaController(emf);
             User user = (User) uC.findUser(username);
             externalContext.getSessionMap().put("user", user);

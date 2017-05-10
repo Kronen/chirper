@@ -6,18 +6,19 @@
 package jpa.entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -29,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Tag.findAll", query = "SELECT t FROM Tag t")
     , @NamedQuery(name = "Tag.findById", query = "SELECT t FROM Tag t WHERE t.id = :id")
-    , @NamedQuery(name = "Tag.findByTag", query = "SELECT t FROM Tag t WHERE t.tag = :tag")})
+    , @NamedQuery(name = "Tag.findByTagName", query = "SELECT t FROM Tag t WHERE t.tagName = :tagName")})
 public class Tag implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,11 +40,10 @@ public class Tag implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
-    @Column(name = "tag")
-    private String tag;
-    @JoinColumn(name = "id_post", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Post idPost;
+    @Column(name = "tag_name")
+    private String tagName;
+    @ManyToMany(mappedBy = "tagCollection")
+    private Collection<Post> postCollection;
 
     public Tag() {
     }
@@ -52,9 +52,9 @@ public class Tag implements Serializable {
         this.id = id;
     }
 
-    public Tag(Integer id, String tag) {
+    public Tag(Integer id, String tagName) {
         this.id = id;
-        this.tag = tag;
+        this.tagName = tagName;
     }
 
     public Integer getId() {
@@ -65,20 +65,21 @@ public class Tag implements Serializable {
         this.id = id;
     }
 
-    public String getTag() {
-        return tag;
+    public String getTagName() {
+        return tagName;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setTagName(String tagName) {
+        this.tagName = tagName;
     }
 
-    public Post getIdPost() {
-        return idPost;
+    @XmlTransient
+    public Collection<Post> getPostCollection() {
+        return postCollection;
     }
 
-    public void setIdPost(Post idPost) {
-        this.idPost = idPost;
+    public void setPostCollection(Collection<Post> postCollection) {
+        this.postCollection = postCollection;
     }
 
     @Override

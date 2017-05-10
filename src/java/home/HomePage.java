@@ -31,7 +31,7 @@ public class HomePage implements Serializable {
     
 
     public HomePage() {
-        emf = Persistence.createEntityManagerFactory("ProyectChirperPU");  
+        emf = Persistence.createEntityManagerFactory("ChirperDbPU");  
     }
     
     @PostConstruct
@@ -75,15 +75,15 @@ public class HomePage implements Serializable {
         profile = profileC.findProfileByUserName(username);
     }
     
-    public List getPostFollowees() {
+    public List getPostsFromFollowees() {
         PostFolloweesJpaController pfC = new PostFolloweesJpaController(emf);
-        return pfC.findPostFollowees(profile.getId());
+        return pfC.findPostsFollowees(profile.getId());
     }
     
-    public List countPosts() {
-        PostJpaController postC = new PostJpaController(emf);
-        return postC.getPostCountByAuthor(profile.getId());
-    }
+//    public List countPosts() {
+//        PostJpaController postC = new PostJpaController(emf);
+//        return postC.getPostCountByAuthor(profile.getId());
+//    }
     
     public String elapsed(Date date) {
         
@@ -103,7 +103,7 @@ public class HomePage implements Serializable {
     }
     
     public void publish() {
-        newPost.setIdAuthor(profile);
+        newPost.setAuthor(profile);
          
         // La version de JPA es anterior a Java8 y no soporta las nuevas clases Date, Time, LocalDateTime, etc... 
         // Habría que añadir un conversor a la entidad para usarlas.        

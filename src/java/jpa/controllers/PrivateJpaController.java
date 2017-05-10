@@ -37,24 +37,24 @@ public class PrivateJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Profile senderId = private1.getSenderId();
-            if (senderId != null) {
-                senderId = em.getReference(senderId.getClass(), senderId.getId());
-                private1.setSenderId(senderId);
+            Profile sender = private1.getSender();
+            if (sender != null) {
+                sender = em.getReference(sender.getClass(), sender.getId());
+                private1.setSender(sender);
             }
-            Profile receiverId = private1.getReceiverId();
-            if (receiverId != null) {
-                receiverId = em.getReference(receiverId.getClass(), receiverId.getId());
-                private1.setReceiverId(receiverId);
+            Profile receiver = private1.getReceiver();
+            if (receiver != null) {
+                receiver = em.getReference(receiver.getClass(), receiver.getId());
+                private1.setReceiver(receiver);
             }
             em.persist(private1);
-            if (senderId != null) {
-                senderId.getPrivateCollection().add(private1);
-                senderId = em.merge(senderId);
+            if (sender != null) {
+                sender.getPrivateCollection().add(private1);
+                sender = em.merge(sender);
             }
-            if (receiverId != null) {
-                receiverId.getPrivateCollection().add(private1);
-                receiverId = em.merge(receiverId);
+            if (receiver != null) {
+                receiver.getPrivateCollection().add(private1);
+                receiver = em.merge(receiver);
             }
             em.getTransaction().commit();
         } finally {
@@ -70,34 +70,34 @@ public class PrivateJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Private persistentPrivate = em.find(Private.class, private1.getId());
-            Profile senderIdOld = persistentPrivate.getSenderId();
-            Profile senderIdNew = private1.getSenderId();
-            Profile receiverIdOld = persistentPrivate.getReceiverId();
-            Profile receiverIdNew = private1.getReceiverId();
-            if (senderIdNew != null) {
-                senderIdNew = em.getReference(senderIdNew.getClass(), senderIdNew.getId());
-                private1.setSenderId(senderIdNew);
+            Profile senderOld = persistentPrivate.getSender();
+            Profile senderNew = private1.getSender();
+            Profile receiverOld = persistentPrivate.getReceiver();
+            Profile receiverNew = private1.getReceiver();
+            if (senderNew != null) {
+                senderNew = em.getReference(senderNew.getClass(), senderNew.getId());
+                private1.setSender(senderNew);
             }
-            if (receiverIdNew != null) {
-                receiverIdNew = em.getReference(receiverIdNew.getClass(), receiverIdNew.getId());
-                private1.setReceiverId(receiverIdNew);
+            if (receiverNew != null) {
+                receiverNew = em.getReference(receiverNew.getClass(), receiverNew.getId());
+                private1.setReceiver(receiverNew);
             }
             private1 = em.merge(private1);
-            if (senderIdOld != null && !senderIdOld.equals(senderIdNew)) {
-                senderIdOld.getPrivateCollection().remove(private1);
-                senderIdOld = em.merge(senderIdOld);
+            if (senderOld != null && !senderOld.equals(senderNew)) {
+                senderOld.getPrivateCollection().remove(private1);
+                senderOld = em.merge(senderOld);
             }
-            if (senderIdNew != null && !senderIdNew.equals(senderIdOld)) {
-                senderIdNew.getPrivateCollection().add(private1);
-                senderIdNew = em.merge(senderIdNew);
+            if (senderNew != null && !senderNew.equals(senderOld)) {
+                senderNew.getPrivateCollection().add(private1);
+                senderNew = em.merge(senderNew);
             }
-            if (receiverIdOld != null && !receiverIdOld.equals(receiverIdNew)) {
-                receiverIdOld.getPrivateCollection().remove(private1);
-                receiverIdOld = em.merge(receiverIdOld);
+            if (receiverOld != null && !receiverOld.equals(receiverNew)) {
+                receiverOld.getPrivateCollection().remove(private1);
+                receiverOld = em.merge(receiverOld);
             }
-            if (receiverIdNew != null && !receiverIdNew.equals(receiverIdOld)) {
-                receiverIdNew.getPrivateCollection().add(private1);
-                receiverIdNew = em.merge(receiverIdNew);
+            if (receiverNew != null && !receiverNew.equals(receiverOld)) {
+                receiverNew.getPrivateCollection().add(private1);
+                receiverNew = em.merge(receiverNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -128,15 +128,15 @@ public class PrivateJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The private1 with id " + id + " no longer exists.", enfe);
             }
-            Profile senderId = private1.getSenderId();
-            if (senderId != null) {
-                senderId.getPrivateCollection().remove(private1);
-                senderId = em.merge(senderId);
+            Profile sender = private1.getSender();
+            if (sender != null) {
+                sender.getPrivateCollection().remove(private1);
+                sender = em.merge(sender);
             }
-            Profile receiverId = private1.getReceiverId();
-            if (receiverId != null) {
-                receiverId.getPrivateCollection().remove(private1);
-                receiverId = em.merge(receiverId);
+            Profile receiver = private1.getReceiver();
+            if (receiver != null) {
+                receiver.getPrivateCollection().remove(private1);
+                receiver = em.merge(receiver);
             }
             em.remove(private1);
             em.getTransaction().commit();
