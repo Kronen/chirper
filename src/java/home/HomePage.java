@@ -69,16 +69,14 @@ public class HomePage implements Serializable {
     public void setNewPost(Post post) {
         this.newPost = post;
     }
-    
-    
-    
+           
     public List getPostsFromFollowees() {
         PostFolloweesJpaController pfC = new PostFolloweesJpaController(emf);
         return pfC.findPostsFollowees(profile.getId());
     }
     
     public String getTheme() {
-        return "blue-theme";
+        return "theme-blue" + ".css";
     }
     
 //    public List countPosts() {
