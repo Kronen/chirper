@@ -3,12 +3,16 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:chirper="http://java.sun.com/jsf/composite/chirper" >
     
     <ui:define name="title">#{userPage.profile.fullName}(@#{userPage.userName}) | Chirper</ui:define>
   
     <ui:define name="content">
-        <ui:include src="/WEB-INF/templates/nav2.xhtml" />
+        <h:outputStylesheet library="css" name="theme-blue.css" />
+        
+        <chirper:navbar
+            profile="#{homePage.profile}" />
         
         <div class="wrapper">            
             <div class="chirp-row">

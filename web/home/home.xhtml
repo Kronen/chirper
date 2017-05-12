@@ -3,14 +3,16 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:chirper="http://java.sun.com/jsf/composite/chirper">
     
     <ui:define name="title">Chirper</ui:define>
   
     <ui:define name="content">
         <h:outputStylesheet library="css" name='#{homePage.theme}' />
         
-        <ui:include src="/WEB-INF/templates/nav.xhtml" />
+        <chirper:navbar 
+            profile="#{homePage.profile}" />
         
         <div class="wrapper">            
             <div class="chirp-row">
@@ -31,9 +33,9 @@
                             <div class="mini-profile-photo">                                
                                 <h:graphicImage value="http://lorempixel.com/48/48/people" alt="user photo"/>                                
                             </div>
-                            <p:link href="/user/#{homePage.user.userName}" styleClass="mini-profile-name" 
-                                value="#{homePage.profile.fullName != null ? homePage.profile.fullName : homePage.user.userName}" />
-                            <span class="mini-profile-view">@#{homePage.user.userName}</span>
+                            <p:link href="/user/#{user.userName}" styleClass="mini-profile-name" 
+                                value="#{homePage.profile.fullName != null ? homePage.profile.fullName : user.userName}" />
+                            <span class="mini-profile-view">@#{user.userName}</span>
                             <span id="user-location"></span>
                         </div>
                         <ul class="module profile-data">

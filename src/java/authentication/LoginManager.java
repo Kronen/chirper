@@ -45,8 +45,6 @@ public class LoginManager implements Serializable {
     private String email;
     private String forwardUrl;
     
-    @ManagedProperty(value="#{userPage}")
-    private UserPage userPage;
 
     public LoginManager() {
         emf = Persistence.createEntityManagerFactory("ChirperDbPU");
@@ -73,15 +71,6 @@ public class LoginManager implements Serializable {
         this.email = email;
     }
 
-    public UserPage getUserPage() {
-        return userPage;
-    }
-
-    public void setUserPage(UserPage userPage) {
-        this.userPage = userPage;
-    }
-    
-
     @PostConstruct
     public void init() {
         this.forwardUrl = extractRequestedUrlBeforeLogin();
@@ -105,7 +94,6 @@ public class LoginManager implements Serializable {
         return FacesContext.getCurrentInstance();
     }
 
-
     /**
      * Performs user login accordingly to the username/password set.
      *
@@ -124,8 +112,7 @@ public class LoginManager implements Serializable {
         } catch (ServletException e) {
             /*
              * The ServletException is thrown if the configured login mechanism does not support
-             * username password authentication, or if a non-null caller identity had already been
-             * established (prior to the call to login), or if validation of the provided username
+             * username password authentication or if validation of the provided username
              * and password fails.
              */
             MessageHandler.addErrorMessage("The password you introduced for user " + username + " is incorrect.", null);
@@ -148,7 +135,7 @@ public class LoginManager implements Serializable {
 
 
     /**
-     * Invalidates the current session, effectively logging out the current user.
+     * Invalidates the current session, logging out the current user.
      *
      * @throws IOException from {@link ExternalContext#redirect(String)}
      */
@@ -160,7 +147,7 @@ public class LoginManager implements Serializable {
 
 
     /**
-     * Makes the current logged in available through EL: #{loginManager.user}. Notice as the user is also placed in
+     * Makes the current logged in user available through EL: #{loginManager.user}. Notice as the user is also placed in
      * the session map (), it also is available through #{user}.
      *
      * @return The currently logged in {@link User}, or {@code null} if no user is logged in.
