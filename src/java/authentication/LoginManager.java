@@ -17,8 +17,10 @@ import java.io.Serializable;
 import javax.faces.bean.ManagedProperty;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import jpa.controllers.ProfileJpaController;
 import jpa.controllers.UserJpaController;
 import jpa.controllers.exceptions.PreexistingEntityException;
+import jpa.entities.Profile;
 import org.apache.commons.codec.digest.DigestUtils;
 import users.UserPage;
 import utils.MessageHandler;
@@ -119,17 +121,23 @@ public class LoginManager implements Serializable {
         }
     }
     
-    public void singup() {
+    public void signup() {
         try {
             UserJpaController uC = new UserJpaController(emf);
-            User user = new User(username, DigestUtils.sha256Hex(password));
+            ProfileJpaController pC = new ProfileJpaController(emf);
+            
+            User user = new User(username, DigestUtils.sha256Hex(password));            
             uC.create(user);
+            
+            Profile profile = new Profile();
+            profile.setUser(user);
+            profile.setEmail(email);
+            pC.create(profile);            
             login();
         } catch (PreexistingEntityException ex) {
             MessageHandler.addErrorMessage("This username is already in use. Try another username.", null);
         } catch (Exception e) {
             MessageHandler.addErrorMessage("Failed to create account: " + e.getLocalizedMessage(), null);
-            e.printStackTrace();
         }
     }
 
@@ -147,8 +155,8 @@ public class LoginManager implements Serializable {
 
 
     /**
-     * Makes the current logged in user available through EL: #{loginManager.user}. Notice as the user is also placed in
-     * the session map (), it also is available through #{user}.
+     * Makes the current logged in user available through #{loginManager.user}. Notice as the user is also placed in
+     * the session map, it also is available through #{user}.
      *
      * @return The currently logged in {@link User}, or {@code null} if no user is logged in.
      */
@@ -170,10 +178,10 @@ public class LoginManager implements Serializable {
 
 
     /**
-     * Verifies if the currently logged in user, if exists, is in the given ROLE.
+     * Verifies if the currently logged in user is in the given Role.
      *
-     * @param role The ROLE to verify if the user has.
-     * @return {@code true} if the user is logged in and has the given ROLE. {@code false} otherwise.
+     * @param role The Role to verify if the user has.
+     * @return {@code true} if the user is logged in and has the given Role. {@code false} otherwise.
      */
     public boolean isUserInRole(String role) {
         FacesContext context = facesContext();
@@ -182,8 +190,8 @@ public class LoginManager implements Serializable {
     }
     
     /**
-     * Decides which is the next page to redirect the user depending on successful/unsuccessful login. If the user 
-     * is logged in he will be redirected to the home page, otherwise he will stay in login page.
+     * Decides which is the next page to redirect the user depending on successful/unsuccessful login. If the {@link User} 
+     * is logged in he will be redirected to the home page, otherwise he will stay in the login page.
      *
      * @return the url the user will be redirected to.
      */

@@ -30,5 +30,10 @@
     <mime-mapping> 
         <extension>woff2</extension>
         <mime-type>font/woff2</mime-type> 
-</mime-mapping>
+    </mime-mapping>
+    
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/faces/login.xhtml</location>
+    </error-page>
 </web-app>

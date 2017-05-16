@@ -36,10 +36,11 @@ public class HomePage implements Serializable {
     
     @PostConstruct
     public void init() {
-       ExternalContext externalContext = externalContext();
-       user = (User)externalContext.getSessionMap().get("user");
-       loadProfile(user.getUserName());
-       newPost = new Post();
+        ExternalContext externalContext = externalContext();
+        newPost = new Post();
+        user = (User)externalContext.getSessionMap().get("user");
+        if(user != null)
+            loadProfile(user.getUserName());   
     }
     
     private ExternalContext externalContext() {

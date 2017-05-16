@@ -68,9 +68,9 @@ public class Profile implements Serializable {
         @JoinColumn(name = "followee", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "follower", referencedColumnName = "id")})
     @ManyToMany
-    private Collection<Profile> profileCollection;
-    @ManyToMany(mappedBy = "profileCollection")
-    private Collection<Profile> profileCollection1;
+    private Collection<Profile> followers;
+    @ManyToMany(mappedBy = "followers")
+    private Collection<Profile> followees;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sender")
     private Collection<Private> privateCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "receiver")
@@ -151,21 +151,21 @@ public class Profile implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Profile> getProfileCollection() {
-        return profileCollection;
+    public Collection<Profile> getFollowers() {
+        return followers;
     }
 
-    public void setProfileCollection(Collection<Profile> profileCollection) {
-        this.profileCollection = profileCollection;
+    public void setProfileCollection(Collection<Profile> followers) {
+        this.followers = followers;
     }
 
     @XmlTransient
-    public Collection<Profile> getProfileCollection1() {
-        return profileCollection1;
+    public Collection<Profile> getFollowees() {
+        return followees;
     }
 
-    public void setProfileCollection1(Collection<Profile> profileCollection1) {
-        this.profileCollection1 = profileCollection1;
+    public void setProfileCollection1(Collection<Profile> followees) {
+        this.followees = followees;
     }
 
     @XmlTransient

@@ -58,8 +58,6 @@
                         }
                     }
                 });
-                console.log('u' + result);
-                return result;
             }
 
             $(function () {
@@ -71,8 +69,9 @@
                         geocoder = new google.maps.Geocoder();
                         // User Location
                         $elem = $('#user-location');
-                        var userLocation = codeLatLng(position.coords.latitude, position.coords.longitude,
-                                function(loc) { $elem.text(loc);});
+                        codeLatLng(position.coords.latitude, position.coords.longitude, function(loc) { 
+                            $elem.text(loc);
+                        });
                         
                         // Posts locations
                         $('.post-location').each(function() {

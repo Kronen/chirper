@@ -40,10 +40,10 @@ public class ProfileJpaController implements Serializable {
     }
 
     public void create(Profile profile) {
-        if (profile.getProfileCollection() == null) {
+        if (profile.getFollowers() == null) {
             profile.setProfileCollection(new ArrayList<Profile>());
         }
-        if (profile.getProfileCollection1() == null) {
+        if (profile.getFollowees() == null) {
             profile.setProfileCollection1(new ArrayList<Profile>());
         }
         if (profile.getPrivateCollection() == null) {
@@ -65,13 +65,13 @@ public class ProfileJpaController implements Serializable {
                 profile.setUser(user);
             }
             Collection<Profile> attachedProfileCollection = new ArrayList<Profile>();
-            for (Profile profileCollectionProfileToAttach : profile.getProfileCollection()) {
+            for (Profile profileCollectionProfileToAttach : profile.getFollowers()) {
                 profileCollectionProfileToAttach = em.getReference(profileCollectionProfileToAttach.getClass(), profileCollectionProfileToAttach.getId());
                 attachedProfileCollection.add(profileCollectionProfileToAttach);
             }
             profile.setProfileCollection(attachedProfileCollection);
             Collection<Profile> attachedProfileCollection1 = new ArrayList<Profile>();
-            for (Profile profileCollection1ProfileToAttach : profile.getProfileCollection1()) {
+            for (Profile profileCollection1ProfileToAttach : profile.getFollowees()) {
                 profileCollection1ProfileToAttach = em.getReference(profileCollection1ProfileToAttach.getClass(), profileCollection1ProfileToAttach.getId());
                 attachedProfileCollection1.add(profileCollection1ProfileToAttach);
             }
@@ -99,12 +99,12 @@ public class ProfileJpaController implements Serializable {
                 user.getProfileCollection().add(profile);
                 user = em.merge(user);
             }
-            for (Profile profileCollectionProfile : profile.getProfileCollection()) {
-                profileCollectionProfile.getProfileCollection().add(profile);
+            for (Profile profileCollectionProfile : profile.getFollowers()) {
+                profileCollectionProfile.getFollowers().add(profile);
                 profileCollectionProfile = em.merge(profileCollectionProfile);
             }
-            for (Profile profileCollection1Profile : profile.getProfileCollection1()) {
-                profileCollection1Profile.getProfileCollection().add(profile);
+            for (Profile profileCollection1Profile : profile.getFollowees()) {
+                profileCollection1Profile.getFollowers().add(profile);
                 profileCollection1Profile = em.merge(profileCollection1Profile);
             }
             for (Private privateCollectionPrivate : profile.getPrivateCollection()) {
@@ -150,10 +150,10 @@ public class ProfileJpaController implements Serializable {
             Profile persistentProfile = em.find(Profile.class, profile.getId());
             User userOld = persistentProfile.getUser();
             User userNew = profile.getUser();
-            Collection<Profile> profileCollectionOld = persistentProfile.getProfileCollection();
-            Collection<Profile> profileCollectionNew = profile.getProfileCollection();
-            Collection<Profile> profileCollection1Old = persistentProfile.getProfileCollection1();
-            Collection<Profile> profileCollection1New = profile.getProfileCollection1();
+            Collection<Profile> profileCollectionOld = persistentProfile.getFollowers();
+            Collection<Profile> profileCollectionNew = profile.getFollowers();
+            Collection<Profile> profileCollection1Old = persistentProfile.getFollowees();
+            Collection<Profile> profileCollection1New = profile.getFollowees();
             Collection<Private> privateCollectionOld = persistentProfile.getPrivateCollection();
             Collection<Private> privateCollectionNew = profile.getPrivateCollection();
             Collection<Private> privateCollection1Old = persistentProfile.getPrivateCollection1();
@@ -238,25 +238,25 @@ public class ProfileJpaController implements Serializable {
             }
             for (Profile profileCollectionOldProfile : profileCollectionOld) {
                 if (!profileCollectionNew.contains(profileCollectionOldProfile)) {
-                    profileCollectionOldProfile.getProfileCollection().remove(profile);
+                    profileCollectionOldProfile.getFollowers().remove(profile);
                     profileCollectionOldProfile = em.merge(profileCollectionOldProfile);
                 }
             }
             for (Profile profileCollectionNewProfile : profileCollectionNew) {
                 if (!profileCollectionOld.contains(profileCollectionNewProfile)) {
-                    profileCollectionNewProfile.getProfileCollection().add(profile);
+                    profileCollectionNewProfile.getFollowers().add(profile);
                     profileCollectionNewProfile = em.merge(profileCollectionNewProfile);
                 }
             }
             for (Profile profileCollection1OldProfile : profileCollection1Old) {
                 if (!profileCollection1New.contains(profileCollection1OldProfile)) {
-                    profileCollection1OldProfile.getProfileCollection().remove(profile);
+                    profileCollection1OldProfile.getFollowers().remove(profile);
                     profileCollection1OldProfile = em.merge(profileCollection1OldProfile);
                 }
             }
             for (Profile profileCollection1NewProfile : profileCollection1New) {
                 if (!profileCollection1Old.contains(profileCollection1NewProfile)) {
-                    profileCollection1NewProfile.getProfileCollection().add(profile);
+                    profileCollection1NewProfile.getFollowers().add(profile);
                     profileCollection1NewProfile = em.merge(profileCollection1NewProfile);
                 }
             }
@@ -352,14 +352,14 @@ public class ProfileJpaController implements Serializable {
                 user.getProfileCollection().remove(profile);
                 user = em.merge(user);
             }
-            Collection<Profile> profileCollection = profile.getProfileCollection();
+            Collection<Profile> profileCollection = profile.getFollowers();
             for (Profile profileCollectionProfile : profileCollection) {
-                profileCollectionProfile.getProfileCollection().remove(profile);
+                profileCollectionProfile.getFollowers().remove(profile);
                 profileCollectionProfile = em.merge(profileCollectionProfile);
             }
-            Collection<Profile> profileCollection1 = profile.getProfileCollection1();
+            Collection<Profile> profileCollection1 = profile.getFollowees();
             for (Profile profileCollection1Profile : profileCollection1) {
-                profileCollection1Profile.getProfileCollection().remove(profile);
+                profileCollection1Profile.getFollowers().remove(profile);
                 profileCollection1Profile = em.merge(profileCollection1Profile);
             }
             em.remove(profile);
@@ -417,6 +417,8 @@ public class ProfileJpaController implements Serializable {
         }
     }
     
+    /* Extended */
+    
     public Profile findProfileByUserName(String username) {
         EntityManager em = getEntityManager();
         try {
@@ -430,4 +432,64 @@ public class ProfileJpaController implements Serializable {
             em.close();
         }
     }
+    
+    public void followUser(int idFollower, int idFollowee) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Profile follower = em.find(Profile.class, idFollower);
+            Profile followee = em.find(Profile.class, idFollowee);
+            System.out.println("Adding");
+            followee.getFollowers().add(follower);
+            follower.getFollowees().add(followee);
+            em.persist(followee);
+            em.getTransaction().commit();
+            em.refresh(followee);
+            em.refresh(follower);
+        } finally {
+            em.close();
+        }
+    }
+    
+    public void unfollowUser(int idFollower, int idFollowee) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Profile follower = em.find(Profile.class, idFollower);
+            Profile followee = em.find(Profile.class, idFollowee);
+            System.out.println("Removing");
+            followee.getFollowers().remove(follower);
+            follower.getFollowees().remove(followee);
+            em.persist(followee);
+            em.getTransaction().commit();
+            System.out.println("UnFollow refreshed");
+            em.refresh(followee);
+            em.refresh(follower);
+        } finally {
+            em.close();
+        }
+    }
+    
+    public boolean isFollowee(int idFollower, int idFollowee) {
+        EntityManager em = getEntityManager();
+        try {
+            
+            String sql = "SELECT count(*) FROM follower_followee WHERE follower = ? AND followee = ?";
+            Query q = em.createNativeQuery(sql)
+                    .setParameter(1, idFollower)
+                    .setParameter(2, idFollowee);
+//            String sql = "SELECT p FROM Profile p WHERE p.id = :idFollower AND :followee MEMBER OF p.profileCollection";
+//            Profile followee = findProfile(idFollowee);
+//            TypedQuery<Profile> q = em.createQuery(sql, Profile.class)
+//                .setParameter("idFollower", idFollower)
+//                .setParameter("followee", followee);
+            
+            boolean b = ((Long) q.getSingleResult()).intValue() == 1;
+            return b;
+        } finally {
+            em.close();
+        }
+    }
+    
+    
 }

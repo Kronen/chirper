@@ -11,8 +11,7 @@
     <ui:define name="content">
         <h:outputStylesheet library="css" name="theme-blue.css" />
         
-        <chirper:navbar
-            profile="#{homePage.profile}" />
+        <chirper:navbar profile="#{homePage.profile}" />
         
         <div class="wrapper">            
             <div class="chirp-row">
@@ -29,38 +28,51 @@
                     </ul>
                     -->
                     
-                        <!-- PROFILE -->
-                        <div class="module mini-profile">
-                            <div class="mini-profile-info">
-                                <div class="mini-profile-photo">                                
-                                    <h:graphicImage value="http://lorempixel.com/48/48/people" alt="user photo"/>                                
-                                </div>
-                                <p:link href="/user/#{userPage.userName}" styleClass="mini-profile-name" 
-                                    value="#{userPage.profile.fullName != null ? userPage.profile.fullName : userPage.username}" />
-                                <span class="mini-profile-view">@#{userPage.userName}</span>
-                                <span id="user-location"></span>
+                    <!-- PROFILE -->
+                    <div class="module mini-profile">
+                        <div class="mini-profile-info">
+                            <div class="mini-profile-photo">                                
+                                <h:graphicImage value="http://lorempixel.com/48/48/people" alt="user photo"/>                                
                             </div>
-                            <ul class="module profile-data">
-                                <li>
-                                    <a href="#" class="open-profile-modal">
-                                        <h:outputText value="#{userPage.profile.postCollection.size()}" styleClass="posts-count" />
-                                        <span class="label">Posts</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#following" class="open-following-page">
-                                        <span class="following-count"><h:outputText value="&#160;" /></span>
-                                        <span class="label">Following</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="open-followers">
-                                        <span class="followers-count"><h:outputText value="&#160;" /></span>
-                                        <span class="label">Followers</span>
-                                    </a>
-                                </li>
-                            </ul>                            
+                            <p:link href="/user/#{userPage.userName}" styleClass="mini-profile-name" 
+                                value="#{userPage.profile.fullName != null ? userPage.profile.fullName : userPage.username}" />
+                            <span class="mini-profile-view">@#{userPage.userName}</span>
+                            <span id="user-location"></span>
                         </div>
+                        <ul class="module profile-data">
+                            <li>
+                                <a href="#" class="open-profile-modal">
+                                    <h:outputText value="#{userPage.profile.postCollection.size()}" styleClass="posts-count" />
+                                    <span class="label">Posts</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#following" class="open-following-page">
+                                    <span class="following-count"><h:outputText value="&#160;" /></span>
+                                    <span class="label">Following</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="open-followers">
+                                    <span class="followers-count"><h:outputText value="&#160;" /></span>
+                                    <span class="label">Followers</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <p:outputPanel id="buttonArea">
+                            <p:panel styleClass="button-area" rendered="#{user != null and homePage.profile.id != userPage.profile.id}">
+                                <h:form>
+                                    <p:commandButton styleClass="button-flat" action="#{userPage.followUser}"
+                                                     value="Follow" rendered="#{!userPage.followed}" update="buttonArea"/>
+                                    <p:commandButton styleClass="button-flat button-red" action="#{userPage.unfollowUser}" 
+                                                     value="Unfollow" rendered="#{userPage.followed}" update="buttonArea"/>
+                                    <p:commandButton styleClass="button-flat" action="#{userPage.followUser}" 
+                                                     value="Message" />
+                                </h:form>
+                            </p:panel>
+                        </p:outputPanel>
+                    </div>
+                        
                 </div>
 
                 <div class="postboard chirp-half">
@@ -127,9 +139,9 @@
                         </ol>
                 </div>
                 <div class="chirp-quarter">
-                        <div class="module mini-profile">
-                            <div style="text-align: center">Some content here</div>
-                        </div>                   
+                    <div class="module mini-profile">
+                        <div style="text-align: center">Some content here</div>
+                    </div>                   
                 </div>
             </p:panel>
             </div>            
