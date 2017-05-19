@@ -6,3 +6,7 @@
     display: inline-block;
     line-height: 0;
 }
+.ui-dialog {
+    background: white;
+    z-index: 9999;
+}

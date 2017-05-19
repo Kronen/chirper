@@ -4,7 +4,6 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import jpa.entities.User;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
@@ -14,7 +13,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Serializable;
-import javax.faces.bean.ManagedProperty;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import jpa.controllers.ProfileJpaController;
@@ -22,7 +20,6 @@ import jpa.controllers.UserJpaController;
 import jpa.controllers.exceptions.PreexistingEntityException;
 import jpa.entities.Profile;
 import org.apache.commons.codec.digest.DigestUtils;
-import users.UserPage;
 import utils.MessageHandler;
 
 /**

@@ -17,20 +17,24 @@
 	<nav class="userMenu">
             <ul>
                 <li class="userMenu-home current"><p:link value="Home" href="/"/></li>
-                <li class="userMenu-network"><a class="label" href="network.html">Network</a></li>
+                <ui:fragment rendered="#{loginManager.userLoggedIn}">
                 <li class="userMenu-profile"><p:link value="Profile" href="/user/#{user.userName}"/></li>
+                </ui:fragment>
+                
                 <li class="userMenu-config">
                     <a class="userMenu-config-dropdown">
                         <div class="config-menu dialog-modal">
-                            <div class="mini-profile-info selectable_theme theme_original">
-                                <div class="mini-profile-photo">
-                                    <img src="http://lorempixel.com/48/48/people" alt="user-photo"/>
+                            <ui:fragment rendered="#{loginManager.userLoggedIn}">
+                                <div class="mini-profile-info selectable_theme theme_original">
+                                    <div class="mini-profile-photo">
+                                        <img src="http://lorempixel.com/48/48/people" alt="user-photo"/>
+                                    </div>
+                                    <p:link href="user/#{user.userName}" styleClass="mini-profile-name"
+                                            value="#{cc.attrs.profile.fullName != null ? cc.attrs.profile.fullName : user.userName}"/>
+                                    <span class="mini-profile-view">@#{user.userName}</span>
                                 </div>
-                                <p:link href="user/#{user.userName}" styleClass="mini-profile-name"
-                                        value="#{cc.attrs.profile.fullName != null ? cc.attrs.profile.fullName : user.userName}"/>
-                                <span class="mini-profile-view">@#{user.userName}</span>
-                            </div>
-                            <h:form>
+                            </ui:fragment>
+                            <h:form id="form-settings">
                                 <a class="dropdown-menu-item uri-shortener">URI shortener</a>
                                 <a class="dropdown-menu-item" href="options.html">Options</a>
                                 <a class="dropdown-menu-item" href="network.html">Network config</a>
@@ -39,7 +43,7 @@
                                 <a class="dropdown-menu-item" href="login.html">Change user</a>
                                 <a class="dropdown-menu-item promoted-posts-only" href="#">Switch to Promoted posts</a>
                                 <a class="dropdown-menu-item direct-messages" href="#">Direct Messages</a>
-                                <p:commandLink value="Log Out" styleClass="dropdown-menu-item" ajax="false" 
+                                <p:commandLink id="logout" value="Log Out" styleClass="dropdown-menu-item" ajax="false" 
                                     rendered="#{loginManager.userLoggedIn}" actionListener="#{loginManager.logout}" />
                             </h:form>
                         </div>
@@ -65,9 +69,9 @@
                     <input type="text" class="userMenu-search-field" placeholder="search"/>
                     <div class="search-results dialog-modal">
                         <ul class="userMenu-search-sugestions" style="display: none;">
-                            <li><a href="#">Fulano</a></li>
-                            <li><a href="#">Otro Fulano</a></li>
-                            <li><a href="#">Y otro</a></li>
+                            <li><a href="#">Sugestion One</a></li>
+                            <li><a href="#">Sugestion Two</a></li>
+                            <li><a href="#">Sugestion Three</a></li>
                         </ul>
                         <ul class="userMenu-search-profiles"></ul>
                     </div>

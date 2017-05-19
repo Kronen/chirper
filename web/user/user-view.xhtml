@@ -35,7 +35,7 @@
                                 <h:graphicImage value="http://lorempixel.com/48/48/people" alt="user photo"/>                                
                             </div>
                             <p:link href="/user/#{userPage.userName}" styleClass="mini-profile-name" 
-                                value="#{userPage.profile.fullName != null ? userPage.profile.fullName : userPage.username}" />
+                                value="#{userPage.name}" />
                             <span class="mini-profile-view">@#{userPage.userName}</span>
                             <span id="user-location"></span>
                         </div>
@@ -48,13 +48,13 @@
                             </li>
                             <li>
                                 <a href="#following" class="open-following-page">
-                                    <span class="following-count"><h:outputText value="&#160;" /></span>
+                                    <h:outputText value="#{userPage.profile.followees.size()}" styleClass="followees-count"/>
                                     <span class="label">Following</span>
                                 </a>
                             </li>
                             <li>
                                 <a class="open-followers">
-                                    <span class="followers-count"><h:outputText value="&#160;" /></span>
+                                    <h:outputText value="#{userPage.profile.followers.size()}" styleClass="followers-count"/>
                                     <span class="label">Followers</span>
                                 </a>
                             </li>
@@ -63,16 +63,15 @@
                             <p:panel styleClass="button-area" rendered="#{user != null and homePage.profile.id != userPage.profile.id}">
                                 <h:form>
                                     <p:commandButton styleClass="button-flat" action="#{userPage.followUser}"
-                                                     value="Follow" rendered="#{!userPage.followed}" update="buttonArea"/>
+                                                     value="Follow" rendered="#{!userPage.followed}" update="@form"/>
                                     <p:commandButton styleClass="button-flat button-red" action="#{userPage.unfollowUser}" 
-                                                     value="Unfollow" rendered="#{userPage.followed}" update="buttonArea"/>
+                                                     value="Unfollow" rendered="#{userPage.followed}" update="@form"/>
                                     <p:commandButton styleClass="button-flat" action="#{userPage.followUser}" 
                                                      value="Message" />
                                 </h:form>
                             </p:panel>
                         </p:outputPanel>
                     </div>
-                        
                 </div>
 
                 <div class="postboard chirp-half">
@@ -80,63 +79,66 @@
                             <span>Chirpboard</span>
                         </h2>
 
-                        <ol id="posts" class="postboard-posts">
-                            <ui:repeat value="#{userPage.profile.postCollection}" var="chirp">
-                            <!-- use "post-template" here -->
-                            <li id="post-template" class="module post" data-time="">
-                                <div class="post-data" data-userpost="" data-content_to_rt="" data-content_to_sigrt=""
-                                     data-screen-name="" data-id="" data-text="" data-text-mentions="">
-                                    <div class="post-photo"><img class="avatar" src="http://lorempixel.com/48/48/people" alt="user-photo"/></div>
-                                    <div class="post-info">
-                                        <p:link href="/user/#{chirp.author.user.userName}" styleClass="post-info-name" value="#{chirp.author.fullName}" />
-                                        <span class="post-info-tag">@#{chirp.author.user.userName}</span>
-                                        <a class="post-info-time">
-                                            <h:outputText value="#{homePage.elapsed(chirp.pubDate)}" />
-                                            <span class="post-location" data-lat="#{chirp.latitude}" data-lng="#{chirp.longitude}"></span>
-                                        </a>
-                                    </div>
-                                    <p class="post-text"><h:outputText value="#{chirp.text}" /></p>
-                                    <div class="post-context" style="display: none;"></div>
-                                    <span class="post-expand">Expand</span>
-
-                                    <div class="post-interactions">
-                                        <span class="post-reply">Reply</span>
-                                        <span class="post-propagate">Retransmit</span>
-                                        <!--span class="post-favorite">Favorite</span-->
-                                    </div>
-                                    <div class="expanded-content">
-                                        <ul class="post-stats">
-                                            <li class="stat-count">
-                                                    <span class="stat-count-value">55</span>
-                                                    <span>Retransmits</span>
-                                            </li>
-                                            <li class="stat-count">
-                                                    <span class="stat-count-value">7</span>
-                                                    <span>Favs</span>
-                                            </li>
-                                            <li class="avatar-row">
-                                                <!-- use "avatar-row-template" here -->
-                                                <a id="avatar-row-template" class="open-profile-modal" href="">
-                                                   <img class="size24" src="http://lorempixel.com/48/48/people" alt="user-photo"/>
-                                                   <span class="user-name-tooltip"></span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                        <div class="post-reply-content" style="display: block;">
-                                            <form class="post-area-reply">
-                                                <textarea placeholder="Reply..."></textarea>
-                                                <div class="post-area-extras">
-                                                    <span class="post-area-remaining">256</span>
-                                                    <button class="undo-unicode">undo</button>
-                                                    <button class="post-submit">post</button>
-                                                </div>
-                                            </form>
+                        <h:form id="postForm">
+                            <p:dataList value="#{userPage.profile.postCollection}" var="chirp" itemType="none" 
+                                        styleClass="postboard-posts" paginator="true" paginatorPosition="bottom" rows="10">
+                                <li id="post-template" class="module post" data-time="">
+                                    <div class="post-data" data-userpost="" data-content_to_rt="" data-content_to_sigrt=""
+                                         data-screen-name="" data-id="" data-text="" data-text-mentions="">
+                                        <div class="post-photo"><img class="avatar" src="http://lorempixel.com/48/48/people" alt="user-photo"/></div>
+                                        <div class="post-info">
+                                            <p:link href="/user/#{userPage.userName}" styleClass="post-info-name" value="#{userPage.name}" />
+                                            <span class="post-info-tag">@#{chirp.author.user.userName}</span>
+                                            <a class="post-info-time">
+                                                <h:outputText value="#{timeHandler.elapsed(chirp.pubDate)}" />
+                                                <span class="post-location" data-lat="#{chirp.latitude}" data-lng="#{chirp.longitude}"></span>
+                                            </a>
                                         </div>
-                                    </div> <!-- expanded-content -->
-                                </div> <!-- post-data -->
-                            </li> <!-- post-template -->
-                            </ui:repeat>
-                        </ol>
+                                        <p class="post-text"><h:outputText value="#{chirp.text}" /></p>
+
+                                        <span class="post-expand">Expand</span>
+
+                                        <div class="post-interactions">
+                                            <span class="post-reply">Reply</span>
+                                            <span class="post-propagate">Retransmit</span>
+                                            <span class="post-favorite">Favorite</span>                                        
+                                        </div>
+                                        
+                                        <div class="expanded-content">
+                                            <ul class="post-stats">
+                                                <li class="stat-count">
+                                                        <span class="stat-count-value">55</span>
+                                                        <span>Retransmits</span>
+                                                </li>
+                                                <li class="stat-count">
+                                                        <span class="stat-count-value">7</span>
+                                                        <span>Favs</span>
+                                                </li>
+                                                <li class="avatar-row">                                                    
+                                                    <p:link href="/user/#{homePage.user.userName}" rendered="#{user != null}">
+                                                       <img class="size24" src="http://lorempixel.com/48/48/people" alt="user-photo"/>
+                                                       <h:outputText styleClass="user-name-tooltip" value="#{homePage.name}"/>
+                                                    </p:link>
+                                                </li>
+                                            </ul>
+                                            <p:panel styleClass="post-reply-content" rendered="#{user != null}">
+                                                <div class="post-area-reply">
+                                                    <textarea placeholder="Reply..."></textarea>
+                                                    <div class="post-area-extras">
+                                                        <span class="post-area-remaining">256</span>
+                                                        <button class="undo-unicode">undo</button>
+                                                        <button class="post-submit">post</button>
+                                                    </div>
+                                                </div>
+                                            </p:panel>
+                                        </div> 
+                                    </div> 
+                                </li> 
+                            </p:dataList>
+                        </h:form>
+                        <p:dialog header="Dialog" widgetVar="dlg" modal="true" dynamic="true">
+                            <h:outputText value="This content is loaded lazy." />
+                        </p:dialog>
                 </div>
                 <div class="chirp-quarter">
                     <div class="module mini-profile">

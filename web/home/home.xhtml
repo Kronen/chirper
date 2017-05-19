@@ -30,7 +30,7 @@
                     <div class="module mini-profile">
                         <div class="mini-profile-info">
                             <div class="mini-profile-photo">                                
-                                <h:graphicImage value="http://lorempixel.com/48/48/people" alt="user photo"/>                                
+                                <h:graphicImage library="images" name="#{homePage.avatar}" alt="user photo"/>                                
                             </div>
                             <p:link href="/user/#{user.userName}" styleClass="mini-profile-name" 
                                 value="#{homePage.profile.fullName != null ? homePage.profile.fullName : user.userName}" />
@@ -46,13 +46,13 @@
                             </li>
                             <li>
                                 <a href="#following" class="open-following-page">
-                                    <span class="following-count"><h:outputText value="&#160;" /></span>
+                                    <h:outputText value="#{homePage.profile.followees.size()}" styleClass="followees-count"/>
                                     <span class="label">Following</span>
                                 </a>
                             </li>
                             <li>
                                 <a class="open-followers">
-                                    <span class="followers-count"><h:outputText value="&#160;" /></span>
+                                    <h:outputText value="#{homePage.profile.followees.size()}" styleClass="followers-count"/>
                                     <span class="label">Followers</span>
                                 </a>
                             </li>
@@ -94,12 +94,12 @@
                                     <p:link href="/user/#{post.followee}" styleClass="post-info-name" value="#{post.followee}" />
                                     <span class="post-info-tag">@#{post.followee}</span>
                                     <a class="post-info-time">
-                                        <h:outputText value="#{homePage.elapsed(post.pubDate)}" />
+                                        <h:outputText value="#{timeHandler.elapsed(post.pubDate)}" />
                                         <span class="post-location" data-lat="#{post.latitude}" data-lng="#{post.longitude}"></span>
                                     </a>
                                 </div>
                                 <p class="post-text"><h:outputText value="#{post.text}" /></p>
-                                <div class="post-context" style="display: none;"></div>
+                                
                                 <span class="post-expand">Expand</span>
 
                                 <div class="post-interactions">

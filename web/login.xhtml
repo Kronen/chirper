@@ -9,7 +9,7 @@
         
         <p:fragment autoUpdate="true">
             <section>
-                <h:form>
+                <h:form id="form-login">
                     <p:messages globalOnly="true" autoUpdate="true" closable="true" showDetail="true"/>
                     
                     <div class="field half first">
@@ -25,7 +25,7 @@
                         <p:message for="password" />
                     </div>
                     <ul class="actions">
-                        <li><p:commandButton value="Sign In" styleClass="button submit" actionListener="#{loginManager.login}" /></li>
+                        <li><p:commandButton id="submit" value="Sign In" styleClass="button submit" actionListener="#{loginManager.login}" /></li>
                     </ul>                    
                 </h:form>
             </section>
@@ -48,7 +48,7 @@
         
         <p:fragment autoUpdate="true">
             <section>
-                <h:form>
+                <h:form id="form-signup">
                     <p:messages globalOnly="true" autoUpdate="true" closable="true" showDetail="true"/>
                     
                     <div class="field half first">
@@ -81,7 +81,7 @@
                         <p:message for="email" />
                     </div>
                     <ul class="actions">
-                        <li><p:commandButton styleClass="button submit" value="Sign Up" actionListener="#{loginManager.signup}" /></li>
+                        <li><p:commandButton id="submit2" styleClass="button submit" value="Sign Up" actionListener="#{loginManager.signup}" /></li>
                     </ul>
                 </h:form>
             </section>	

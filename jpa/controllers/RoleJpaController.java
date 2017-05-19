@@ -11,21 +11,19 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import jpa.controllers.exceptions.NonexistentEntityException;
 import jpa.controllers.exceptions.PreexistingEntityException;
-import jpa.entities.PostFollowees;
+import jpa.entities.Role;
 
 /**
  *
  * @author Kronen
  */
-public class PostFolloweesJpaController implements Serializable {
+public class RoleJpaController implements Serializable {
 
-    public PostFolloweesJpaController(EntityManagerFactory emf) {
+    public RoleJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -34,16 +32,16 @@ public class PostFolloweesJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(PostFollowees postFollowees) throws PreexistingEntityException, Exception {
+    public void create(Role role) throws PreexistingEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(postFollowees);
+            em.persist(role);
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (findPostFollowees(postFollowees.getId()) != null) {
-                throw new PreexistingEntityException("PostFollowees " + postFollowees + " already exists.", ex);
+            if (findRole(role.getRoleName()) != null) {
+                throw new PreexistingEntityException("Role " + role + " already exists.", ex);
             }
             throw ex;
         } finally {
@@ -53,19 +51,19 @@ public class PostFolloweesJpaController implements Serializable {
         }
     }
 
-    public void edit(PostFollowees postFollowees) throws NonexistentEntityException, Exception {
+    public void edit(Role role) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            postFollowees = em.merge(postFollowees);
+            role = em.merge(role);
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                String id = postFollowees.getId();
-                if (findPostFollowees(id) == null) {
-                    throw new NonexistentEntityException("The postFollowees with id " + id + " no longer exists.");
+                String id = role.getRoleName();
+                if (findRole(id) == null) {
+                    throw new NonexistentEntityException("The role with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -81,14 +79,14 @@ public class PostFolloweesJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            PostFollowees postFollowees;
+            Role role;
             try {
-                postFollowees = em.getReference(PostFollowees.class, id);
-                postFollowees.getId();
+                role = em.getReference(Role.class, id);
+                role.getRoleName();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The postFollowees with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The role with id " + id + " no longer exists.", enfe);
             }
-            em.remove(postFollowees);
+            em.remove(role);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -97,19 +95,19 @@ public class PostFolloweesJpaController implements Serializable {
         }
     }
 
-    public List<PostFollowees> findPostFolloweesEntities() {
-        return findPostFolloweesEntities(true, -1, -1);
+    public List<Role> findRoleEntities() {
+        return findRoleEntities(true, -1, -1);
     }
 
-    public List<PostFollowees> findPostFolloweesEntities(int maxResults, int firstResult) {
-        return findPostFolloweesEntities(false, maxResults, firstResult);
+    public List<Role> findRoleEntities(int maxResults, int firstResult) {
+        return findRoleEntities(false, maxResults, firstResult);
     }
 
-    private List<PostFollowees> findPostFolloweesEntities(boolean all, int maxResults, int firstResult) {
+    private List<Role> findRoleEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(PostFollowees.class));
+            cq.select(cq.from(Role.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -121,20 +119,20 @@ public class PostFolloweesJpaController implements Serializable {
         }
     }
 
-    public PostFollowees findPostFollowees(String id) {
+    public Role findRole(String id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(PostFollowees.class, id);
+            return em.find(Role.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getPostFolloweesCount() {
+    public int getRoleCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<PostFollowees> rt = cq.from(PostFollowees.class);
+            Root<Role> rt = cq.from(Role.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
@@ -143,17 +141,4 @@ public class PostFolloweesJpaController implements Serializable {
         }
     }
     
-    public List findPostsFollowees(int id_follower) {
-        EntityManager em = getEntityManager();
-        try {
-            TypedQuery<PostFollowees> tq = em.createNamedQuery("PostFollowees.findByIdFollowerOrdered", PostFollowees.class)
-                    .setParameter("idFollower", id_follower);
-
-            return tq.getResultList();
-        } catch(NoResultException e) {
-            return null;
-        } finally {
-            em.close();
-        }
-    }
 }
