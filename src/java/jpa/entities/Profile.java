@@ -21,7 +21,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -42,6 +41,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Profile.findByFullName", query = "SELECT p FROM Profile p WHERE p.fullName = :fullName")
     , @NamedQuery(name = "Profile.findByNumPosts", query = "SELECT p FROM Profile p WHERE p.numPosts = :numPosts")
     , @NamedQuery(name = "Profile.findByPhoto", query = "SELECT p FROM Profile p WHERE p.photo = :photo")
+    , @NamedQuery(name = "Profile.findByTheme", query = "SELECT p FROM Profile p WHERE p.theme = :theme")
     , @NamedQuery(name = "Profile.findByUserName", query = "SELECT p FROM Profile p WHERE p.user.userName = :userName")})
 public class Profile implements Serializable {
 
@@ -51,6 +51,7 @@ public class Profile implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Basic(optional = false)
     @Column(name = "email")
     private String email;
     @Column(name = "location")
@@ -64,6 +65,8 @@ public class Profile implements Serializable {
     private int numPosts;
     @Column(name = "photo")
     private String photo;
+    @Column(name = "theme")
+    private String theme;
     @JoinTable(name = "follower_followee", joinColumns = {
         @JoinColumn(name = "followee", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "follower", referencedColumnName = "id")})
@@ -76,7 +79,6 @@ public class Profile implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "receiver")
     private Collection<Private> privateCollection1;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
-    @OrderBy("pubDate DESC")
     private Collection<Post> postCollection;
     @JoinColumn(name = "user", referencedColumnName = "user_name")
     @ManyToOne(optional = false)
@@ -89,8 +91,9 @@ public class Profile implements Serializable {
         this.id = id;
     }
 
-    public Profile(Integer id, int numPosts) {
+    public Profile(Integer id, String email, int numPosts) {
         this.id = id;
+        this.email = email;
         this.numPosts = numPosts;
     }
 
@@ -150,12 +153,20 @@ public class Profile implements Serializable {
         this.photo = photo;
     }
 
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
     @XmlTransient
     public Collection<Profile> getFollowers() {
         return followers;
     }
 
-    public void setProfileCollection(Collection<Profile> followers) {
+    public void setFollowers(Collection<Profile> followers) {
         this.followers = followers;
     }
 
@@ -164,7 +175,7 @@ public class Profile implements Serializable {
         return followees;
     }
 
-    public void setProfileCollection1(Collection<Profile> followees) {
+    public void setFollowees(Collection<Profile> followees) {
         this.followees = followees;
     }
 

@@ -117,8 +117,8 @@ public class HomePage implements Serializable {
         // Add post to database
         newPost.setAuthor(profile);
         newPost.setPubDate(new Date());
-        postC.create(newPost);        
-        System.out.println(newPost.getId());
+        postC.create(newPost);
+        
         // Add tags to database with the post associated
         try {
             tagC.createTagsWithPost(newPost, tags); 

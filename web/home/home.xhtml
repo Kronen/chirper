@@ -84,21 +84,23 @@
                     </h2>
                     
                     <ol id="posts" class="postboard-posts">
-                        <ui:repeat value="#{homePage.postsFromFollowees}" var="post">
+                        <p:dataList value="#{homePage.postsFromFollowees}" var="chirp" itemType="none" 
+                                        styleClass="postboard-posts" paginator="true" paginatorPosition="bottom" rows="10">
                         <!-- use "post-template" here -->
                         <li id="post-template" class="module post" data-time="">
                             <div class="post-data" data-userpost="" data-content_to_rt="" data-content_to_sigrt=""
                                  data-screen-name="" data-id="" data-text="" data-text-mentions="">
                                 <div class="post-photo"><img class="avatar" src="http://lorempixel.com/48/48/people" alt="user-photo"/></div>
                                 <div class="post-info">
-                                    <p:link href="/user/#{post.followee}" styleClass="post-info-name" value="#{post.followee}" />
-                                    <span class="post-info-tag">@#{post.followee}</span>
+                                    <p:link href="/user/#{chirp.followeeName}" styleClass="post-info-name" 
+                                            value="#{chirp.followeeFullName != null ? chirp.followeeFullName : chirp.followeeName}" />
+                                    <span class="post-info-tag">@#{chirp.followeeName}</span>
                                     <a class="post-info-time">
-                                        <h:outputText value="#{timeHandler.elapsed(post.pubDate)}" />
-                                        <span class="post-location" data-lat="#{post.latitude}" data-lng="#{post.longitude}"></span>
+                                        <h:outputText value="#{timeHandler.elapsed(chirp.pubDate)}" />
+                                        <span class="post-location" data-lat="#{chirp.latitude}" data-lng="#{chirp.longitude}"></span>
                                     </a>
                                 </div>
-                                <p class="post-text"><h:outputText value="#{post.text}" /></p>
+                                <p class="post-text"><h:outputText value="#{chirp.text}" /></p>
                                 
                                 <span class="post-expand">Expand</span>
 
@@ -120,8 +122,10 @@
                                         <li class="avatar-row">
                                             <!-- use "avatar-row-template" here -->
                                             <a id="avatar-row-template" class="open-profile-modal" href="">
-                                               <img class="size24" src="http://lorempixel.com/48/48/people" alt="user-photo"/>
-                                               <span class="user-name-tooltip"></span>
+                                               <h:graphicImage library="images" name="#{homePage.avatar}" 
+                                                               styleClass="size24" alt="user photo"/> 
+                                               <h:outputText styleClass="user-name-tooltip" 
+                                                             value="#{homePage.profile.fullName != null ? homePage.profile.fullName : user.userName}"/>
                                             </a>
                                         </li>
                                     </ul>
@@ -138,7 +142,7 @@
                                 </div> <!-- expanded-content -->
                             </div> <!-- post-data -->
                         </li> <!-- post-template -->
-                        </ui:repeat>
+                        </p:dataList>
                     </ol>           
                 </div>
                 <div class="chirp-quarter">

@@ -192,19 +192,16 @@ public class TagJpaController implements Serializable {
                     tag.getPostCollection().add(newPost);
                     edit(tag);
                 } catch (NoResultException|NonexistentEntityException e) {
-                    if(tag != null) {
-                        tag = new Tag(null, tagName);
-                        ArrayList<Post> posts = new ArrayList<>();
-                        posts.add(newPost);
-                        tag.setPostCollection(posts);
-                        create(tag);
-                    }
+                    tag = new Tag(null, tagName);
+                    ArrayList<Post> posts = new ArrayList<>();
+                    posts.add(newPost);
+                    tag.setPostCollection(posts);
+                    create(tag);
                 }
             }
         } finally {
             em.close();
-        }
-        
+        }        
     }
     
 }

@@ -88,7 +88,7 @@
                                         <div class="post-photo"><img class="avatar" src="http://lorempixel.com/48/48/people" alt="user-photo"/></div>
                                         <div class="post-info">
                                             <p:link href="/user/#{userPage.userName}" styleClass="post-info-name" value="#{userPage.name}" />
-                                            <span class="post-info-tag">@#{chirp.author.user.userName}</span>
+                                            <h:outputText styleClass="post-info-tag" value="@#{chirp.author.user.userName}" />
                                             <a class="post-info-time">
                                                 <h:outputText value="#{timeHandler.elapsed(chirp.pubDate)}" />
                                                 <span class="post-location" data-lat="#{chirp.latitude}" data-lng="#{chirp.longitude}"></span>

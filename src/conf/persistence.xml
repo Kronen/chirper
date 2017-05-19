@@ -10,6 +10,7 @@
     <class>jpa.entities.PostFollowees</class>
     <class>jpa.entities.User</class>
     <class>jpa.entities.UserRole</class>
+    <class>jpa.entities.TrendingTopics</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/chirper_db?zeroDateTimeBehavior=convertToNull"/>

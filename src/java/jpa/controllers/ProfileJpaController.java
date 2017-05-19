@@ -41,10 +41,10 @@ public class ProfileJpaController implements Serializable {
 
     public void create(Profile profile) {
         if (profile.getFollowers() == null) {
-            profile.setProfileCollection(new ArrayList<Profile>());
+            profile.setFollowers(new ArrayList<Profile>());
         }
         if (profile.getFollowees() == null) {
-            profile.setProfileCollection1(new ArrayList<Profile>());
+            profile.setFollowees(new ArrayList<Profile>());
         }
         if (profile.getPrivateCollection() == null) {
             profile.setPrivateCollection(new ArrayList<Private>());
@@ -69,13 +69,13 @@ public class ProfileJpaController implements Serializable {
                 profileCollectionProfileToAttach = em.getReference(profileCollectionProfileToAttach.getClass(), profileCollectionProfileToAttach.getId());
                 attachedProfileCollection.add(profileCollectionProfileToAttach);
             }
-            profile.setProfileCollection(attachedProfileCollection);
+            profile.setFollowers(attachedProfileCollection);
             Collection<Profile> attachedProfileCollection1 = new ArrayList<Profile>();
             for (Profile profileCollection1ProfileToAttach : profile.getFollowees()) {
                 profileCollection1ProfileToAttach = em.getReference(profileCollection1ProfileToAttach.getClass(), profileCollection1ProfileToAttach.getId());
                 attachedProfileCollection1.add(profileCollection1ProfileToAttach);
             }
-            profile.setProfileCollection1(attachedProfileCollection1);
+            profile.setFollowees(attachedProfileCollection1);
             Collection<Private> attachedPrivateCollection = new ArrayList<Private>();
             for (Private privateCollectionPrivateToAttach : profile.getPrivateCollection()) {
                 privateCollectionPrivateToAttach = em.getReference(privateCollectionPrivateToAttach.getClass(), privateCollectionPrivateToAttach.getId());
@@ -198,14 +198,14 @@ public class ProfileJpaController implements Serializable {
                 attachedProfileCollectionNew.add(profileCollectionNewProfileToAttach);
             }
             profileCollectionNew = attachedProfileCollectionNew;
-            profile.setProfileCollection(profileCollectionNew);
+            profile.setFollowers(profileCollectionNew);
             Collection<Profile> attachedProfileCollection1New = new ArrayList<Profile>();
             for (Profile profileCollection1NewProfileToAttach : profileCollection1New) {
                 profileCollection1NewProfileToAttach = em.getReference(profileCollection1NewProfileToAttach.getClass(), profileCollection1NewProfileToAttach.getId());
                 attachedProfileCollection1New.add(profileCollection1NewProfileToAttach);
             }
             profileCollection1New = attachedProfileCollection1New;
-            profile.setProfileCollection1(profileCollection1New);
+            profile.setFollowees(profileCollection1New);
             Collection<Private> attachedPrivateCollectionNew = new ArrayList<Private>();
             for (Private privateCollectionNewPrivateToAttach : privateCollectionNew) {
                 privateCollectionNewPrivateToAttach = em.getReference(privateCollectionNewPrivateToAttach.getClass(), privateCollectionNewPrivateToAttach.getId());
@@ -416,7 +416,6 @@ public class ProfileJpaController implements Serializable {
             em.close();
         }
     }
-    
     /* Extended */
     
     public Profile findProfileByUserName(String username) {
@@ -477,6 +476,4 @@ public class ProfileJpaController implements Serializable {
             em.close();
         }
     }
-    
-    
 }

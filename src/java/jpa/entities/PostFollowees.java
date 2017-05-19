@@ -30,8 +30,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PostFollowees.findAll", query = "SELECT p FROM PostFollowees p")
     , @NamedQuery(name = "PostFollowees.findById", query = "SELECT p FROM PostFollowees p WHERE p.id = :id")
     , @NamedQuery(name = "PostFollowees.findByIdFollower", query = "SELECT p FROM PostFollowees p WHERE p.idFollower = :idFollower")
-    , @NamedQuery(name = "PostFollowees.findByFollower", query = "SELECT p FROM PostFollowees p WHERE p.follower = :follower")
-    , @NamedQuery(name = "PostFollowees.findByFollowee", query = "SELECT p FROM PostFollowees p WHERE p.followee = :followee")
+    , @NamedQuery(name = "PostFollowees.findByFollowerName", query = "SELECT p FROM PostFollowees p WHERE p.followerName = :followerName")
+    , @NamedQuery(name = "PostFollowees.findByFolloweeName", query = "SELECT p FROM PostFollowees p WHERE p.followeeName = :followeeName")
+    , @NamedQuery(name = "PostFollowees.findByFolloweeFullName", query = "SELECT p FROM PostFollowees p WHERE p.followeeFullName = :followeeFullName")
+    , @NamedQuery(name = "PostFollowees.findByPost", query = "SELECT p FROM PostFollowees p WHERE p.post = :post")
     , @NamedQuery(name = "PostFollowees.findByText", query = "SELECT p FROM PostFollowees p WHERE p.text = :text")
     , @NamedQuery(name = "PostFollowees.findByOriginalPost", query = "SELECT p FROM PostFollowees p WHERE p.originalPost = :originalPost")
     , @NamedQuery(name = "PostFollowees.findByPubDate", query = "SELECT p FROM PostFollowees p WHERE p.pubDate = :pubDate")
@@ -49,11 +51,16 @@ public class PostFollowees implements Serializable {
     @Column(name = "id_follower")
     private int idFollower;
     @Basic(optional = false)
-    @Column(name = "follower")
-    private String follower;
+    @Column(name = "follower_name")
+    private String followerName;
     @Basic(optional = false)
-    @Column(name = "followee")
-    private String followee;
+    @Column(name = "followee_name")
+    private String followeeName;
+    @Column(name = "followee_full_name")
+    private String followeeFullName;
+    @Basic(optional = false)
+    @Column(name = "post")
+    private int post;
     @Basic(optional = false)
     @Column(name = "text")
     private String text;
@@ -91,20 +98,36 @@ public class PostFollowees implements Serializable {
         this.idFollower = idFollower;
     }
 
-    public String getFollower() {
-        return follower;
+    public String getFollowerName() {
+        return followerName;
     }
 
-    public void setFollower(String follower) {
-        this.follower = follower;
+    public void setFollowerName(String followerName) {
+        this.followerName = followerName;
     }
 
-    public String getFollowee() {
-        return followee;
+    public String getFolloweeName() {
+        return followeeName;
     }
 
-    public void setFollowee(String followee) {
-        this.followee = followee;
+    public void setFolloweeName(String followeeName) {
+        this.followeeName = followeeName;
+    }
+
+    public String getFolloweeFullName() {
+        return followeeFullName;
+    }
+
+    public void setFolloweeFullName(String followeeFullName) {
+        this.followeeFullName = followeeFullName;
+    }
+
+    public int getPost() {
+        return post;
+    }
+
+    public void setPost(int post) {
+        this.post = post;
     }
 
     public String getText() {
