@@ -15,22 +15,12 @@
         
         <div class="wrapper">            
             <div class="chirp-row">
-                <div class="chirp-quarter">
-                    <!-- sub-menu (mentions, messages and edit profile) 
-                    <ul class="mini-profile-indicators selectable_theme theme_nin">
-                        <li class="userMenu-connections">
-                            <a href="#" title="Mentions"><span class="messages-qtd" style="display:none;">0</span><span>Mentions</span></a>
-                        </li>
-                        <li class="userMenu-messages">
-                            <a href="#" title="Direct Messages"><span class="messages-qtd" style="display:none;">0</span><span>Messages</span></a>
-                        </li>
-                    </ul>
-                    -->
+                <div class="chirp-quarter">                    
                     <!-- PROFILE -->
                     <div class="module mini-profile">
                         <div class="mini-profile-info">
                             <div class="mini-profile-photo">                                
-                                <h:graphicImage library="images" name="#{homePage.avatar}" alt="user photo"/>                                
+                                <h:graphicImage library="images" name="#{filesHandler.getAvatar(homePage.profile)}" alt="user photo"/>                                
                             </div>
                             <p:link href="/user/#{user.userName}" styleClass="mini-profile-name" 
                                 value="#{homePage.profile.fullName != null ? homePage.profile.fullName : user.userName}" />
@@ -57,8 +47,8 @@
                                 </a>
                             </li>
                         </ul>
-                        <div class="post-area">
-                            
+                        
+                        <div class="post-area">                            
                             <h:form id="form-new-post" styleClass="post-area-new">
                                 <p:inputTextarea id="new-post-text" value="#{homePage.newPost.text}" placeholder="New Post..." 
                                     maxlength="256" />
@@ -90,16 +80,20 @@
                         <li id="post-template" class="module post" data-time="">
                             <div class="post-data" data-userpost="" data-content_to_rt="" data-content_to_sigrt=""
                                  data-screen-name="" data-id="" data-text="" data-text-mentions="">
-                                <div class="post-photo"><img class="avatar" src="http://lorempixel.com/48/48/people" alt="user-photo"/></div>
-                                <div class="post-info">
+                                <p:panel styleClass="post-photo">
+                                    <img class="avatar" src="http://lorempixel.com/48/48/people" alt="user-photo"/>
+                                    <!--<p:graphicImage library="images" name="#{chirp.followeePhoto}"/>-->                                
+                                </p:panel>
+                                <p:panel styleClass="post-info">
                                     <p:link href="/user/#{chirp.followeeName}" styleClass="post-info-name" 
                                             value="#{chirp.followeeFullName != null ? chirp.followeeFullName : chirp.followeeName}" />
-                                    <span class="post-info-tag">@#{chirp.followeeName}</span>
+                                    <h:outputText styleClass="post-info-tag" value="@#{chirp.followeeName}" />
                                     <a class="post-info-time">
                                         <h:outputText value="#{timeHandler.elapsed(chirp.pubDate)}" />
                                         <span class="post-location" data-lat="#{chirp.latitude}" data-lng="#{chirp.longitude}"></span>
                                     </a>
-                                </div>
+                                </p:panel>
+                                
                                 <p class="post-text"><h:outputText value="#{chirp.text}" /></p>
                                 
                                 <span class="post-expand">Expand</span>
@@ -121,12 +115,12 @@
                                         </li>
                                         <li class="avatar-row">
                                             <!-- use "avatar-row-template" here -->
-                                            <a id="avatar-row-template" class="open-profile-modal" href="">
-                                               <h:graphicImage library="images" name="#{homePage.avatar}" 
+                                            <p:link href="/user/#{homePage.user.userName}">
+                                               <h:graphicImage library="images" name="#{filesHandler.getAvatar(homePage.profile)}" 
                                                                styleClass="size24" alt="user photo"/> 
                                                <h:outputText styleClass="user-name-tooltip" 
                                                              value="#{homePage.profile.fullName != null ? homePage.profile.fullName : user.userName}"/>
-                                            </a>
+                                            </p:link>
                                         </li>
                                     </ul>
                                     <div class="post-reply-content" style="display: block;">
@@ -134,7 +128,6 @@
                                             <textarea placeholder="Reply..."></textarea>
                                             <div class="post-area-extras">
                                                 <span class="post-area-remaining">256</span>
-                                                <button class="undo-unicode">undo</button>
                                                 <button class="post-submit">post</button>
                                             </div>
                                         </form>
@@ -146,8 +139,27 @@
                     </ol>           
                 </div>
                 <div class="chirp-quarter">
-                    <div class="module mini-profile">
-                        <div style="text-align: center">Some content here</div>
+                    <div class="module trending-topics">
+                        <h2><h:outputText value="Trending Topics"/></h2>
+                        <p:dataList value="#{homePage.trendingTopics(1)}" var="tt" type="ordered">
+                            <f:facet name="header">
+                                <h:outputText value="Last 24 Hours"/>
+                            </f:facet>
+                            <p:link class="tt" href="">#{tt[0]}</p:link> <span>#{tt[1]}</span>
+                            <h:outputText value="#{tt[1]}"/>
+                        </p:dataList>
+                        <p:dataList value="#{homePage.trendingTopics(7)}" var="tt" type="ordered">
+                            <f:facet name="header">
+                                <h:outputText value="Last 7 Days"/>
+                            </f:facet>
+                            <p:link class="tt" href="">#{tt[0]}</p:link> <span>#{tt[1]}</span>
+                        </p:dataList>
+                        <p:dataList value="#{homePage.trendingTopics(31)}" var="tt" type="ordered">
+                            <f:facet name="header">
+                                <h:outputText value="Last Month"/>
+                            </f:facet>
+                            <p:link class="tt" href="">#{tt[0]}</p:link> <span>#{tt[1]}</span>
+                        </p:dataList>
                     </div>
                 </div>
             </div>

@@ -204,4 +204,22 @@ public class TagJpaController implements Serializable {
         }        
     }
     
+    public List findTrendingTopics(int dias) {
+        EntityManager em = getEntityManager();
+        try {
+            String sql =
+                "SELECT t.tag_name AS tag_name, count(pt.tag) AS post_count " +
+                "FROM post_tag pt " +
+                "   LEFT JOIN tag t ON (pt.tag = t.id) " +
+                "   LEFT JOIN post p ON (pt.post = p.id) " +
+                "WHERE p.pub_date >= now() - INTERVAL ? DAY " +
+                "GROUP BY pt.tag";
+            Query q = em.createNativeQuery(sql, "TrendingTopicsMappingXML")
+                    .setParameter(1, dias)
+                    .setMaxResults(10);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }

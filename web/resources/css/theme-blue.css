@@ -13,11 +13,13 @@ html, body {
     background-color: #7691ce;
 }
 
-.postboard {
-	background: rgba(255, 255, 255, .5);
+.postboard,
+.trending-topics {
+    background: rgba(255, 255, 255, .5);
 }
 
-.postboard h2 {
+.postboard h2,
+.trending-topics h2 {
     background: #7691ce;
 }
 

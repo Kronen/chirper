@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "PostFollowees.findByFollowerName", query = "SELECT p FROM PostFollowees p WHERE p.followerName = :followerName")
     , @NamedQuery(name = "PostFollowees.findByFolloweeName", query = "SELECT p FROM PostFollowees p WHERE p.followeeName = :followeeName")
     , @NamedQuery(name = "PostFollowees.findByFolloweeFullName", query = "SELECT p FROM PostFollowees p WHERE p.followeeFullName = :followeeFullName")
+    , @NamedQuery(name = "PostFollowees.findByPhoto", query = "SELECT p FROM PostFollowees p WHERE p.followeePhoto = :followeePhoto")        
     , @NamedQuery(name = "PostFollowees.findByPost", query = "SELECT p FROM PostFollowees p WHERE p.post = :post")
     , @NamedQuery(name = "PostFollowees.findByText", query = "SELECT p FROM PostFollowees p WHERE p.text = :text")
     , @NamedQuery(name = "PostFollowees.findByOriginalPost", query = "SELECT p FROM PostFollowees p WHERE p.originalPost = :originalPost")
@@ -58,6 +59,8 @@ public class PostFollowees implements Serializable {
     private String followeeName;
     @Column(name = "followee_full_name")
     private String followeeFullName;
+    @Column(name = "followee_photo")
+    private String followeePhoto;
     @Basic(optional = false)
     @Column(name = "post")
     private int post;
@@ -120,6 +123,14 @@ public class PostFollowees implements Serializable {
 
     public void setFolloweeFullName(String followeeFullName) {
         this.followeeFullName = followeeFullName;
+    }
+    
+    public String getFolloweePhoto() {
+        return followeePhoto;
+    }
+
+    public void setFolloweePhoto(String followeePhoto) {
+        this.followeePhoto = followeePhoto;
     }
 
     public int getPost() {

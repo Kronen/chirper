@@ -32,7 +32,7 @@
                     <div class="module mini-profile">
                         <div class="mini-profile-info">
                             <div class="mini-profile-photo">                                
-                                <h:graphicImage value="http://lorempixel.com/48/48/people" alt="user photo"/>                                
+                                <h:graphicImage library="images" name="#{filesHandler.getAvatar(userPage.profile)}" alt="user photo"/>                                
                             </div>
                             <p:link href="/user/#{userPage.userName}" styleClass="mini-profile-name" 
                                 value="#{userPage.name}" />
@@ -60,7 +60,7 @@
                             </li>
                         </ul>
                         <p:outputPanel id="buttonArea">
-                            <p:panel styleClass="button-area" rendered="#{user != null and homePage.profile.id != userPage.profile.id}">
+                            <p:panel styleClass="button-area" rendered="#{loginManager.userLoggedIn and homePage.profile.id != userPage.profile.id}">
                                 <h:form>
                                     <p:commandButton styleClass="button-flat" action="#{userPage.followUser}"
                                                      value="Follow" rendered="#{!userPage.followed}" update="@form"/>
@@ -94,8 +94,9 @@
                                                 <span class="post-location" data-lat="#{chirp.latitude}" data-lng="#{chirp.longitude}"></span>
                                             </a>
                                         </div>
-                                        <p class="post-text"><h:outputText value="#{chirp.text}" /></p>
-
+                                        <!--<p:commandLink onclick="PF('dlg').show();">-->
+                                            <h:outputText styleClass="post-text" value="#{chirp.text}" />
+                                        <!--</p:commandLink>-->
                                         <span class="post-expand">Expand</span>
 
                                         <div class="post-interactions">
@@ -115,9 +116,11 @@
                                                         <span>Favs</span>
                                                 </li>
                                                 <li class="avatar-row">                                                    
-                                                    <p:link href="/user/#{homePage.user.userName}" rendered="#{user != null}">
-                                                       <img class="size24" src="http://lorempixel.com/48/48/people" alt="user-photo"/>
-                                                       <h:outputText styleClass="user-name-tooltip" value="#{homePage.name}"/>
+                                                    <p:link href="/user/#{homePage.user.userName}" rendered="#{loginManager.userLoggedIn and homePage.profile.id != userPage.profile.id}">
+                                                        <h:graphicImage library="images" name="#{filesHandler.getAvatar(homePage.profile)}" 
+                                                            styleClass="size24" alt="user photo"/>
+                                                       <h:outputText styleClass="user-name-tooltip" 
+                                                            value="#{homePage.profile.fullName != null ? homePage.profile.fullName : user.userName}"/>
                                                     </p:link>
                                                 </li>
                                             </ul>
@@ -126,7 +129,6 @@
                                                     <textarea placeholder="Reply..."></textarea>
                                                     <div class="post-area-extras">
                                                         <span class="post-area-remaining">256</span>
-                                                        <button class="undo-unicode">undo</button>
                                                         <button class="post-submit">post</button>
                                                     </div>
                                                 </div>
@@ -136,14 +138,33 @@
                                 </li> 
                             </p:dataList>
                         </h:form>
-                        <p:dialog header="Dialog" widgetVar="dlg" modal="true" dynamic="true">
+                        <p:dialog header="Chirp Info" widgetVar="dlg" modal="true" closable="true" closeOnEscape="true"
+                                  resizable="false" responsive="true">
                             <h:outputText value="This content is loaded lazy." />
                         </p:dialog>
                 </div>
                 <div class="chirp-quarter">
-                    <div class="module mini-profile">
-                        <div style="text-align: center">Some content here</div>
-                    </div>                   
+                    <div class="module trending-topics">
+                        <h2><h:outputText value="Trending Topics"/></h2>
+                        <p:dataList value="#{homePage.trendingTopics(1)}" var="tt">
+                            <f:facet name="header">
+                                <h:outputText value="Last 24 Hours"/>
+                            </f:facet>
+                            <p:link class="tt" href="">#{tt[0]}</p:link> <span>#{tt[1]}</span>
+                        </p:dataList>
+                        <p:dataList value="#{homePage.trendingTopics(7)}" var="tt">
+                            <f:facet name="header">
+                                <h:outputText value="Last 7 Days"/>
+                            </f:facet>
+                            <p:link class="tt" href="">#{tt[0]}</p:link> <span>#{tt[1]}</span>
+                        </p:dataList>
+                        <p:dataList value="#{homePage.trendingTopics(31)}" var="tt" type="ordered">
+                            <f:facet name="header">
+                                <h:outputText value="Last Month"/>
+                            </f:facet>
+                            <p:link class="tt" href="">#{tt[0]}</p:link> <span>#{tt[1]}</span>
+                        </p:dataList>
+                    </div>
                 </div>
             </p:panel>
             </div>            

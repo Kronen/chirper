@@ -1,0 +1,6 @@
+<sql-result-set-mapping name="TrendingTopicsMappingXML">
+    <entity-result entity-class="jpa.entities.Tag">
+        <field-result name="tagName" column="tag_name"/>
+    </entity-result>
+    <column-result name="postCount" class="java.lang.Long" />
+</sql-result-set-mapping>

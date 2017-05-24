@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Mention Notification</title>
+        <style type="text/css">
+            .wrap {
+                background-color: #E8EEF1;
+                min-height: 600px;
+                padding:2em;		
+            }
+            .text-box {		    
+                width: 40%;
+                padding: 1.2em;
+                margin: 2em auto;
+                background: #fff;
+                -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+                -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+            }
+            .text-box p {
+                font-size: 18px;
+                font-weight: bold;
+                color: #777;
+            }
+            h2 {
+                display: inline-block;
+            }
+
+            a {
+                text-decoration: none;
+                color: #ef3636;
+            }
+            a:hover h2 {
+                text-decoration: underline;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="wrap">
+            <h1 style="text-align: center;"><img src="http://i.imgur.com/h4HM1z8.png" alt="" width="112" height="74" /><span style="font-size: 36pt;">Chirper</span></h1>
+            <p style="text-align: center;">The user <a href="{url_user}">@{name}</a> mentioned you in a Chirp.</p>
+            <div class="text-box"><a href="{url_user}">{fullname}</a> <span>@{name}</span>
+                <p>{text}</p>
+            </div>
+        </div>
+    </body>
+</html>

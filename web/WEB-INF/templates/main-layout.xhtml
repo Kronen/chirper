@@ -6,10 +6,17 @@
       xmlns:p="http://primefaces.org/ui">
 
     <h:head>
-        <title><ui:insert name="title">Chirper</ui:insert></title>
-
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <f:facet name="first">
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+            <title><ui:insert name="title">Chirper</ui:insert></title>
+            <h:outputScript library="js" name="jquery-3.2.0.min.js" />
+            <h:outputScript library="js" name="jquery-ui.min.js" />
+        </f:facet>
+        
+        
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyTWLyHUGlnANR_7FC36nyB2K-F_L9PUE"></script>
+        
     </h:head>
 
     <h:body>    
@@ -19,8 +26,7 @@
 
         <ui:insert name="content">Error loading content</ui:insert> 
 
-        <h:outputScript library="js" name="jquery-3.2.0.min.js" />
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyTWLyHUGlnANR_7FC36nyB2K-F_L9PUE"></script>
+          
         <h:outputScript library="js" name="notify.min.js" />
         <h:outputScript library="js" name="home.js" />    
         <script>

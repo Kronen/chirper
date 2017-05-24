@@ -23,17 +23,16 @@
                 
                 <li class="userMenu-config">
                     <a class="userMenu-config-dropdown">
-                        <div class="config-menu dialog-modal">
-                            <ui:fragment rendered="#{loginManager.userLoggedIn}">
-                                <div class="mini-profile-info selectable_theme theme_original">
-                                    <div class="mini-profile-photo">
-                                        <img src="http://lorempixel.com/48/48/people" alt="user-photo"/>
-                                    </div>
-                                    <p:link href="user/#{user.userName}" styleClass="mini-profile-name"
-                                            value="#{cc.attrs.profile.fullName != null ? cc.attrs.profile.fullName : user.userName}"/>
-                                    <span class="mini-profile-view">@#{user.userName}</span>
+                        <p:panel styleClass="config-menu dialog-modal" rendered="#{loginManager.userLoggedIn}">
+                            <p:panel styleClass="mini-profile-info selectable_theme theme_original">
+                                <div class="mini-profile-photo">
+                                    <h:graphicImage library="images" name="#{filesHandler.getAvatar(cc.attrs.profile)}" 
+                                         alt="user-photo"/>
                                 </div>
-                            </ui:fragment>
+                                <p:link href="user/#{user.userName}" styleClass="mini-profile-name"
+                                        value="#{cc.attrs.profile.fullName != null ? cc.attrs.profile.fullName : user.userName}"/>
+                                <h:outputText styleClass="mini-profile-view" value="@#{user.userName}" />
+                            </p:panel>
                             <h:form id="form-settings">
                                 <a class="dropdown-menu-item uri-shortener">URI shortener</a>
                                 <a class="dropdown-menu-item" href="options.html">Options</a>
@@ -44,9 +43,9 @@
                                 <a class="dropdown-menu-item promoted-posts-only" href="#">Switch to Promoted posts</a>
                                 <a class="dropdown-menu-item direct-messages" href="#">Direct Messages</a>
                                 <p:commandLink id="logout" value="Log Out" styleClass="dropdown-menu-item" ajax="false" 
-                                    rendered="#{loginManager.userLoggedIn}" actionListener="#{loginManager.logout}" />
+                                    actionListener="#{loginManager.logout}" />
                             </h:form>
-                        </div>
+                        </p:panel>
                     </a>
                 </li>
                 <li class="userMenu-connections">

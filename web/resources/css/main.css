@@ -379,13 +379,15 @@ a:hover {
 .post-area-remaining {
     font-size: 13px
 }
-.postboard {
+.postboard,
+.trending-topics {
     background: rgba(255, 255, 255, .5);
     border: solid 1px rgba(69, 71, 77, .05);
     margin: 0 1%;
     padding: 10px
 }
-.postboard h2 {
+.postboard h2,
+.trending-topics h2 {
     background: #e34f42;
     border-bottom: solid 1px rgba(69, 71, 77, .1);
     color: rgba(255, 255, 255, 1);
@@ -447,7 +449,8 @@ a:hover {
     width: 48px
 }
 .post-info span {
-    vertical-align: top
+    vertical-align: top;
+    margin-left: 5px;
 }
 .post-info-name, .mini-profile-name {
     color: #e34f42;
@@ -463,7 +466,7 @@ a:hover {
     font-style: italic;
     letter-spacing: 0;
     margin-top: 4px;
-    opacity: .6
+    opacity: .6;
 }
 .post-info-time {
     display: none;
@@ -471,18 +474,19 @@ a:hover {
     font-size: 12px;
     margin: 4px 8px 0;
     opacity: .8;
-    text-decoration: none
+    text-decoration: none;
 }
 .post-text {
+    display: block;
     font-size: 14px;
     margin: 5px 16px 4px 60px;
-    word-wrap: break-word
+    word-wrap: break-word;    
 }
 .post-context {
     font-size: 11px;
-    margin: 2px 16px 4px 60px
+    margin: 2px 16px 4px 60px;
 }
-.confirm-popup .message a, .post-text a, .post-context a, .mini-screen-name {
+.confirm-popup .message a, .post-text a, .post-context a, .mini-screen-name, .trending-topics a {
     color: #E34F42
 }
 .mini-screen-name {
@@ -647,4 +651,31 @@ a:hover {
 .button-flat.button-red:active {
   background-color: #a5281d;
   text-shadow: -1px 1px #821f16;
+}
+
+
+.trending-topics .ui-widget-header {
+    border: 1px solid #d9d9d9;
+    color: #1b1d1f;
+    background: #c9dff0;
+}
+
+.trending-topics .ui-widget-content {
+    border-left: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+    background-color: #fff;
+}
+
+.trending-topics .ui-datalist {
+    margin: 15px 5px;
+}
+.trending-topics .ui-datalist-item {
+    text-align: right;
+}
+.trending-topics .ui-datalist-item a + span {
+    padding: 0 5px;
+    font-size: 11px;
+    color: #aaa;
 }
