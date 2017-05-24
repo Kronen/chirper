@@ -28,9 +28,12 @@ public class FilesHandler {
         }
     }
     
-    public String getAvatar(Profile profile) {
-        if(FilesHandler.imageExists(profile.getPhoto())) 
-            return profile.getPhoto();
-        return "user-blue.png";
+    public String getAvatar(String photo) {
+        
+        if(photo.isEmpty() || !FilesHandler.imageExists(photo)) {
+            System.out.println("Vacia");
+            return "user-blue.png";            
+        }            
+        return photo;
     }
 }

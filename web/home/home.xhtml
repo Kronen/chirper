@@ -17,7 +17,7 @@
             <div class="chirp-row">
                 <div class="chirp-quarter">                    
                     <!-- PROFILE -->
-                    <div class="module mini-profile">
+                    <p:panel styleClass="module mini-profile" rendered="#{loginManager.userLoggedIn}">
                         <div class="mini-profile-info">
                             <div class="mini-profile-photo">                                
                                 <h:graphicImage library="images" name="#{filesHandler.getAvatar(homePage.profile)}" alt="user photo"/>                                
@@ -31,7 +31,7 @@
                             <li>
                                 <a href="#" class="open-profile-modal">
                                     <h:outputText value="#{homePage.profile.postCollection.size()}" styleClass="posts-count" />
-                                    <span class="label">Posts</span>
+                                    <span class="label">Chirps</span>
                                 </a>
                             </li>
                             <li>
@@ -48,7 +48,7 @@
                             </li>
                         </ul>
                         
-                        <div class="post-area">                            
+                        <p:panel styleClass="post-area">                            
                             <h:form id="form-new-post" styleClass="post-area-new">
                                 <p:inputTextarea id="new-post-text" value="#{homePage.newPost.text}" placeholder="New Post..." 
                                     maxlength="256" />
@@ -64,45 +64,43 @@
                                                      actionListener="#{homePage.publish}" oncomplete="handlePostSubmited()"/>                                    
                                 </div>
                             </h:form>
-                        </div>
-                    </div>
+                        </p:panel>
+                    </p:panel>
                 </div>
 
                 <div class="postboard chirp-half">
-                    <h2>
-                        <span>Chirpboard</span>
-                    </h2>
+                    <h2><span>Chirpboard</span></h2>
                     
                     <ol id="posts" class="postboard-posts">
                         <p:dataList value="#{homePage.postsFromFollowees}" var="chirp" itemType="none" 
                                         styleClass="postboard-posts" paginator="true" paginatorPosition="bottom" rows="10">
                         <!-- use "post-template" here -->
-                        <li id="post-template" class="module post" data-time="">
-                            <div class="post-data" data-userpost="" data-content_to_rt="" data-content_to_sigrt=""
-                                 data-screen-name="" data-id="" data-text="" data-text-mentions="">
+                        
+                        <li id="post-template" class="module post">
+                            
+                            <p:panel styleClass="post-data">
                                 <p:panel styleClass="post-photo">
-                                    <img class="avatar" src="http://lorempixel.com/48/48/people" alt="user-photo"/>
-                                    <!--<p:graphicImage library="images" name="#{chirp.followeePhoto}"/>-->                                
+                                    <p:graphicImage library="images" name="#{filesHandler.getAvatar(chirp.followeePhoto)}" 
+                                                    styleClass="avatar" alt="user-photo"/>                                
                                 </p:panel>
                                 <p:panel styleClass="post-info">
                                     <p:link href="/user/#{chirp.followeeName}" styleClass="post-info-name" 
                                             value="#{chirp.followeeFullName != null ? chirp.followeeFullName : chirp.followeeName}" />
                                     <h:outputText styleClass="post-info-tag" value="@#{chirp.followeeName}" />
-                                    <a class="post-info-time">
+                                    <p:link styleClass="post-info-time">
                                         <h:outputText value="#{timeHandler.elapsed(chirp.pubDate)}" />
                                         <span class="post-location" data-lat="#{chirp.latitude}" data-lng="#{chirp.longitude}"></span>
-                                    </a>
+                                    </p:link>
                                 </p:panel>
                                 
                                 <p class="post-text"><h:outputText value="#{chirp.text}" /></p>
                                 
-                                <span class="post-expand">Expand</span>
+                                <h:outputText styleClass="post-expand" value="Expand"/>
 
-                                <div class="post-interactions">
-                                    <span class="post-reply">Reply</span>
-                                    <span class="post-propagate">Retransmit</span>
-                                    <!--span class="post-favorite">Favorite</span-->
-                                </div>
+                                <p:panel class="post-interactions">
+                                    <h:outputText styleClass="post-propagate" value="Retransmit"/>
+                                    <h:outputText styleClass="post-favorite" value="Favorite"/>
+                                </p:panel>
                                 <div class="expanded-content">
                                     <ul class="post-stats">
                                         <li class="stat-count">
@@ -133,7 +131,7 @@
                                         </form>
                                     </div>
                                 </div> <!-- expanded-content -->
-                            </div> <!-- post-data -->
+                            </p:panel> <!-- post-data -->
                         </li> <!-- post-template -->
                         </p:dataList>
                     </ol>           

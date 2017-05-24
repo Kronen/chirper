@@ -11,7 +11,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import jpa.controllers.ProfileJpaController;
 import jpa.entities.Profile;
-import utils.FilesHandler;
 import utils.MessageHandler;
 
 /**
@@ -34,7 +33,7 @@ public class UserPage implements Serializable {
         emf = Persistence.createEntityManagerFactory("ChirperDbPU");
     }
 
-   
+    
     public String getUserName() {      
         return userName;        
     }
@@ -91,11 +90,5 @@ public class UserPage implements Serializable {
     public boolean isFollowed() {
           ProfileJpaController profileC = new ProfileJpaController(emf);
           return profileC.isFollowed(homePage.getProfile().getId(), profile.getId());
-    }
-    
-    public String getAvatar() {
-        if(FilesHandler.imageExists(profile.getPhoto())) 
-            return profile.getPhoto();
-        return "user-blue.png";
     }
 }

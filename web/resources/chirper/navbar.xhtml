@@ -16,9 +16,9 @@
 
 	<nav class="userMenu">
             <ul>
-                <li class="userMenu-home current"><p:link value="Home" href="/"/></li>
+                <li class="userMenu-home #{view.viewId eq '/home/home.xhtml' ? 'current' : ''}"><p:link value="Home" href="/"/></li>
                 <ui:fragment rendered="#{loginManager.userLoggedIn}">
-                <li class="userMenu-profile"><p:link value="Profile" href="/user/#{user.userName}"/></li>
+                <li class="userMenu-profile #{view.viewId eq '/user/user-view.xhtml' ? 'current' : ''}"><p:link value="Profile" href="/user/#{user.userName}"/></li>
                 </ui:fragment>
                 
                 <li class="userMenu-config">
@@ -36,7 +36,7 @@
                             <h:form id="form-settings">
                                 <a class="dropdown-menu-item uri-shortener">URI shortener</a>
                                 <a class="dropdown-menu-item" href="options.html">Options</a>
-                                <a class="dropdown-menu-item" href="network.html">Network config</a>
+                                <a class="dropdown-menu-item" href="#">view..iewId #{view.viewId}</a>
                                 <a class="dropdown-menu-item" href="profile-edit.html">Setup account</a>
                                 <a class="dropdown-menu-item dropdown-menu-following" href="#following">Following users</a>
                                 <a class="dropdown-menu-item" href="login.html">Change user</a>

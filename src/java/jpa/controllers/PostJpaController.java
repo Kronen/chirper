@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 import jpa.controllers.exceptions.NonexistentEntityException;
 import jpa.entities.Post;
 
@@ -202,6 +204,20 @@ public class PostJpaController implements Serializable {
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
+        } finally {
+            em.close();
+        }
+    }
+    
+    public List findPostReplies(Integer originalPost) {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Post> tq = em.createNamedQuery("Post.findByOriginalPostOrdered", Post.class)
+                    .setParameter("originalPost", originalPost);
+
+            return tq.getResultList();
+        } catch(NoResultException e) {
+            return null;
         } finally {
             em.close();
         }

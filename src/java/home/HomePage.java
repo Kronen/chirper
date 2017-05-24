@@ -23,7 +23,6 @@ import jpa.entities.Post;
 import jpa.entities.Profile;
 import jpa.entities.User;
 import org.apache.commons.io.IOUtils;
-import utils.FilesHandler;
 import utils.MailHandler;
 import utils.MessageHandler;
 import utils.TextHandler;
@@ -91,11 +90,7 @@ public class HomePage implements Serializable {
         return "theme-blue" + ".css";
     }
     
-//    public List countPosts() {
-//        PostJpaController postC = new PostJpaController(emf);
-//        return postC.getPostCountByAuthor(profile.getId());
-//    }
-    
+    /* Loads the profile for the current logged in user */
     public void loadProfile(String username) {        
         ProfileJpaController profileC = new ProfileJpaController(emf);
         profile = profileC.findProfileByUserName(username);
@@ -107,14 +102,8 @@ public class HomePage implements Serializable {
     public void publish() {
         createChirps();
         processMentions();        
-    }
-        
-    public String getAvatar() {
-        if(FilesHandler.imageExists(profile.getPhoto())) 
-            return profile.getPhoto();
-        return "user-blue.png";
-    }
-    
+    }        
+   
     private void createChirps() {
         PostJpaController postC = new PostJpaController(emf);
         TagJpaController tagC = new TagJpaController(emf);

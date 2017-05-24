@@ -10,3 +10,14 @@
     background: white;
     z-index: 9999;
 }
+
+.ui-panel {
+    padding: 0;
+}
+.ui-panel .ui-panel-content {
+    padding: 0;
+}
+
+.ui-datalist .ui-datalist-empty-message {
+    text-align: center;
+}
