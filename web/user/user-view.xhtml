@@ -75,11 +75,17 @@
                 </div>
 
                 <div class="postboard chirp-half">
-                    <h2><h:outputText value="#{userPage.profile.fullName} | Chirps"/></h2>
+                    <h2>
+                        <h:outputText value="#{userPage.name} | Chirps" rendered="#{homePage.profile.id != userPage.profile.id}"/>
+                        <h:outputText value="Tus Chirps" rendered="#{homePage.profile.id == userPage.profile.id}"/>
+                    </h2>
 
                     <h:form id="postForm">
-                        <p:dataList value="#{userPage.profile.postCollection}" var="chirp" itemType="none" 
-                                    styleClass="postboard-posts" paginator="true" paginatorPosition="bottom" rows="10">
+                        <p:dataScroller value="#{userPage.profile.postCollection}" var="chirp" styleClass="postboard-posts" 
+                                        chunkSize="10" >
+                            <f:facet name="loader">
+                                <p:commandButton type="button" value="View More" styleClass="view-more" />
+                            </f:facet>
                             <li id="post-template" class="module post">
                                 <p:panel class="post-data">
                                     <p:panel styleClass="post-photo">
@@ -87,7 +93,8 @@
                                                         styleClass="avatar" alt="user-photo"/>                                
                                     </p:panel>
                                     <div class="post-info">
-                                        <p:link href="/user/#{chirp.author.user.userName}" styleClass="post-info-name" value="#{chirp.author.fullName}" />
+                                        <p:link href="/user/#{chirp.author.user.userName}" styleClass="post-info-name" 
+                                                value="#{chirp.author.fullName != null ? chirp.author.fullName : chirp.author.user.userName}" />
                                         <h:outputText styleClass="post-info-tag" value="@#{chirp.author.user.userName}" />
                                         <a class="post-info-time">
                                             <h:outputText value="#{timeHandler.elapsed(chirp.pubDate)}" />
@@ -135,7 +142,7 @@
                                     </div> 
                                 </p:panel> 
                             </li> 
-                        </p:dataList>
+                        </p:dataScroller>
                     </h:form>
                 </div>
                 <div class="chirp-quarter">

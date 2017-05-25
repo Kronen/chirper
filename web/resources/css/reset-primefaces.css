@@ -21,3 +21,7 @@
 .ui-datalist .ui-datalist-empty-message {
     text-align: center;
 }
+
+.ui-datascroller .ui-datascroller-loader {
+    padding: 4px 0;
+}

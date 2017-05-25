@@ -18,7 +18,7 @@ function handlePostSubmited(area) {
     );
 }
 
-$(function () {
+$(function () {    
     $('.post-location, .post-info-time').hide();
 
     $('.userMenu-config').click(function(e) {
@@ -70,13 +70,34 @@ $(function () {
                 break;
         }
     });
+    
+    
     $.each($('a.tt'), function() {
         $(this).attr("href", 'tag/' + $(this).text().substring(1));
     });
+    
+    
     var tagPattern = /\B#([a-zA-Z0-9_-]{4,81})/gi;
-    $.each($('.post-text'), function() {
-        $(this).html($(this).html().replace(tagPattern, "<a href='/Chirper/tag/$1'>#$1</a>"));
+    
+    /* add link to Trenting topic tags */
+    
+    $.each($('a.tt'), function() {
+        $(this).attr("href", 'tag/' + $(this).text().substring(1));
     });
+    /* add link to present and future post tags */
+    tagsToLinks();
     
-    
+    $('button.view-more').on('click', function() {tagsToLinks();});
 });
+
+function tagsToLinks() {
+    var tagPattern = /\B#([a-zA-Z0-9_-]{4,81})/gi;
+    setTimeout(function(){        
+        $.each($('.post-text'), function() {
+            if(!$(this).find("a.tag").length )
+                $(this).html($(this).html().replace(tagPattern, "<a class='tag' href='/Chirper/tag/$1'>#$1</a>"));
+        });
+    }, 500);    
+}
+
+  

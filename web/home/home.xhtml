@@ -72,68 +72,70 @@
                     <h2><span>Chirpboard</span></h2>
                     
                     <ol id="posts" class="postboard-posts">
-                        <p:dataList value="#{homePage.postsFromFollowees}" var="chirp" itemType="none" 
-                                        styleClass="postboard-posts" paginator="true" paginatorPosition="bottom" rows="10">
-                        <!-- use "post-template" here -->
-                        
-                        <li id="post-template" class="module post">
-                            
-                            <p:panel styleClass="post-data">
-                                <p:panel styleClass="post-photo">
-                                    <p:graphicImage library="images" name="#{filesHandler.getAvatar(chirp.followeePhoto)}" 
-                                                    styleClass="avatar" alt="user-photo"/>                                
-                                </p:panel>
-                                <p:panel styleClass="post-info">
-                                    <p:link href="/user/#{chirp.followeeName}" styleClass="post-info-name" 
-                                            value="#{chirp.followeeFullName != null ? chirp.followeeFullName : chirp.followeeName}" />
-                                    <h:outputText styleClass="post-info-tag" value="@#{chirp.followeeName}" />
-                                    <p:link styleClass="post-info-time">
-                                        <h:outputText value="#{timeHandler.elapsed(chirp.pubDate)}" />
-                                        <span class="post-location" data-lat="#{chirp.latitude}" data-lng="#{chirp.longitude}"></span>
-                                    </p:link>
-                                </p:panel>
-                                
-                                <p class="post-text"><h:outputText value="#{chirp.text}" /></p>
-                                
-                                <h:outputText styleClass="post-expand" value="Expand"/>
+                        <p:dataScroller value="#{homePage.postsFromFollowees}" var="chirp" styleClass="postboard-posts" 
+                                        chunkSize="10" >
+                            <f:facet name="loader">
+                                <p:commandButton type="button" value="View More" styleClass="view-more"/>
+                            </f:facet>
+                            <li id="post-template" class="module post">
 
-                                <p:panel class="post-interactions">
-                                    <h:outputText styleClass="post-propagate" value="Retransmit"/>
-                                    <h:outputText styleClass="post-favorite" value="Favorite"/>
+                                <p:panel styleClass="post-data">
+                                    <p:panel styleClass="post-photo">
+                                        <p:graphicImage library="images" name="#{filesHandler.getAvatar(chirp.followeePhoto)}" 
+                                                        styleClass="avatar" alt="user-photo"/>                                
+                                    </p:panel>
+                                    <p:panel styleClass="post-info">
+                                        <p:link href="/user/#{chirp.followeeName}" styleClass="post-info-name" 
+                                                value="#{chirp.followeeFullName != null ? chirp.followeeFullName : chirp.followeeName}" />
+                                        <h:outputText styleClass="post-info-tag" value="@#{chirp.followeeName}" />
+                                        <p:link styleClass="post-info-time">
+                                            <h:outputText value="#{timeHandler.elapsed(chirp.pubDate)}" />
+                                            <span class="post-location" data-lat="#{chirp.latitude}" data-lng="#{chirp.longitude}"></span>
+                                        </p:link>
+                                    </p:panel>
+
+                                    <p class="post-text"><h:outputText value="#{chirp.text}" /></p>
+
+                                    <h:outputText styleClass="post-expand" value="Expand"/>
+
+                                    <p:panel class="post-interactions">
+                                        <h:outputText styleClass="post-propagate" value="Retransmit"/>
+                                        <h:outputText styleClass="post-favorite" value="Favorite"/>
+                                    </p:panel>
+                                    <div class="expanded-content">
+                                        <ul class="post-stats">
+                                            <li class="stat-count">
+                                                    <span class="stat-count-value">55</span>
+                                                    <span>Retransmits</span>
+                                            </li>
+                                            <li class="stat-count">
+                                                    <span class="stat-count-value">7</span>
+                                                    <span>Favs</span>
+                                            </li>
+                                            <li class="avatar-row">
+                                                <!-- use "avatar-row-template" here -->
+                                                <p:link href="/user/#{homePage.user.userName}">
+                                                   <h:graphicImage library="images" styleClass="size24" alt="user photo"
+                                                        name="#{filesHandler.getAvatar(homePage.profile)}"/> 
+                                                   <h:outputText styleClass="user-name-tooltip" 
+                                                         value="#{homePage.profile.fullName != null ? 
+                                                                  homePage.profile.fullName : user.userName}"/>
+                                                </p:link>
+                                            </li>
+                                        </ul>
+                                        <div class="post-reply-content" style="display: block;">
+                                            <form class="post-area-reply">
+                                                <textarea placeholder="Reply..."></textarea>
+                                                <div class="post-area-extras">
+                                                    <span class="post-area-remaining">256</span>
+                                                    <button class="post-submit">post</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div> 
                                 </p:panel>
-                                <div class="expanded-content">
-                                    <ul class="post-stats">
-                                        <li class="stat-count">
-                                                <span class="stat-count-value">55</span>
-                                                <span>Retransmits</span>
-                                        </li>
-                                        <li class="stat-count">
-                                                <span class="stat-count-value">7</span>
-                                                <span>Favs</span>
-                                        </li>
-                                        <li class="avatar-row">
-                                            <!-- use "avatar-row-template" here -->
-                                            <p:link href="/user/#{homePage.user.userName}">
-                                               <h:graphicImage library="images" name="#{filesHandler.getAvatar(homePage.profile)}" 
-                                                               styleClass="size24" alt="user photo"/> 
-                                               <h:outputText styleClass="user-name-tooltip" 
-                                                             value="#{homePage.profile.fullName != null ? homePage.profile.fullName : user.userName}"/>
-                                            </p:link>
-                                        </li>
-                                    </ul>
-                                    <div class="post-reply-content" style="display: block;">
-                                        <form class="post-area-reply">
-                                            <textarea placeholder="Reply..."></textarea>
-                                            <div class="post-area-extras">
-                                                <span class="post-area-remaining">256</span>
-                                                <button class="post-submit">post</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div> <!-- expanded-content -->
-                            </p:panel> <!-- post-data -->
-                        </li> <!-- post-template -->
-                        </p:dataList>
+                            </li>
+                        </p:dataScroller>
                     </ol>           
                 </div>
                 <div class="chirp-quarter">

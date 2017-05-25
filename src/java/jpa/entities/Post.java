@@ -57,6 +57,8 @@ public class Post implements Serializable {
     @Basic(optional = false)
     @Column(name = "text")
     private String text;
+    @Column(name = "image")
+    private String image;
     @Basic(optional = false)
     @Column(name = "pub_date")
     @Temporal(TemporalType.TIMESTAMP)
