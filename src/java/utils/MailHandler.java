@@ -27,13 +27,12 @@ public class MailHandler {
         host = System.getenv("EMAIL_NOTIFIER_HOST");
         port = System.getenv("EMAIL_NOTIFIER_PORT");
         username = System.getenv("EMAIL_NOTIFIER_USER");
-        password = System.getenv("EMAIL_NOTIFIER_PASS"); 
+        password = System.getenv("EMAIL_NOTIFIER_PASS");
         props.put("mail.smtp.host", host);
         props.put("mail.smtp.socketFactory.port", port);
 	props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.auth", "true");
 	props.put("mail.smtp.port", port);
-               
     }
     
     public void sendMail(String to, String subject, String text) throws MessagingException {

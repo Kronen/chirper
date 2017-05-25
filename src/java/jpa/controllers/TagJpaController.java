@@ -208,7 +208,7 @@ public class TagJpaController implements Serializable {
         EntityManager em = getEntityManager();
         try {
             String sql =
-                "SELECT t.tag_name AS tag_name, count(pt.tag) AS post_count " +
+                "SELECT t.tag_name AS tag, count(pt.tag) AS count " +
                 "FROM post_tag pt " +
                 "   LEFT JOIN tag t ON (pt.tag = t.id) " +
                 "   LEFT JOIN post p ON (pt.post = p.id) " +

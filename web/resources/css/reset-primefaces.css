@@ -10,18 +10,19 @@
     background: white;
     z-index: 9999;
 }
-
 .ui-panel {
     padding: 0;
 }
 .ui-panel .ui-panel-content {
     padding: 0;
 }
-
 .ui-datalist .ui-datalist-empty-message {
     text-align: center;
 }
-
 .ui-datascroller .ui-datascroller-loader {
     padding: 4px 0;
+}
+.ui-tagcloud {
+    width: auto;
+    margin: 10px 5px;
 }

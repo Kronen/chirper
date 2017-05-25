@@ -141,12 +141,20 @@
                 <div class="chirp-quarter">
                     <div class="module trending-topics">
                         <h2><h:outputText value="Trending Topics"/></h2>
+                        <f:facet name="header">
+                                <h:outputText value="Tag Cloud"/>
+                            </f:facet>
+                        <p:tagCloud model="#{homePage.tagCloudModel}">
+                            <f:facet name="header">
+                                <h:outputText value="Tag Cloud"/>
+                            </f:facet>
+                            <p:ajax event="select" listener="#{homePage.onSelect}" />
+                        </p:tagCloud>
                         <p:dataList value="#{homePage.trendingTopics(1)}" var="tt" type="ordered">
                             <f:facet name="header">
                                 <h:outputText value="Last 24 Hours"/>
                             </f:facet>
                             <p:link class="tt" href="">#{tt[0]}</p:link> <span>#{tt[1]}</span>
-                            <h:outputText value="#{tt[1]}"/>
                         </p:dataList>
                         <p:dataList value="#{homePage.trendingTopics(7)}" var="tt" type="ordered">
                             <f:facet name="header">

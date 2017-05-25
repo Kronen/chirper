@@ -3,6 +3,7 @@ package home;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import static java.lang.Math.toIntExact;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,6 +24,11 @@ import jpa.entities.Post;
 import jpa.entities.Profile;
 import jpa.entities.User;
 import org.apache.commons.io.IOUtils;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.tagcloud.DefaultTagCloudItem;
+import org.primefaces.model.tagcloud.DefaultTagCloudModel;
+import org.primefaces.model.tagcloud.TagCloudItem;
+import org.primefaces.model.tagcloud.TagCloudModel;
 import utils.MailHandler;
 import utils.MessageHandler;
 import utils.TextHandler;
@@ -35,7 +41,7 @@ public class HomePage implements Serializable {
     private User user;
     private Profile profile;
     private Post newPost;
-    
+    private TagCloudModel model;
 
     public HomePage() {
         emf = Persistence.createEntityManagerFactory("ChirperDbPU");  
@@ -46,7 +52,14 @@ public class HomePage implements Serializable {
         newPost = new Post();
         user = (User)externalContext().getSessionMap().get("user");
         if(user != null)
-            loadProfile(user.getUserName());   
+            loadProfile(user.getUserName()); 
+        
+        TagJpaController tC = new TagJpaController(emf);
+        List<Object[]> tts = tC.findTrendingTopics(30);
+        model = new DefaultTagCloudModel();
+        for(Object[] tt : tts) {
+            model.addTag(new DefaultTagCloudItem((String)tt[0], toIntExact((Long)tt[1])));
+        }
     }
     
     private ExternalContext externalContext() {
@@ -160,5 +173,13 @@ public class HomePage implements Serializable {
         } catch (IOException ex) {
             Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public TagCloudModel getTagCloudModel() {
+        return model;
+    }
+     
+    public void onSelect(SelectEvent event) {
+        TagCloudItem item = (TagCloudItem) event.getObject();
     }
 }

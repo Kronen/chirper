@@ -18,7 +18,9 @@
             <ul>
                 <li class="userMenu-home #{view.viewId eq '/home/home.xhtml' ? 'current' : ''}"><p:link value="Home" href="/"/></li>
                 <ui:fragment rendered="#{loginManager.userLoggedIn}">
-                <li class="userMenu-profile #{view.viewId eq '/user/user-view.xhtml' ? 'current' : ''}"><p:link value="Profile" href="/user/#{user.userName}"/></li>
+                <li class="userMenu-profile #{view.viewId eq '/user/user-view.xhtml' ? 'current' : ''}">
+                    <p:link value="Profile" href="/user/#{user.userName}"/>
+                </li>
                 </ui:fragment>
                 
                 <li class="userMenu-config">

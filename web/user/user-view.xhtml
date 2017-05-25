@@ -15,19 +15,9 @@
         
         <div class="wrapper">            
             <div class="chirp-row">
+                <!--We only render if the user exist -->
                 <p:panel rendered="#{not empty userPage.profile}">
-                <div class="chirp-quarter">
-                    <!-- sub-menu (mentions, messages and edit profile) 
-                    <ul class="mini-profile-indicators selectable_theme theme_nin">
-                        <li class="userMenu-connections">
-                            <a href="#" title="Mentions"><span class="messages-qtd" style="display:none;">0</span><span>Mentions</span></a>
-                        </li>
-                        <li class="userMenu-messages">
-                            <a href="#" title="Direct Messages"><span class="messages-qtd" style="display:none;">0</span><span>Messages</span></a>
-                        </li>
-                    </ul>
-                    -->
-                    
+                <div class="chirp-quarter">                    
                     <!-- PROFILE -->
                     <div class="module mini-profile">
                         <div class="mini-profile-info">
@@ -147,28 +137,35 @@
                 </div>
                 <div class="chirp-quarter">
                     <div class="module trending-topics">
-                        <h2><h:outputText value="Trending Topics"/></h2>
-                        <p:dataList value="#{homePage.trendingTopics(1)}" var="tt">
+                        <h2><h:outputText value="User Data"/></h2>
+                        <h:panelGrid columns="2" cellpadding="5">
                             <f:facet name="header">
-                                <h:outputText value="Last 24 Hours"/>
+                                <p:graphicImage library="images" name="#{filesHandler.getAvatar(userPage.profile.photo)}" />
                             </f:facet>
-                            <p:link class="tt" href="">#{tt[0]}</p:link> <span>#{tt[1]}</span>
-                        </p:dataList>
-                        <p:dataList value="#{homePage.trendingTopics(7)}" var="tt">
-                            <f:facet name="header">
-                                <h:outputText value="Last 7 Days"/>
-                            </f:facet>
-                            <p:link class="tt" href="">#{tt[0]}</p:link> <span>#{tt[1]}</span>
-                        </p:dataList>
-                        <p:dataList value="#{homePage.trendingTopics(31)}" var="tt" type="ordered">
-                            <f:facet name="header">
-                                <h:outputText value="Last Month"/>
-                            </f:facet>
-                            <p:link class="tt" href="">#{tt[0]}</p:link> <span>#{tt[1]}</span>
-                        </p:dataList>
+                            <h:outputText value="Name:" />
+                            <h:outputText value="#{userPage.profile.user.userName}" />
+                            
+                            <h:outputText value="Full Name:" rendered="#{not empty userPage.profile.fullName}"/>
+                            <h:outputText value="#{userPage.profile.fullName}" 
+                                          rendered="#{not empty userPage.profile.fullName}"/>
+                            
+                            <h:outputText value="Email:" />
+                            <h:outputText value="#{userPage.profile.email}" />
+                            
+                            <h:outputText value="Location:" rendered="#{not empty userPage.profile.location}"/>
+                            <h:outputText value="#{userPage.profile.location}" 
+                                          rendered="#{not empty userPage.profile.location}"/>
+                            
+                            <h:outputText value="Website:" rendered="#{not empty userPage.profile.website}"/>
+                            <h:outputText value="#{userPage.profile.website}" 
+                                          rendered="#{not empty userPage.profile.website}"/>
+                        </h:panelGrid>
                     </div>
                 </div>
-            </p:panel>
+                </p:panel>
+                <p:panel rendered="#{empty userPage.profile}">
+                    <h:outputText value="User #{userPage.userName} does not exist"/>
+                </p:panel>
             </div>            
         </div>
               
