@@ -6,8 +6,6 @@ import java.io.Serializable;
 import static java.lang.Math.toIntExact;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -109,9 +107,6 @@ public class HomePage implements Serializable {
         profile = profileC.findProfileByUserName(username);
     }
     
-    // La version de JPA es anterior a Java8 y no soporta las nuevas API de Date y Time.
-    // Habría que añadir un conversor de atributo a la entidad para usarlas o usar un
-    // framework que de soporte a la API como Hibernate 5
     public void publish() {
         createChirps();
         processMentions();        
@@ -131,7 +126,7 @@ public class HomePage implements Serializable {
         try {
             tagC.createTagsWithPost(newPost, tags); 
         } catch (Exception ex) {
-            MessageHandler.addErrorMessage("Error registering tags for new post", null);
+            MessageHandler.addErrorMessage("Error registering tags for this post", null);
         }
     }
     
@@ -156,7 +151,7 @@ public class HomePage implements Serializable {
             MailHandler mh = new MailHandler();
             String url_post = "http://localhost/Chirper/post/" + newPost.getId();
             String url_user = "http://localhost/Chirper/user/" + user.getUserName();
-            // Uso getResourceAsStream puesto que el fichero no tiene pq estar fisicamente en disco,
+            // Uso getResourceAsStream puesto que el fichero no tiene pq estar físicamente en disco,
             // según el servidor usado al desplegar el WAR puede estar en memoria únicamente
             InputStream content = externalContext().getResourceAsStream("/resources/html/mentions.html");
             System.out.println(content);
@@ -169,9 +164,9 @@ public class HomePage implements Serializable {
 
             mh.sendMail(email, "Chirper | Mention Notification", text);
         } catch (MessagingException ex) {
-            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+            MessageHandler.addErrorMessage("Error sending email. Try again later or contact the admin if the problem persist.", null);
         } catch (IOException ex) {
-            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+            MessageHandler.addErrorMessage("Error creating email template.", null);
         }
     }
     
