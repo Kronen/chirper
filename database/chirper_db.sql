@@ -231,7 +231,7 @@ INSERT INTO `tag` (`id`, `tag_name`) VALUES
 (4, '#ChirperRules');
 
 DROP VIEW IF EXISTS `post_followees`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`proyecto`@`localhost` SQL SECURITY DEFINER VIEW `post_followees`  AS  (select uuid() AS `id`,`p1`.`id` AS `id_follower`,`p1`.`user` AS `follower_name`,`p2`.`user` AS `followee_name`,`p2`.`full_name` AS `followee_full_name`,`p`.`id` AS `post`,`p`.`text` AS `text`,`p`.`original_post` AS `original_post`,`p`.`pub_date` AS `pub_date`,`p`.`latitude` AS `latitude`,`p`.`longitude` AS `longitude`,`p`.`likes` AS `likes` from (((`profile` `p1` join `follower_followee` `f` on((`p1`.`id` = `f`.`follower`))) join `profile` `p2` on((`p2`.`id` = `f`.`followee`))) join `post` `p` on((`p`.`author` = `p2`.`id`)))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`proyecto`@`localhost` SQL SECURITY DEFINER VIEW `post_followees`  AS  (select uuid() AS `id`,`p1`.`id` AS `id_follower`,`p1`.`user` AS `follower_name`,`p2`.`user` AS `followee_name`,`p2`.`full_name` AS `followee_full_name`,`p2`.`photo` AS `followee_photo`,`p`.`id` AS `post`,`p`.`text` AS `text`,`p`.`original_post` AS `original_post`,`p`.`pub_date` AS `pub_date`,`p`.`latitude` AS `latitude`,`p`.`longitude` AS `longitude`,`p`.`likes` AS `likes` from (((`profile` `p1` join `follower_followee` `f` on((`p1`.`id` = `f`.`follower`))) join `profile` `p2` on((`p2`.`id` = `f`.`followee`))) join `post` `p` on((`p`.`author` = `p2`.`id`)))) ;
 
 DROP VIEW IF EXISTS `trending_topics`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`proyecto`@`localhost` SQL SECURITY DEFINER VIEW `trending_topics`  AS  select uuid() AS `id`,`t`.`id` AS `id_tag`,`t`.`tag_name` AS `tag_name`,count(`pt`.`tag`) AS `post_count` from (`post_tag` `pt` left join `tag` `t` on((`pt`.`tag` = `t`.`id`))) group by `pt`.`tag` ;
