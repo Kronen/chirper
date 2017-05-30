@@ -84,20 +84,36 @@ $(function () {
     $.each($('a.tt'), function() {
         $(this).attr("href", 'tag/' + $(this).text().substring(1));
     });
-    /* add link to present and future post tags */
-    tagsToLinks();
+    /* add link to post tags */
+    tagsAndMentionsToLinks();
     
-    $('button.view-more').on('click', function() {tagsToLinks();});
+    // Elementos futuros? (No funciona)
+    //  $('.post-text').on('DOMNodeInserted', function() {
+    //  if(!$(this).find("a.tag").length )
+    //      $(this).html($(this).html().replace(tagPattern, "<a class='tag' href='/Chirper/tag/$1'>#$1</a>"));
+    //  });  
+    
+    $('button.view-more').on('click', function() {futureTagsAndMentions();});
 });
 
-function tagsToLinks() {
+function tagsAndMentionsToLinks() {
     var tagPattern = /\B#([a-zA-Z0-9_-]{4,81})/gi;
+    var mentionPattern = /\B@([a-zA-Z0-9_-]{4,21})/gi;
+    $.each($('.post-text'), function() {
+        /* Don't add link if it already has */
+        if(!$(this).find("a.tag").length )
+            $(this).html($(this).html().replace(tagPattern, "<a class='tag' href='/Chirper/tag/$1'>#$1</a>"));
+    });
+    $.each($('.post-text'), function() {
+        if(!$(this).find("a.mention").length )
+            $(this).html($(this).html().replace(mentionPattern, "<a class='mention' href='/Chirper/user/$1'>@$1</a>"));
+    });    
+}
+
+function futureTagsAndMentions() {
     setTimeout(function(){        
-        $.each($('.post-text'), function() {
-            if(!$(this).find("a.tag").length )
-                $(this).html($(this).html().replace(tagPattern, "<a class='tag' href='/Chirper/tag/$1'>#$1</a>"));
-        });
-    }, 500);    
+        tagsAndMentionsToLinks();
+    }, 800);    
 }
 
   
