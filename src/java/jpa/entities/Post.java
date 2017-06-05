@@ -113,6 +113,14 @@ public class Post implements Serializable {
         this.text = text;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public Date getPubDate() {
         return pubDate;
     }

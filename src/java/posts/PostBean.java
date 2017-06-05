@@ -8,7 +8,6 @@ import javax.faces.bean.ViewScoped;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import jpa.controllers.PostJpaController;
-import jpa.controllers.ProfileJpaController;
 import jpa.entities.Post;
 
 /**

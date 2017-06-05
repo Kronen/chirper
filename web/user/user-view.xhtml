@@ -9,7 +9,7 @@
     <ui:define name="title">#{userPage.profile.fullName}(@#{userPage.userName}) | Chirper</ui:define>
   
     <ui:define name="content">
-        <h:outputStylesheet library="css" name="theme-blue.css" />
+        <h:outputStylesheet library="css" name="#{homePage.theme}" />
         
         <chirper:navbar profile="#{homePage.profile}" />
         
@@ -67,7 +67,7 @@
                 <div class="postboard chirp-half">
                     <h2>
                         <h:outputText value="#{userPage.name} | Chirps" rendered="#{homePage.profile.id != userPage.profile.id}"/>
-                        <h:outputText value="Tus Chirps" rendered="#{homePage.profile.id == userPage.profile.id}"/>
+                        <h:outputText value="Your Chirps" rendered="#{homePage.profile.id == userPage.profile.id}"/>
                     </h2>
 
                     <h:form id="postForm">
@@ -92,7 +92,13 @@
                                         </a>
                                     </div>
                                     
-                                    <h:outputText styleClass="post-text" value="#{chirp.text}" />
+                                    <p:panel styleClass="post-text">
+                                        <h:outputText  value="#{chirp.text}" />
+                                        <p:panel rendered="#{not empty chirp.image}" styleClass="imageContainer">
+                                            <img src="/uploads/#{chirp.image}" />
+                                        </p:panel>
+                                    </p:panel>
+                                    
                                     
                                     <h:outputText styleClass="post-expand" value="Expand"/>
 

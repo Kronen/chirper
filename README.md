@@ -40,7 +40,6 @@ retransmiting and direct/private messages, search of words in all posts, trendin
 * [Easy Responsive Tabs](https://webthemez.com/demo/easy-responsive-tabs/Index.html) - is a lightweight jQuery plugin which optimizes normal horizontal or vertical tabs to accordion.
 * [jQuery scrollex](https://github.com/ajlkn/jquery.scrollex) - Scroll events for jQuery.
 * [jQuery scrolly](https://github.com/Victa/scrolly) - Parallax scroll.
-* [Notify.js] https://notifyjs.com/ - jQuery plugin to provide simple yet fully customisable notifications.
 
 ## Versioning
 

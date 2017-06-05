@@ -24,10 +24,10 @@ import utils.MessageHandler;
 
 /**
  * This class manages the login page for JSF.
- * It allows logging in and out, as well as retrieving the current user (if any) and more.
+ * It allows logging in and out, as well as retrieving the current user.
  *
- * It also works as a substitute for the j_security_check/j_username/j_password form (which is buggy!). Having
- * this bean, our login form can be pure JSF, allowing a more fine-grained control and all (such as embedding
+ * It also works as a substitute for the j_security_check/j_username/j_password form. With this bean, 
+ * our login form can be pure JSF, allowing a more fine-grained control and all (such as embedding
  * validation/error messages in the form itself; custom {@link User} instances building and so on).
  */
 @ManagedBean
@@ -36,7 +36,7 @@ import utils.MessageHandler;
 public class LoginManager implements Serializable {
 
     private static final String HOMEPAGE = "/";
-    private static final String PAGE_AFTER_LOGOUT = HOMEPAGE; // Another good option is the login page back again
+    private static final String PAGE_AFTER_LOGOUT = HOMEPAGE;
    
     private final EntityManagerFactory emf;
     private String username;
@@ -74,13 +74,19 @@ public class LoginManager implements Serializable {
     public void init() {
         this.forwardUrl = extractRequestedUrlBeforeLogin();
     }
-
+           
+    /**
+     * Extract the current url so we can later redirect to this url when the login was 
+     * not performed in the login view. (Note: I don't know yet if I will implement the login from other views).
+     * 
+     */
     private String extractRequestedUrlBeforeLogin() {
+        // Por si introduzco la posibilidad de login desde otras vistas como por ejemplo la vista de usuario, 
+        // así despues de logear nos volverá a reenviar a la vista en la que estábamos.
         ExternalContext externalContext = externalContext();
         String requestedUrl = (String) externalContext.getRequestMap().get(RequestDispatcher.FORWARD_REQUEST_URI);
-        if (requestedUrl == null) {
+        if (requestedUrl == null)
             return externalContext.getRequestContextPath() + HOMEPAGE;
-        }
         String queryString = (String) externalContext.getRequestMap().get(RequestDispatcher.FORWARD_QUERY_STRING);
         return requestedUrl + (queryString == null ? "" : "?" + queryString);
     }
@@ -92,11 +98,12 @@ public class LoginManager implements Serializable {
     private FacesContext facesContext() {
         return FacesContext.getCurrentInstance();
     }
-
+    
     /**
-     * Performs user login accordingly to the username/password set.
-     *
-     * @throws IOException from {@link ExternalContext#redirect(String)}
+     * Performs the login with the corresponding username/password converting the password 
+     * to hexaedcimal SHA256.
+     * 
+     * @throws java.io.IOException for redirect
      */
     public void login() throws IOException {
         ExternalContext externalContext = externalContext();
@@ -141,8 +148,8 @@ public class LoginManager implements Serializable {
 
     /**
      * Invalidates the current session, logging out the current user.
-     *
-     * @throws IOException from {@link ExternalContext#redirect(String)}
+     * 
+     * @throws java.io.IOException for redirect
      */
     public void logout() throws IOException {
         ExternalContext externalContext = externalContext();

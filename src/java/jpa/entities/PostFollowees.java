@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "PostFollowees.findByPhoto", query = "SELECT p FROM PostFollowees p WHERE p.followeePhoto = :followeePhoto")        
     , @NamedQuery(name = "PostFollowees.findByPost", query = "SELECT p FROM PostFollowees p WHERE p.post = :post")
     , @NamedQuery(name = "PostFollowees.findByText", query = "SELECT p FROM PostFollowees p WHERE p.text = :text")
+    , @NamedQuery(name = "PostFollowees.findByImage", query = "SELECT p FROM PostFollowees p WHERE p.image = :image")
     , @NamedQuery(name = "PostFollowees.findByOriginalPost", query = "SELECT p FROM PostFollowees p WHERE p.originalPost = :originalPost")
     , @NamedQuery(name = "PostFollowees.findByPubDate", query = "SELECT p FROM PostFollowees p WHERE p.pubDate = :pubDate")
     , @NamedQuery(name = "PostFollowees.findByLatitude", query = "SELECT p FROM PostFollowees p WHERE p.latitude = :latitude")
@@ -50,6 +51,9 @@ public class PostFollowees implements Serializable {
     @Column(name = "follower_name")
     private String followerName;
     @Basic(optional = false)
+    @Column(name = "id_followee")
+    private int idFollowee;
+    @Basic(optional = false)
     @Column(name = "followee_name")
     private String followeeName;
     @Column(name = "followee_full_name")
@@ -62,6 +66,8 @@ public class PostFollowees implements Serializable {
     @Basic(optional = false)
     @Column(name = "text")
     private String text;
+    @Column(name = "image")
+    private String image;
     @Column(name = "original_post")
     private Integer originalPost;
     @Basic(optional = false)
@@ -104,6 +110,15 @@ public class PostFollowees implements Serializable {
         this.followerName = followerName;
     }
 
+    public int getIdFollowee() {
+        return idFollowee;
+    }
+
+    public void setIdFollowee(int idFollowee) {
+        this.idFollowee = idFollowee;
+    }
+    
+    
     public String getFolloweeName() {
         return followeeName;
     }
@@ -142,6 +157,14 @@ public class PostFollowees implements Serializable {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public Integer getOriginalPost() {

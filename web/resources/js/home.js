@@ -1,21 +1,44 @@
-// Notifica al usuario cuando ha enviado un chirp (mensaje)
+var geocoder;
+var city, country;
+
+function codeLatLng(lat, lng, callback) {
+    var latlng = new google.maps.LatLng(lat, lng);
+    var result = "";
+    geocoder.geocode({'latLng': latlng}, function(results, status) {
+        if(status === google.maps.GeocoderStatus.OK) {
+            if(results[1]) {
+                // Find the city name
+                for(var i = 0; i < results[0].address_components.length; i++) {
+                  for(var b = 0; b < results[0].address_components[i].types.length; b++) {
+                    if(results[0].address_components[i].types[b] === "administrative_area_level_2") {
+                        city = results[0].address_components[i];
+                        break;
+                    }
+                  }
+                }
+
+                // Find the state name
+                for(var i = 0; i < results[0].address_components.length; i++) {
+                  for(var b = 0; b < results[0].address_components[i].types.length; b++) {
+                    if(results[0].address_components[i].types[b] === "country") {
+                        country = results[0].address_components[i];
+                        break;
+                    }
+                  }
+                }
+
+                callback(city.long_name + ", " + country.long_name);
+            }
+        }
+    });
+}
+
 function handlePostSubmited(area) {
     $('.post-area-new textarea').val('');
-    if (area === 'new-post')
-        $('.post-area-new').removeClass('open');
-    $.notify("¡Tu Chirp ha sido enviado!",
-            {
-                clickToHide: true,
-                autoHide: true,
-                autoHideDelay: 5000,
-                position: 'top center',
-                className: 'success',
-                showAnimation: 'slideDown',
-                showDuration: 400,
-                hideAnimation: 'slideUp',
-                hideDuration: 200
-            }
-    );
+}
+
+function handleReplySubmited(area) {
+    $('.post-area-reply textarea').val('');
 }
 
 $(function () {    
@@ -71,20 +94,8 @@ $(function () {
         }
     });
     
+    $('.post-upload .ui-c').text('Upload Image');
     
-    $.each($('a.tt'), function() {
-        $(this).attr("href", 'tag/' + $(this).text().substring(1));
-    });
-    
-    
-    var tagPattern = /\B#([a-zA-Z0-9_-]{4,81})/gi;
-    
-    /* add link to Trenting topic tags */
-    
-    $.each($('a.tt'), function() {
-        $(this).attr("href", 'tag/' + $(this).text().substring(1));
-    });
-    /* add link to post tags */
     tagsAndMentionsToLinks();
     
     // Elementos futuros? (No funciona)
@@ -94,13 +105,47 @@ $(function () {
     //  });  
     
     $('button.view-more').on('click', function() {futureTagsAndMentions();});
+    
+    navigator.geolocation.getCurrentPosition(
+        function (position) {
+            $(PrimeFaces.escapeClientId('form-new-post:new-post-lat')).val(position.coords.latitude);
+            $(PrimeFaces.escapeClientId('form-new-post:new-post-lng')).val(position.coords.longitude);
+
+            geocoder = new google.maps.Geocoder();
+            // User Location
+            $elem = $('#user-location');
+            codeLatLng(position.coords.latitude, position.coords.longitude, function(loc) { 
+                $elem.text(loc);
+            });
+
+            // Posts locations
+            $('.post-location').each(function() {
+                var $elem = $(this);
+                var lat = $elem.data('lat');
+                var lng = $elem.data('lng');
+                codeLatLng(lat, lng, function(loc) { 
+                    $elem.text(' · ' + loc);                                
+                });                            
+            });
+            $('.post-location, .post-info-time').fadeIn();
+
+        },
+        function(error) {
+            // no hacer nada
+        },
+        {enableHighAccuracy: true}
+    );
 });
 
 function tagsAndMentionsToLinks() {
     var tagPattern = /\B#([a-zA-Z0-9_-]{4,81})/gi;
     var mentionPattern = /\B@([a-zA-Z0-9_-]{4,21})/gi;
+    $.each($('a.tt'), function() {
+        if(!$(this).find("a.tag").length )
+            $(this).html($(this).html().replace(tagPattern, "<a class='tag' href='/Chirper/tag/$1'>#$1</a>"));
+    });
     $.each($('.post-text'), function() {
-        /* Don't add link if it already has */
+        /* Don't add link if it already has been added */
         if(!$(this).find("a.tag").length )
             $(this).html($(this).html().replace(tagPattern, "<a class='tag' href='/Chirper/tag/$1'>#$1</a>"));
     });
@@ -115,5 +160,6 @@ function futureTagsAndMentions() {
         tagsAndMentionsToLinks();
     }, 800);    
 }
+
 
   

@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import static java.lang.Math.toIntExact;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -21,8 +25,10 @@ import jpa.controllers.TagJpaController;
 import jpa.entities.Post;
 import jpa.entities.Profile;
 import jpa.entities.User;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.UploadedFile;
 import org.primefaces.model.tagcloud.DefaultTagCloudItem;
 import org.primefaces.model.tagcloud.DefaultTagCloudModel;
 import org.primefaces.model.tagcloud.TagCloudItem;
@@ -39,7 +45,8 @@ public class HomePage implements Serializable {
     private User user;
     private Profile profile;
     private Post newPost;
-    private TagCloudModel model;
+    private TagCloudModel tagCloudModel;
+    private UploadedFile image;
 
     public HomePage() {
         emf = Persistence.createEntityManagerFactory("ChirperDbPU");  
@@ -54,9 +61,9 @@ public class HomePage implements Serializable {
         
         TagJpaController tC = new TagJpaController(emf);
         List<Object[]> tts = tC.findTrendingTopics(30);
-        model = new DefaultTagCloudModel();
+        tagCloudModel = new DefaultTagCloudModel();
         for(Object[] tt : tts) {
-            model.addTag(new DefaultTagCloudItem((String)tt[0], toIntExact((Long)tt[1])));
+            tagCloudModel.addTag(new DefaultTagCloudItem((String)tt[0], toIntExact((Long)tt[1])));
         }
     }
     
@@ -91,6 +98,14 @@ public class HomePage implements Serializable {
     public void setNewPost(Post post) {
         this.newPost = post;
     }
+
+    public UploadedFile getImage() {
+        return image;
+    }
+
+    public void setImage(UploadedFile image) {
+        this.image = image;
+    }
            
     public List getPostsFromFollowees() {
         PostFolloweesJpaController pfC = new PostFolloweesJpaController(emf);
@@ -107,27 +122,49 @@ public class HomePage implements Serializable {
         profile = profileC.findProfileByUserName(username);
     }
     
-    public void publish() {
+    public String publish() {        
         createChirps();
-        processMentions();        
-    }        
+        processTags();
+        processMentions();
+        MessageHandler.addInfoMessage("Your Chirp has been published!", null);
+        return null;
+    }
+    
+    public String publishReply(int idPost) {        
+        newPost.setOriginalPost(idPost);
+        createChirps();
+        processTags();
+        processMentions();
+        MessageHandler.addInfoMessage("Your reply has been published!", null);
+        return null;
+    }
    
     private void createChirps() {
-        PostJpaController postC = new PostJpaController(emf);
-        TagJpaController tagC = new TagJpaController(emf);
-        List<String> tags = TextHandler.extractTags(newPost.getText());        
-        
-        // Add post to database
+        PostJpaController postC = new PostJpaController(emf);                
         newPost.setAuthor(profile);
-        newPost.setPubDate(new Date());
-        postC.create(newPost);
-        
-        // Add tags to database with the post associated
-        try {
-            tagC.createTagsWithPost(newPost, tags); 
-        } catch (Exception ex) {
-            MessageHandler.addErrorMessage("Error registering tags for this post", null);
+        newPost.setPubDate(new Date());        
+        if(image != null && !image.getFileName().isEmpty()) {
+            String filename = saveImageToDisk();
+            newPost.setImage(filename);
+            image = null;
         }
+        postC.create(newPost);        
+    }
+    
+    private String saveImageToDisk() {          
+        String filename = FilenameUtils.getBaseName(image.getFileName()); 
+        String extension = FilenameUtils.getExtension(image.getFileName());            
+
+        try {
+            Path folder = Paths.get(System.getenv("UPLOAD_PATH"));
+            Path file = Files.createTempFile(folder, filename + "-", "." + extension);
+            InputStream input = image.getInputstream();
+            Files.copy(input, file, StandardCopyOption.REPLACE_EXISTING);
+            return file.getFileName().toString();
+        } catch (IOException ex) {
+            MessageHandler.addErrorMessage("Error uploading file", null);
+        }
+        return null;
     }
     
     private void processMentions() {
@@ -138,6 +175,18 @@ public class HomePage implements Serializable {
             Profile p = pC.findProfileByUserName(username.substring(1));
             if(p != null)
                 sendMentionNotification(p.getEmail());
+        }
+    }
+    
+    private void processTags() {
+        TagJpaController tagC = new TagJpaController(emf);
+        List<String> tags = TextHandler.extractTags(newPost.getText());        
+        
+        // Add tags to database with the post associated
+        try {
+            tagC.createTagsWithPost(newPost, tags);
+        } catch (Exception ex) {
+            MessageHandler.addErrorMessage("Error registering tags for this post", null);
         }
     }
     
@@ -171,7 +220,7 @@ public class HomePage implements Serializable {
     }
     
     public TagCloudModel getTagCloudModel() {
-        return model;
+        return tagCloudModel;
     }
      
     public void onSelect(SelectEvent event) {

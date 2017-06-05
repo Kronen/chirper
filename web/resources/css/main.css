@@ -69,7 +69,7 @@ a:hover {
     }
 }
 .userMenu:after {
-    
+
     background: url("#{resource['images/plane.png']}") no-repeat center center;
     background-size: 100px 73px;
     content: "";
@@ -320,7 +320,8 @@ a:hover {
     font-size: 13px
 }
 .profile-data li a:hover {
-    color: #b43e34
+    color: #b43e34;
+    text-decoration: none;
 }
 .profile-data li a span.posts-count, .profile-data li a span.followees-count, .profile-data li a span.followers-count {
     display: block;
@@ -335,7 +336,7 @@ a:hover {
     border-radius: 3px;
     display: block;
     font-size: 13px;
-    height: 28px;
+    height: 28px !important;
     outline: none;
     padding: 4px;
     resize: none;
@@ -343,19 +344,20 @@ a:hover {
     width: 100%;
 }
 .post-area-new.open textarea, .post-area-reply.open textarea {
-    height: 80px
+    height: 100px !important;
 }
 .post-area-new textarea:focus, .post-area-reply textarea:focus {
     border: solid 1px rgba(227, 79, 66, .5)
 }
 .post-area-extras {
-    height: 0;
+    height: 40px;
     overflow: hidden;
     text-align: right
 }
-.post-area-new.open .post-area-extras, .post-area-reply.open .post-area-extras {
-    height: 35px;
-    transition: all .6s linear
+.post-area-new.open .post-area-extras, 
+.post-area-reply.open .post-area-extras {
+    height: 40px;
+    transition: all .6s linear;
 }
 .mini-profile .post-area-new {
     padding: 9px
@@ -364,17 +366,27 @@ a:hover {
     margin-left: 0;
     width: 100%
 }
-.post-submit {
-    background: #45474d;
+.post-submit,
+.post-upload .ui-button {
     border: none;
     color: rgba(255, 255, 255, .8);
     cursor: pointer;
     display: inline-block;
-    margin: 4px 0 0 8px;
-    padding: 5px 10px
+    margin-top: 4px;
 }
-.post-submit:hover {
+
+.post-submit {
+    background: #45474d;
+    margin-left: 8px;
+    padding: 5px 10px;
+}
+.post-submit:hover,
+.post-upload .ui-button:hover {
     background: #b43e34;
+}
+
+.post-upload .ui-button {
+    background: #5171b9;
 }
 .post-area-remaining {
     font-size: 13px;
@@ -546,22 +558,14 @@ a:hover {
     font-size: 14px;
 }
 .post:hover .post-reply, .post:hover .post-propagate, .post:hover .post-favorite, .original.open .post-interactions .post-reply, .original.open .post-interactions .post-propagate, .original.open .post-interactions .post-favorite, .post:hover .original .post-interactions .post-reply, .post:hover .original .post-interactions .post-propagate, .post:hover .original .post-interactions .post-favorite {
-    display: inline-block
+    display: inline-block;
 }
-.related.post:hover .post-reply, .related.post:hover .post-propagate, .related.post:hover .post-favorite {
-    display: inline-block
-}
-.open .related .post-reply, .open .related .post-propagate, .open .related .post-favorite {
-    display: none !important
-}
-.open .related:hover .post-reply, .open .related:hover .post-propagate, .open .related:hover .post-favorite {
-    display: inline-block !important
-}
+
 .post-propagate {
-    background: url("#{resource['images/repost.png']}") no-repeat left center
+    background: url("#{resource['images/repost.png']}") no-repeat left center;
 }
 .post-favorite:before {
-    content: "★"
+    content: "★";
 }
 .post-reply:hover, .post-propagate:hover, .post-favorite:hover {
     opacity: 1;
@@ -627,16 +631,16 @@ a:hover {
     border: none;
 }
 .button-flat:focus {
-  outline: none;
+    outline: none;
 }
 .button-flat:hover {
-  background-color: #346392;
-  text-shadow: -1px 1px #27496d;
-  text-decoration: none;
+    background-color: #346392;
+    text-shadow: -1px 1px #27496d;
+    text-decoration: none;
 }
 .button-flat:active {
-  background-color: #27496d;
-  text-shadow: -1px 1px #193047;
+    background-color: #27496d;
+    text-shadow: -1px 1px #193047;
 }
 
 .button-flat.button-red {
@@ -645,14 +649,14 @@ a:hover {
 }
 
 .button-flat.button-red:hover {
-  background-color: #c52f22;
-  text-shadow: -1px 1px #a5281d;
-  text-decoration: none;
+    background-color: #c52f22;
+    text-shadow: -1px 1px #a5281d;
+    text-decoration: none;
 }
 
 .button-flat.button-red:active {
-  background-color: #a5281d;
-  text-shadow: -1px 1px #821f16;
+    background-color: #a5281d;
+    text-shadow: -1px 1px #821f16;
 }
 
 
@@ -694,4 +698,17 @@ a:hover {
 }
 .view-more:hover {
     background-color: #33739E;
+}
+.post-text .imageContainer {
+    text-align: center;
+}
+.post-text .imageContainer img {
+    width: 100%;
+    height: auto;
+}
+
+.user-email {
+    position: absolute;
+    top: 45px;
+    font-size: 14px;
 }

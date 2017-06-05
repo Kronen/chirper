@@ -18,124 +18,152 @@
                 <div class="chirp-quarter">                    
                     <!-- PROFILE -->
                     <p:panel styleClass="module mini-profile" rendered="#{loginManager.userLoggedIn}">
-                        <div class="mini-profile-info">
-                            <div class="mini-profile-photo">                                
+                        <p:panel class="mini-profile-info">
+                            <p:panel styleClass="mini-profile-photo">                                
                                 <h:graphicImage library="images" name="#{filesHandler.getAvatar(homePage.profile)}" alt="user photo"/>                                
-                            </div>
+                            </p:panel>
                             <p:link href="/user/#{user.userName}" styleClass="mini-profile-name" 
                                 value="#{homePage.profile.fullName != null ? homePage.profile.fullName : user.userName}" />
-                            <span class="mini-profile-view">@#{user.userName}</span>
-                            <span id="user-location"></span>
-                        </div>
+                            <h:outputText styleClass="mini-profile-view" value="@#{user.userName}"/>
+                            <h:outputText id="user-location" value="" />
+                        </p:panel>
                         <ul class="module profile-data">
                             <li>
-                                <a href="#" class="open-profile-modal">
+                                <a styleClass="posts" href="/user/#{user.userName}">
+                                    <p:panel>
                                     <h:outputText value="#{homePage.profile.postCollection.size()}" styleClass="posts-count" />
-                                    <span class="label">Chirps</span>
+                                    <h:outputText styleClass="label" value="Chirps"/>
+                                    </p:panel>
                                 </a>
                             </li>
                             <li>
-                                <a href="#following" class="open-following-page">
+                                <p:link styleClass="followees" href="/followees/#{homePage.profile.id}">
+                                    <p:panel>
                                     <h:outputText value="#{homePage.profile.followees.size()}" styleClass="followees-count"/>
-                                    <span class="label">Following</span>
-                                </a>
+                                    <h:outputText styleClass="label" value="Following"/>
+                                    </p:panel>
+                                </p:link>
                             </li>
                             <li>
-                                <a class="open-followers">
-                                    <h:outputText value="#{homePage.profile.followees.size()}" styleClass="followers-count"/>
-                                    <span class="label">Followers</span>
-                                </a>
+                                <p:link styleClass="followers" href="/followers/#{homePage.profile.id}">
+                                    <p:panel>
+                                    <h:outputText value="#{homePage.profile.followers.size()}" styleClass="followers-count"/>
+                                    <h:outputText styleClass="label" value="Followers"/>
+                                    </p:panel>
+                                </p:link>
                             </li>
                         </ul>
                         
-                        <p:panel styleClass="post-area">                            
-                            <h:form id="form-new-post" styleClass="post-area-new">
-                                <p:inputTextarea id="new-post-text" value="#{homePage.newPost.text}" placeholder="New Post..." 
-                                    maxlength="256" />
+                        <p:panel styleClass="post-area">
+                            <h:form enctype="multipart/form-data" id="form-new-post" styleClass="post-area-new">
+                                <p:growl id="messages" showDetail="true" globalOnly="true" sticky="true"/>
+                                
                                 <h:inputHidden id="new-post-lat" value="#{homePage.newPost.latitude}" />
                                 <h:inputHidden id="new-post-lng" value="#{homePage.newPost.longitude}" />
                                 
-                                <div class="post-area-extras">
-                                    <span class="post-area-attach" style="display: none;">
-                                        <input type="file" id="fileInputAttach" style="font-size: 10px; width: 135px;"/>
-                                    </span>
+                                <p:inputTextarea id="new-post-text" value="#{homePage.newPost.text}" placeholder="New Post..." 
+                                                 required="true" maxlength="256" requiredMessage="You must provide a message"/>
+                                <p:panel class="post-area-attach">
+                                    <p:fileUpload value="#{homePage.image}" mode="simple" skinSimple="true"
+                                                  styleClass="post-upload" sizeLimit="100000"
+                                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                                  invalidFileMessage="Invalid File Type. Try with (gif/jpg/png)"
+                                                  invalidSizeMessage="Invalid Size. Max: 100.000"/>                                        
+                                </p:panel>                               
+                                
+                                <p:panel styleClass="post-area-extras">                                    
                                     <span class="post-area-remaining">256</span>
-                                    <p:commandButton id="post-publish" value="post" class="post-submit" 
+                                    <p:commandButton id="post-publish" value="post" class="post-submit" ajax="false"
                                                      actionListener="#{homePage.publish}" oncomplete="handlePostSubmited()"/>                                    
-                                </div>
+                                </p:panel>
                             </h:form>
                         </p:panel>
                     </p:panel>
                 </div>
 
                 <div class="postboard chirp-half">
-                    <h2><span>Chirpboard</span></h2>
+                    <h2><h:outputText value="Chirpboard"/></h2>
                     
                     <ol id="posts" class="postboard-posts">
-                        <p:dataScroller value="#{homePage.postsFromFollowees}" var="chirp" styleClass="postboard-posts" 
-                                        chunkSize="10" >
-                            <f:facet name="loader">
-                                <p:commandButton type="button" value="View More" styleClass="view-more"/>
-                            </f:facet>
-                            <li id="post-template" class="module post">
+                    
+                    <p:dataScroller value="#{homePage.postsFromFollowees}" var="chirp" styleClass="postboard-posts" 
+                                    chunkSize="10" >
+                        <p:growl id="messages" showDetail="true" globalOnly="true" sticky="true"/>
+                        <f:facet name="loader">                            
+                            <p:commandButton type="button" value="View More" styleClass="view-more"/>
+                        </f:facet>
+                        <li id="post-template" class="module post">
 
-                                <p:panel styleClass="post-data">
-                                    <p:panel styleClass="post-photo">
-                                        <p:graphicImage library="images" name="#{filesHandler.getAvatar(chirp.followeePhoto)}" 
-                                                        styleClass="avatar" alt="user-photo"/>                                
-                                    </p:panel>
-                                    <p:panel styleClass="post-info">
-                                        <p:link href="/user/#{chirp.followeeName}" styleClass="post-info-name" 
-                                                value="#{chirp.followeeFullName != null ? chirp.followeeFullName : chirp.followeeName}" />
-                                        <h:outputText styleClass="post-info-tag" value="@#{chirp.followeeName}" />
-                                        <p:link styleClass="post-info-time">
-                                            <h:outputText value="#{timeHandler.elapsed(chirp.pubDate)}" />
-                                            <span class="post-location" data-lat="#{chirp.latitude}" data-lng="#{chirp.longitude}"></span>
-                                        </p:link>
-                                    </p:panel>
-
-                                    <p class="post-text"><h:outputText value="#{chirp.text}" /></p>
-
-                                    <h:outputText styleClass="post-expand" value="Expand"/>
-
-                                    <p:panel class="post-interactions">
-                                        <h:outputText styleClass="post-propagate" value="Retransmit"/>
-                                        <h:outputText styleClass="post-favorite" value="Favorite"/>
-                                    </p:panel>
-                                    <div class="expanded-content">
-                                        <ul class="post-stats">
-                                            <li class="stat-count">
-                                                    <span class="stat-count-value">55</span>
-                                                    <span>Retransmits</span>
-                                            </li>
-                                            <li class="stat-count">
-                                                    <span class="stat-count-value">7</span>
-                                                    <span>Favs</span>
-                                            </li>
-                                            <li class="avatar-row">
-                                                <!-- use "avatar-row-template" here -->
-                                                <p:link href="/user/#{homePage.user.userName}">
-                                                   <h:graphicImage library="images" styleClass="size24" alt="user photo"
-                                                        name="#{filesHandler.getAvatar(homePage.profile)}"/> 
-                                                   <h:outputText styleClass="user-name-tooltip" 
-                                                         value="#{homePage.profile.fullName != null ? 
-                                                                  homePage.profile.fullName : user.userName}"/>
-                                                </p:link>
-                                            </li>
-                                        </ul>
-                                        <div class="post-reply-content" style="display: block;">
-                                            <form class="post-area-reply">
-                                                <textarea placeholder="Reply..."></textarea>
-                                                <div class="post-area-extras">
-                                                    <span class="post-area-remaining">256</span>
-                                                    <button class="post-submit">post</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div> 
+                            <p:panel styleClass="post-data">
+                                <p:panel styleClass="post-photo">
+                                    <p:graphicImage library="images" name="#{filesHandler.getAvatar(chirp.followeePhoto)}" 
+                                                    styleClass="avatar" alt="user-photo"/>                                
                                 </p:panel>
-                            </li>
-                        </p:dataScroller>
+                                <p:panel styleClass="post-info">
+                                    <p:link href="/user/#{chirp.followeeName}" styleClass="post-info-name" 
+                                            value="#{chirp.followeeFullName != null ? chirp.followeeFullName : chirp.followeeName}" />
+                                    <h:outputText styleClass="post-info-tag" value="@#{chirp.followeeName}" />
+                                    <p:link styleClass="post-info-time">
+                                        <h:outputText value="#{timeHandler.elapsed(chirp.pubDate)}" />
+                                        <span class="post-location" data-lat="#{chirp.latitude}" data-lng="#{chirp.longitude}"></span>
+                                    </p:link>
+                                </p:panel>
+
+                                <p:panel styleClass="post-text">
+                                    <h:outputText  value="#{chirp.text}" />
+                                    <p:panel rendered="#{not empty chirp.image}" styleClass="imageContainer">
+                                        <img src="/uploads/#{chirp.image}" />
+                                    </p:panel>
+                                </p:panel>
+
+                                <h:outputText styleClass="post-expand" value="Expand"/>
+
+                                <p:panel class="post-interactions">
+                                    <h:outputText styleClass="post-propagate" value="Retransmit"/>
+                                    <h:outputText styleClass="post-favorite" value="Favorite"/>
+                                </p:panel>
+                                <div class="expanded-content">
+                                    <ul class="post-stats">
+                                        <li class="stat-count">
+                                                <span class="stat-count-value">55</span>
+                                                <span>Retransmits</span>
+                                        </li>
+                                        <li class="stat-count">
+                                                <span class="stat-count-value">7</span>
+                                                <span>Favs</span>
+                                        </li>
+                                        <li class="avatar-row">
+                                            <!-- use "avatar-row-template" here -->
+                                            <p:link href="/user/#{homePage.user.userName}">
+                                               <h:graphicImage library="images" styleClass="size24" alt="user photo"
+                                                    name="#{filesHandler.getAvatar(homePage.profile)}"/> 
+                                               <h:outputText styleClass="user-name-tooltip" 
+                                                     value="#{homePage.profile.fullName != null ? 
+                                                              homePage.profile.fullName : user.userName}"/>
+                                            </p:link>
+                                        </li>
+                                    </ul>
+                                    <p:panel styleClass="post-reply-content" style="display: block;">
+                                        <p:panel styleClass="post-area-reply">
+                                            <h:inputHidden value="#{homePage.newPost.latitude}" />
+                                            <h:inputHidden value="#{homePage.newPost.longitude}" />
+                                            
+                                            <p:inputTextarea placeholder="Reply..." value="#{homePage.newPost.text}"
+                                                             required="true" maxlength="256" 
+                                                             requiredMessage="You must provide a message"/>
+                                            
+                                            <p:panel style="text-align: right">
+                                                <h:outputText styleClass="post-area-remaining">256</h:outputText>
+                                                <p:commandButton styleClass="post-submit" oncomplete="handleReplySubmited()"
+                                                    actionListener="#{homePage.publishReply(chirp.post)}" value="reply" ajax="true"/>                                                                  
+                                            </p:panel>
+                                        </p:panel>
+                                    </p:panel>
+                                </div> 
+                            </p:panel>
+                        </li>
+                    </p:dataScroller>
+                    
                     </ol>           
                 </div>
                 <div class="chirp-quarter">

@@ -63,7 +63,7 @@ h1, h2, h3, h4, h5, h6 {
 input[type="submit"], input[type="reset"], input[type="button"], button, .button {
     display: inline-block;
     position: relative;
-    padding: 0 3.75em;
+    padding: 16px 25px;
     transition: border-color .2s ease;
     background-color: transparent;
     border: solid 1px !important;
@@ -79,6 +79,10 @@ input[type="submit"], input[type="reset"], input[type="button"], button, .button
     text-align: center;
     text-decoration: none;
     text-transform: uppercase;
+}
+
+a.button {
+    padding: 0 3.75em;
 }
 input[type="submit"]:after, input[type="reset"]:after, input[type="button"]:after, button:after, .button:after {
     content: '';

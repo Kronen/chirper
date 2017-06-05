@@ -1,5 +1,8 @@
 package utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -7,6 +10,8 @@ import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -31,5 +36,9 @@ public class FilesHandler {
         if(photo.isEmpty() || !FilesHandler.imageExists(photo))
             return "user-blue.png";
         return photo;
+    }
+    
+    public String streamedImage(String image) {
+        return "/uploads/" + image;
     }
 }
