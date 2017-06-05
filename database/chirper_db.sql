@@ -9,6 +9,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
+DROP DATABASE IF EXISTS `chirper_db`;
 CREATE DATABASE IF NOT EXISTS `chirper_db` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `chirper_db`;
 
@@ -18,7 +19,8 @@ CREATE TABLE `follower_followee` (
   `followee` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `follower_followee` (`follower`, `followee`) VALUES
+INSERT INTO `follower_followee` VALUES
+(1, 2),
 (2, 1),
 (2, 102),
 (102, 1),
@@ -30,25 +32,50 @@ CREATE TABLE `post` (
   `author` int(11) NOT NULL,
   `original_post` int(11) DEFAULT NULL,
   `text` varchar(256) NOT NULL,
+  `image` varchar(80) DEFAULT NULL,
   `pub_date` datetime NOT NULL,
   `latitude` decimal(9,6) DEFAULT NULL,
   `longitude` decimal(9,6) DEFAULT NULL,
   `likes` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `post` (`id`, `author`, `original_post`, `text`, `pub_date`, `latitude`, `longitude`, `likes`) VALUES
-(1, 1, NULL, 'Esto es un mensaje', '2017-03-26 00:00:00', NULL, NULL, 0),
-(2, 1, NULL, 'Este fue el primer post de todos los tiempos.', '2017-03-25 00:00:00', NULL, NULL, 0),
-(3, 1, NULL, 'Primer post creado dinámicamente.', '2017-05-07 23:48:43', '36.725047', '-4.452898', 0),
-(4, 1, NULL, 'Segundo Post dinámico.', '2017-05-08 00:18:49', '36.725067', '-4.452899', 0),
-(5, 1, NULL, 'Otra prueba mas', '2017-05-08 00:23:42', '36.725084', '-4.452899', 0),
-(6, 2, NULL, 'Hakuna Matata!', '2017-05-15 21:26:13', '36.725082', '-4.452858', 0),
-(7, 1, NULL, 'Post reciente', '2017-05-17 00:20:43', '36.725052', '-4.452892', 0),
-(8, 102, NULL, 'Post de test3', '2017-05-17 20:48:00', '36.725092', '-4.452861', 0),
-(12, 2, NULL, 'Bebiendo una Mahou!', '2017-05-19 18:19:59', '36.725052', '-4.452961', 0),
-(14, 2, NULL, 'mi #ChirperRules', '2017-05-19 18:34:53', '36.725052', '-4.452961', 0),
-(17, 2, NULL, 'mi segundo #ChirperRules', '2017-05-19 18:47:21', '36.725052', '-4.452961', 0),
-(18, 2, NULL, 'el tercer #ChirperRules\r\n', '2017-05-19 19:04:02', '36.725052', '-4.452961', 0);
+INSERT INTO `post` VALUES
+(1, 1, NULL, 'Esto es un mensaje', NULL, '2017-03-26 00:00:00', NULL, NULL, 0),
+(2, 1, NULL, 'Este fue el primer post de todos los tiempos.', NULL, '2017-03-25 00:00:00', NULL, NULL, 0),
+(3, 1, NULL, 'Primer post creado dinámicamente.', NULL, '2017-05-07 23:48:43', '36.725047', '-4.452898', 0),
+(4, 1, NULL, 'Segundo Post dinámico.', NULL, '2017-05-08 00:18:49', '36.725067', '-4.452899', 0),
+(5, 1, NULL, 'Otra prueba mas', NULL, '2017-05-08 00:23:42', '36.725084', '-4.452899', 0),
+(6, 2, NULL, 'Hakuna Matata!', NULL, '2017-05-15 21:26:13', '36.725082', '-4.452858', 0),
+(7, 1, NULL, 'Post reciente', NULL, '2017-05-17 00:20:43', '36.725052', '-4.452892', 0),
+(8, 102, NULL, 'Post de test3', NULL, '2017-05-17 20:48:00', '36.725092', '-4.452861', 0),
+(14, 2, NULL, 'mi #comida', NULL, '2017-05-19 18:34:53', '36.725052', '-4.452961', 0),
+(17, 2, NULL, 'mi segundaaaa #comida', NULL, '2017-05-19 18:47:21', '36.725052', '-4.452961', 0),
+(18, 2, NULL, 'elite 5 #comida\r\n', NULL, '2017-05-19 19:04:02', '36.725052', '-4.452961', 0),
+(22, 2, NULL, 'post nuevo #tag69', NULL, '2017-05-19 21:49:28', '36.725141', '-4.452919', 0),
+(23, 2, NULL, '@kronen wins GG', NULL, '2017-05-23 21:09:10', '36.725089', '-4.452899', 0),
+(24, 2, NULL, '@kronen wins GG intento 2', NULL, '2017-05-23 21:11:03', '36.725089', '-4.452899', 0),
+(25, 2, NULL, 'errr... @kronen wins GG intento 3', NULL, '2017-05-23 21:12:49', '36.725089', '-4.452899', 0),
+(26, 2, NULL, '@kronen probando email con html', NULL, '2017-05-24 00:09:37', '36.725109', '-4.452878', 0),
+(27, 2, NULL, '@kronen probando email con html 2', NULL, '2017-05-24 00:11:47', '36.725071', '-4.452927', 0),
+(28, 2, NULL, '@kronen probando email con html 3', NULL, '2017-05-24 00:12:45', '36.725095', '-4.452941', 0),
+(29, 2, NULL, '@kronen probando email con html 4', NULL, '2017-05-24 00:16:00', '36.725074', '-4.452946', 0),
+(30, 2, NULL, 'En Chirper los emails con html para notificar las menciones y los mensajes privados ya están aquí YUUUHUUU! @kronen', NULL, '2017-05-24 00:38:57', '36.725087', '-4.452957', 0),
+(31, 2, NULL, 'prueba variables de entorno para configurar email @kronen', NULL, '2017-05-25 21:42:56', '36.725174', '-4.452922', 0),
+(32, 2, NULL, 'otra prueba envvars @kronen #kronen', NULL, '2017-05-25 21:47:03', '36.725147', '-4.452922', 0),
+(33, 2, NULL, '@kronen prueba\r\n', NULL, '2017-05-25 21:50:42', '36.725130', '-4.452936', 0),
+(34, 2, NULL, 'otra mas @kronen\r\n', NULL, '2017-05-25 22:01:50', '36.725144', '-4.452913', 0),
+(35, 2, NULL, '', NULL, '2017-05-25 22:02:15', '36.725144', '-4.452913', 0),
+(36, 2, NULL, '@kronen lalala', NULL, '2017-05-25 22:07:32', '36.725153', '-4.452922', 0),
+(37, 2, NULL, '@kronen lololo', NULL, '2017-05-25 22:39:55', '36.725144', '-4.452913', 0),
+(38, 2, NULL, '@kronen\r\n', NULL, '2017-05-25 22:42:19', '36.725129', '-4.452941', 0),
+(39, 2, NULL, '@kronen lululu', NULL, '2017-05-25 23:35:38', '36.725107', '-4.452943', 0),
+(66, 2, NULL, 'sdsdsd', 'circle-4751015231148374578.png', '2017-06-01 00:01:47', '36.725093', '-4.452875', 0),
+(67, 1, NULL, 'Prueba de imagen', 'banda-3430313997195645642.png', '2017-06-01 00:33:34', '36.725089', '-4.452885', 0),
+(68, 2, NULL, 'lalaland', NULL, '2017-06-01 23:09:58', '36.725134', '-4.452818', 0),
+(69, 2, NULL, 'lalaland2', NULL, '2017-06-01 23:17:41', '36.725132', '-4.452816', 0),
+(85, 2, 4, 'esto es una respuesta a segundo post dinámico', NULL, '2017-06-02 01:27:17', NULL, NULL, 0),
+(96, 2, NULL, 'prueba #prueba @kronen', 'circle-4392947994564255639.png', '2017-06-02 01:45:11', '36.725111', '-4.452890', 0),
+(97, 2, NULL, 'aaaaaaa', NULL, '2017-06-04 19:28:21', '36.725050', '-4.452746', 0);
 
 
 DROP TABLE IF EXISTS `post_tag`;
@@ -57,10 +84,13 @@ CREATE TABLE `post_tag` (
   `tag` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `post_tag` (`post`, `tag`) VALUES
+INSERT INTO `post_tag` VALUES
 (14, 4),
 (17, 4),
-(18, 4);
+(18, 4),
+(22, 5),
+(32, 6),
+(96, 7);
 
 DROP TABLE IF EXISTS `private`;
 CREATE TABLE `private` (
@@ -80,11 +110,11 @@ CREATE TABLE `profile` (
   `website` varchar(256) DEFAULT NULL,
   `full_name` varchar(60) DEFAULT NULL,
   `num_posts` int(11) NOT NULL DEFAULT '0',
-  `photo` varchar(25) DEFAULT NULL,
+  `photo` varchar(80) DEFAULT NULL,
   `theme` varchar(256) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `profile` (`id`, `user`, `email`, `location`, `website`, `full_name`, `num_posts`, `photo`, `theme`) VALUES
+INSERT INTO `profile` VALUES
 (1, 'test', 'test@test.com', 'Malaga', NULL, 'Test User', 1, NULL, NULL),
 (2, 'kronen', 'kronenr@gmail.com', 'España', 'http://kronen.github.io', 'Alberto G. Lagos', 0, 'kronen.jpg', NULL),
 (52, 'myepiskopov0', 'myepiskopov0@shinystat.com', 'myepiskopov0@dropbox.com', 'https://pbs.org/nisi/at/nibh/in/hac/habitasse/platea.jpg', 'Maudie Yepiskopov', 0, 'ac_tellus_semper.tiff', NULL),
@@ -144,23 +174,29 @@ CREATE TABLE `role` (
   `role_name` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+INSERT INTO `role` VALUES
+('admin'),
+('autorizado');
+
+DROP TABLE IF EXISTS `tag`;
+CREATE TABLE `tag` (
+  `id` int(11) NOT NULL,
+  `tag_name` varchar(81) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `tag` VALUES
+(4, '#comida'),
+(6, '#kronen'),
+(7, '#prueba'),
+(5, '#tag69');
+
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `user_name` varchar(25) NOT NULL,
   `password` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-DROP TABLE IF EXISTS `user_role`;
-CREATE TABLE `user_role` (
-  `user_name` varchar(25) NOT NULL,
-  `role_name` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `role` (`role_name`) VALUES
-('admin'),
-('autorizado');
-
-INSERT INTO `user` (`user_name`, `password`) VALUES
+INSERT INTO `user` VALUES
 ('admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918'),
 ('aweldont', '56c9c31e97818eb524477058a38a59ad20cf1310d92d6f428ad30fd645a41f39'),
 ('bdavidovicsu', '7ed1337265d2b8d3d00723467c541aebb5cfd0ee1511fe7096fe5f40e6252dd9'),
@@ -216,22 +252,18 @@ INSERT INTO `user` (`user_name`, `password`) VALUES
 ('wlipyeati', '46aad3d432c278b0a733696199c780d30bd2a4e60494659c3971f36bf60593d6'),
 ('wtopley12', '4e5670fc2e6e2edb81c62c468dd352e85affe5079ead40c0ef149c8fa37c6fa5');
 
-INSERT INTO `user_role` (`user_name`, `role_name`) VALUES
+DROP TABLE IF EXISTS `user_role`;
+CREATE TABLE `user_role` (
+  `user_name` varchar(25) NOT NULL,
+  `role_name` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `user_role` VALUES
 ('admin', 'admin'),
 ('test', 'autorizado');
 
-
-DROP TABLE IF EXISTS `tag`;
-CREATE TABLE `tag` (
-  `id` int(11) NOT NULL,
-  `tag_name` varchar(81) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `tag` (`id`, `tag_name`) VALUES
-(4, '#ChirperRules');
-
 DROP VIEW IF EXISTS `post_followees`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`proyecto`@`localhost` SQL SECURITY DEFINER VIEW `post_followees`  AS  (select uuid() AS `id`,`p1`.`id` AS `id_follower`,`p1`.`user` AS `follower_name`,`p2`.`user` AS `followee_name`,`p2`.`full_name` AS `followee_full_name`,`p2`.`photo` AS `followee_photo`,`p`.`id` AS `post`,`p`.`text` AS `text`,`p`.`original_post` AS `original_post`,`p`.`pub_date` AS `pub_date`,`p`.`latitude` AS `latitude`,`p`.`longitude` AS `longitude`,`p`.`likes` AS `likes` from (((`profile` `p1` join `follower_followee` `f` on((`p1`.`id` = `f`.`follower`))) join `profile` `p2` on((`p2`.`id` = `f`.`followee`))) join `post` `p` on((`p`.`author` = `p2`.`id`)))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`proyecto`@`localhost` SQL SECURITY DEFINER VIEW `post_followees`  AS  (select uuid() AS `id`,`p1`.`id` AS `id_follower`,`p1`.`user` AS `follower_name`,`p2`.`id` AS `id_followee`,`p2`.`user` AS `followee_name`,`p2`.`full_name` AS `followee_full_name`,`p2`.`photo` AS `followee_photo`,`p`.`id` AS `post`,`p`.`text` AS `text`,`p`.`image` AS `image`,`p`.`original_post` AS `original_post`,`p`.`pub_date` AS `pub_date`,`p`.`latitude` AS `latitude`,`p`.`longitude` AS `longitude`,`p`.`likes` AS `likes` from (((`profile` `p1` join `follower_followee` `f` on((`p1`.`id` = `f`.`follower`))) join `profile` `p2` on((`p2`.`id` = `f`.`followee`))) join `post` `p` on((`p`.`author` = `p2`.`id`)))) ;
 
 DROP VIEW IF EXISTS `trending_topics`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`proyecto`@`localhost` SQL SECURITY DEFINER VIEW `trending_topics`  AS  select uuid() AS `id`,`t`.`id` AS `id_tag`,`t`.`tag_name` AS `tag_name`,count(`pt`.`tag`) AS `post_count` from (`post_tag` `pt` left join `tag` `t` on((`pt`.`tag` = `t`.`id`))) group by `pt`.`tag` ;
@@ -273,13 +305,13 @@ ALTER TABLE `user_role`
 
 
 ALTER TABLE `post`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 ALTER TABLE `private`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `profile`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 ALTER TABLE `tag`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 ALTER TABLE `follower_followee`
   ADD CONSTRAINT `followee_ibfk_2` FOREIGN KEY (`followee`) REFERENCES `profile` (`id`),

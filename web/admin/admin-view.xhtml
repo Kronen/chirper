@@ -1,0 +1,318 @@
+<ui:composition template="/WEB-INF/templates/admin-layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:chirper="http://java.sun.com/jsf/composite/chirper">
+    <ui:define name="title">Chirper</ui:define>
+
+    <ui:define name="content">
+        Yo: 
+        <p:fragment rendered="#{loginManager.userLoggedIn and loginManager.isUserInRole('admin')}">
+            Soy Admin
+        </p:fragment>
+        <div style="display: flex;">
+            <div id="admin-menu">
+                <ul>
+                    <li ><p:link href="/"><h:outputText value="HOME"/></p:link></li>
+                    <li class="active"><p:link href="#"><h:outputText value="CRUD"/></p:link></li>
+                    <li><p:link href="/admin/stats"><h:outputText value="STATS"/></p:link></li>                
+                </ul>
+            </div>
+            <div id="admin-content">
+                <h:form id="form">
+                    <p:growl id="msgs" showDetail="true"/>
+
+                    <p:tabView dynamic="true" cache="true">
+                        <p:tab title="Users">
+                            <h:panelGrid id="panel-create-user" columns="2" >
+                                <h:outputLabel value="Username"/>
+                                <p:inputText value="#{userResource.newUser.userName}" />
+                                <h:outputLabel value="Password"/>
+                                <p:inputText value="#{userResource.newUser.password}" />
+                                <p:commandButton action="#{userResource.create}" value="Create" update="users :form:msgs" />
+                            </h:panelGrid>
+                            <p:dataTable id="users" var="user" value="#{userResource.users}" editable="true" style="margin-bottom:20px">
+                                <f:facet name="header">
+                                    User Table
+                                </f:facet>
+
+                                <p:ajax event="rowEdit" listener="#{userResource.onRowEdit}" update=":form:msgs" />
+
+                                <p:column headerText="Username" style="width: 25%;" >
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{user.userName}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{user.userName}" disabled="true" style="width:100%" label="User Name"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Password">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{user.password}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{user.password}" style="width:100%" label="Password"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column style="width:32px">
+                                    <p:rowEditor />
+                                </p:column>
+                                <p:column style="width:32px; padding: 4px 5px;">
+                                    <p:commandButton icon="ui-icon-trash"
+                                                     title="Delete this user" style="width: 1.1em;"
+                                                     action="#{userResource.remove(user)}" update="users :form:msgs" />
+                                </p:column>
+                            </p:dataTable>                            
+                        </p:tab>
+                        <p:tab title="Roles">
+                            <h:panelGrid id="panel-create-role" columns="2" >
+                                <h:outputLabel value="Role Name"/>
+                                <p:inputText value="#{roleResource.newRole.roleName}" />
+                                <p:commandButton action="#{roleResource.create}" value="Create" update="roles :form:msgs" />
+                            </h:panelGrid>
+                            <p:dataTable id="roles" var="role" value="#{roleResource.roles}" editable="true" style="margin-bottom:20px">
+                                <f:facet name="header">
+                                    Role Table
+                                </f:facet>
+
+                                <p:ajax event="rowEdit" listener="#{tagResource.onRowEdit}" update=":form:msgs" />
+
+                                <p:column headerText="Role Name" style="width: 25%;" >
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{role.roleName}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{role.roleName}" style="width:100%" label="Role Name"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                              
+                                <p:column style="width:32px">
+                                    <p:rowEditor />
+                                </p:column>
+                                <p:column style="width:32px; padding: 4px 5px;">
+                                    <p:commandButton icon="ui-icon-trash"
+                                                     title="Delete this role" style="width: 1.1em;"
+                                                     action="#{roleResource.remove(role)}" update="roles :form:msgs" />
+                                </p:column>
+                            </p:dataTable>                            
+                        </p:tab>
+                        <p:tab title="UserRole">
+                            <h:panelGrid id="panel-create-userrole" columns="2" >
+                                <h:outputLabel value="User Name"/>
+                                <p:inputText value="#{userRoleResource.newUserRole.userRolePK.userName}" />
+                                <h:outputLabel value="Role Name"/>
+                                <p:inputText value="#{userRoleResource.newUserRole.userRolePK.roleName}" />
+                                <p:commandButton action="#{userRoleResource.create}" value="Create" update="userRoles :form:msgs" />
+                            </h:panelGrid>
+                            <p:dataTable id="userRoles" var="userRole" value="#{userRoleResource.userRoles}" editable="true" style="margin-bottom:20px">
+                                <f:facet name="header">
+                                    UserRole Table
+                                </f:facet>
+
+                                <p:ajax event="rowEdit" listener="#{userRoleResource.onRowEdit}" update=":form:msgs" />
+
+                                <p:column headerText="User Name" style="width: 25%;" >
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{userRole.userRolePK.userName}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{userRole.userRolePK.userName}" style="width:100%" label="User Name"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                
+                                <p:column headerText="Role Name" style="width: 25%;" >
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{userRole.userRolePK.roleName}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{userRole.userRolePK.roleName}" style="width:100%" label="Role Name"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                              
+                                <p:column style="width:32px">
+                                    <p:rowEditor />
+                                </p:column>
+                                <p:column style="width:32px; padding: 4px 5px;">
+                                    <p:commandButton icon="ui-icon-trash"
+                                                     title="Delete this tag" style="width: 1.1em;"
+                                                     action="#{tagResource.remove(tag)}" update="tags :form:msgs" />
+                                </p:column>
+                            </p:dataTable>                            
+                        </p:tab>
+                        <p:tab title="Profiles">
+                            <h:panelGrid id="panel-create-profile" columns="2" >
+                                <h:outputLabel value="Full Name"/>
+                                <p:inputText value="#{profileResource.newProfile.fullName}" />
+                                <h:outputLabel value="Email"/>
+                                <p:inputText value="#{profileResource.newProfile.email}" />
+                                <h:outputLabel value="Location"/>
+                                <p:inputText value="#{profileResource.newProfile.location}" />
+                                <h:outputLabel value="Photo"/>
+                                <p:inputText value="#{profileResource.newProfile.photo}" />
+                                <h:outputLabel value="Website"/>
+                                <p:inputText value="#{profileResource.newProfile.website}" />
+                                <h:outputLabel value="Theme"/>
+                                <p:inputText value="#{profileResource.newProfile.theme}" />                                
+                                <p:commandButton action="#{profileResource.create}" value="Create" update="profiles :form:msgs" />
+                            </h:panelGrid>
+                            <p:dataTable id="profiles" var="profile" value="#{profileResource.profiles}" editable="true" style="margin-bottom:20px">
+                                <f:facet name="header">
+                                    Profile Table
+                                </f:facet>
+
+                                <p:ajax event="rowEdit" listener="#{profileResource.onRowEdit}" update=":form:msgs" />                                
+
+                                <p:column headerText="FullName">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{profile.fullName}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{profile.fullName}" style="width:100%" label="Full Name"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Email">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{profile.email}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{profile.email}" style="width:100%" label="Email"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Location">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{profile.location}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{profile.location}" style="width:100%" label="Location"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Photo">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{profile.photo}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{profile.photo}" style="width:100%" label="Photo"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Website">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{profile.website}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{profile.website}" style="width:100%" label="Website"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Theme">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{profile.theme}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{profile.theme}" style="width:100%" label="Theme"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Nº Posts" style="width:64px;">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{profile.numPosts}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{profile.numPosts}" style="width:100%" label="Theme"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column style="width:32px">
+                                    <p:rowEditor />
+                                </p:column>
+                                <p:column style="width:32px; padding: 4px 5px;">
+                                    <p:commandButton icon="ui-icon-trash"
+                                                     title="Delete this profile" style="width: 1.1em;"
+                                                     action="#{profileResource.remove(profile)}" update="profiles :form:msgs" />
+                                </p:column>
+                            </p:dataTable>                            
+                        </p:tab>
+                        <p:tab title="Posts">
+                            <h:panelGrid id="panel-create-post" columns="2" >
+                                <h:outputLabel value="Author"/>
+                                <p:inputText value="#{postResource.newPost.author}" />
+                                <h:outputLabel value="Text"/>
+                                <p:inputText value="#{postResource.newPost.text}" />
+                                <h:outputLabel value="Publication Date"/>
+                                <p:inputText value="#{postResource.newPost.pubDate}" />
+                                <h:outputLabel value="Latitude"/>
+                                <p:inputText value="#{postResource.newPost.latitude}" />
+                                <h:outputLabel value="Longitude"/>
+                                <p:inputText value="#{postResource.newPost.longitude}" />
+                                <h:outputLabel value="Likes"/>
+                                <p:inputText value="#{postResource.newPost.likes}" />
+                                <p:commandButton action="#{postResource.create}" value="Create" update="posts :form:msgs" />
+                            </h:panelGrid>
+                            
+                            <p:dataTable id="posts" var="post" value="#{postResource.posts}" editable="true" style="margin-bottom:20px">
+                                <f:facet name="header">Posts Table</f:facet>
+
+                                <p:ajax event="rowEdit" listener="#{postResource.onRowEdit}" update=":form:msgs" />                                
+
+                                <p:column headerText="Author">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{post.author.user.userName}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{post.author.user.userName}" disabled="true" style="width:100%" label="Author"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column headerText="Text">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{post.text}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{post.text}" style="width:100%" label="Email"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Publication Date">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{post.pubDate}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{post.pubDate}" style="width:100%" label="Location"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Latitude">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{post.latitude}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{post.latitude}" style="width:100%" label="Photo"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Longitude">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{post.longitude}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{post.longitude}" style="width:100%" label="Website"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Likes">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{post.likes}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{post.likes}" style="width:100%" label="Theme"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column style="width:32px">
+                                    <p:rowEditor />
+                                </p:column>
+                                <p:column style="width:32px; padding: 4px 5px;">
+                                    <p:commandButton icon="ui-icon-trash"
+                                                     title="Delete this post" style="width: 1.1em;"
+                                                     action="#{postResource.remove(post)}" update="posts :form:msgs" />
+                                </p:column>
+                            </p:dataTable>                            
+                        </p:tab>
+                        <p:tab title="Tags">
+                            <h:panelGrid id="panel-create-tag" columns="2" >
+                                <h:outputLabel value="Tag Name"/>
+                                <p:inputText value="#{tagResource.newTag.tagName}" />
+                                <p:commandButton action="#{tagResource.create}" value="Create" update="tags :form:msgs" />
+                            </h:panelGrid>
+                            <p:dataTable id="tags" var="tag" value="#{tagResource.tags}" editable="true" style="margin-bottom:20px">
+                                <f:facet name="header">
+                                    Tag Table
+                                </f:facet>
+
+                                <p:ajax event="rowEdit" listener="#{tagResource.onRowEdit}" update=":form:msgs" />
+
+                                <p:column headerText="Tag Name" style="width: 25%;" >
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{tag.tagName}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{tag.tagName}" style="width:100%" label="Tag Name"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                              
+                                <p:column style="width:32px">
+                                    <p:rowEditor />
+                                </p:column>
+                                <p:column style="width:32px; padding: 4px 5px;">
+                                    <p:commandButton icon="ui-icon-trash"
+                                                     title="Delete this tag" style="width: 1.1em;"
+                                                     action="#{tagResource.remove(tag)}" update="tags :form:msgs" />
+                                </p:column>
+                            </p:dataTable>                            
+                        </p:tab>
+                    </p:tabView>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

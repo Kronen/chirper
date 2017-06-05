@@ -1,0 +1,111 @@
+<ui:composition template="/WEB-INF/templates/main-layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:chirper="http://java.sun.com/jsf/composite/chirper" >
+
+    <ui:define name="title">@#{homePage.user.userName} Followees | Chirper</ui:define>
+
+    <ui:define name="content">
+        <h:outputStylesheet library="css" name="#{homePage.theme}" />
+
+        <chirper:navbar profile="#{homePage.profile}" />
+
+        <div class="wrapper">            
+            <div class="chirp-row">
+                <div class="chirp-quarter">                    
+                    <p:panel styleClass="module mini-profile" rendered="#{loginManager.userLoggedIn}">
+                        <p:panel class="mini-profile-info">
+                            <p:panel styleClass="mini-profile-photo">                                
+                                <h:graphicImage library="images" name="#{filesHandler.getAvatar(homePage.profile)}" alt="user photo"/>                                
+                            </p:panel>
+                            <p:link href="/user/#{user.userName}" styleClass="mini-profile-name" 
+                                    value="#{homePage.profile.fullName != null ? homePage.profile.fullName : user.userName}" />
+                            <h:outputText styleClass="mini-profile-view">@#{user.userName}</h:outputText>
+                            <h:outputText styleClass="user-location"></h:outputText>
+                        </p:panel>
+                        <ul class="module profile-data">
+                            <li>
+                                <a href="#" class="open-profile-modal">
+                                    <h:outputText value="#{homePage.profile.postCollection.size()}" styleClass="posts-count" />
+                                    <h:outputText styleClass="label" value="Chirps"/>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#following" class="open-following-page">
+                                    <h:outputText value="#{homePage.profile.followees.size()}" styleClass="followees-count"/>
+                                    <h:outputText styleClass="label" value="Following"/>
+                                </a>
+                            </li>
+                            <li>
+                                <p:link styleClass="followers" href="/followers/#{homePage.profile.id}">
+                                    <h:outputText value="#{homePage.profile.followees.size()}" styleClass="followers-count"/>
+                                    <h:outputText styleClass="label" value="Followers"/>
+                                </p:link>
+                            </li>
+                        </ul>
+
+                        <p:panel styleClass="post-area">
+                            <h:form enctype="multipart/form-data" id="form-new-post" styleClass="post-area-new">
+                                <p:growl id="messages" showDetail="true" globalOnly="true" sticky="true"/>
+
+                                <h:inputHidden id="new-post-lat" value="#{homePage.newPost.latitude}" />
+                                <h:inputHidden id="new-post-lng" value="#{homePage.newPost.longitude}" />
+
+                                <p:inputTextarea id="new-post-text" value="#{homePage.newPost.text}" placeholder="New Post..." 
+                                                 required="true" maxlength="256" requiredMessage="You must provide a message"/>
+                                <p:panel class="post-area-attach">
+                                    <p:fileUpload value="#{homePage.image}" mode="simple" skinSimple="true"
+                                                  styleClass="post-upload" sizeLimit="100000"
+                                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                                  invalidFileMessage="Invalid File Type. Try with (gif/jpg/png)"
+                                                  invalidSizeMessage="Invalid Size. Max: 100.000"/>                                        
+                                </p:panel>                               
+
+                                <p:panel styleClass="post-area-extras">                                    
+                                    <span class="post-area-remaining">256</span>
+                                    <p:commandButton id="post-publish" value="post" class="post-submit" ajax="false"
+                                                     actionListener="#{homePage.publish}" oncomplete="handlePostSubmited()"/>                                    
+                                </p:panel>
+                            </h:form>
+                        </p:panel>
+                    </p:panel>
+                    <p:panel styleClass="module mini-profile" rendered="#{!loginManager.userLoggedIn}">
+                        <h:outputText value="&#160;" />
+                    </p:panel>
+                </div>
+
+                <div class="postboard chirp-half">
+                    <h2>
+                        <h:outputText value="#{followersBean.profile.user.userName} Followers" 
+                                      rendered="#{!loginManager.userLoggedIn or homePage.profile.id != followersBean.profile.id}"/>
+                        <h:outputText value="Your Followers" 
+                                      rendered="#{loginManager.userLoggedIn and homePage.profile.id == followersBean.profile.id}"/>
+                    </h2>
+
+                    <h:form id="postForm">
+                        <p:dataList value="#{followersBean.followers}" var="follower" type="definition">
+                            <f:facet name="description">
+                                <p:panel class="mini-profile-info">
+                                    <p:panel styleClass="mini-profile-photo">                                
+                                       <h:graphicImage library="images" name="#{filesHandler.getAvatar(follower)}" alt="user photo"/>                                
+                                    </p:panel>
+                                    <p:link href="/user/#{follower.user.userName}" styleClass="mini-profile-name" 
+                                            value="#{follower.fullName != null ? follower.fullName : follower.user.userName}" />
+                                    <h:outputText styleClass="mini-profile-view" value="@#{follower.user.userName}"/>
+                                    <h:outputText styleClass="user-email" value="email: #{follower.email}"/>
+                                </p:panel>
+                            </f:facet>
+                        </p:dataList>
+                    </h:form>
+                </div>
+                <div class="chirp-quarter">
+                </div>
+            </div>            
+        </div>
+
+    </ui:define>
+
+</ui:composition>
