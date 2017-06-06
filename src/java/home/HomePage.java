@@ -10,6 +10,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -175,7 +177,7 @@ public class HomePage implements Serializable {
         ProfileJpaController pC = new ProfileJpaController(emf);
         List<String> users = TextHandler.extractMentions(post.getText());
         for(String username : users) {
-            Profile p = pC.findProfileByUserName(username.substring(1));
+            Profile p = pC.findProfileByUserName(username);
             if(p != null)
                 sendMentionNotification(p.getEmail());
         }
@@ -226,7 +228,17 @@ public class HomePage implements Serializable {
         return tagCloudModel;
     }
      
+    /** 
+     *  Redirects to corresponding tag view when a tag was selected in the Tag Cloud
+     *
+     * @param event Event with information about the item selected in the TagCloud
+     */
     public void onSelect(SelectEvent event) {
-        TagCloudItem item = (TagCloudItem) event.getObject();
+        try {
+            TagCloudItem item = (TagCloudItem) event.getObject();
+            ContextHandler.externalContext().redirect("tag/" + item.getLabel().substring(1));
+        } catch (IOException ex) {
+            MessageHandler.addErrorMessage("Error redirecting to tag view.", null);
+        }
     }
 }

@@ -21,12 +21,12 @@ public class TextHandler {
     }
     
     public static List extractMentions(String text) {
-        /* min/max length is {4, 21} because username  */
-        Matcher m = Pattern.compile("\\B@[a-zA-Z0-9_-]{4,21}").matcher(text); 
+        /* min/max length is {4, 21} to comply with username validation */
+        Matcher m = Pattern.compile("\\B@([a-zA-Z0-9_-]{4,21})").matcher(text); 
         
         List<String> allMentions = new ArrayList<>();        
         while(m.find())
-            allMentions.add(m.group());        
+            allMentions.add(m.group(1));        
         return allMentions;
     }
 }

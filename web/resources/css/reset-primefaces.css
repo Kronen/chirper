@@ -2,7 +2,6 @@
 .ui-button-text-only .ui-button-text {
     padding: 0;
 }
-
 .ui-dialog {
     background: white;
     z-index: 9999;
@@ -33,14 +32,24 @@
     background-color: #9ccc65;
     border-color: #9ccc65;
 }
-
+.ui-autocomplete-panel {
+    border: 1px solid #d5d5d5;
+    background: #fff;
+    color: #222;
+    margin-top: 5px;
+}
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, 
+.ui-widget-header .ui-state-highlight {
+    border: 1px solid #156090;
+    background: #186ba0;
+    color: #fff;
+}
 .ui-growl .ui-growl-error,
 .ui-messages .ui-message-error{
     color: #fff;
     background-color: #ef5350;
     border-color: #ef5350;
 }
-
 .ui-icon {
     width: 16px;
     height: 16px;
@@ -53,4 +62,7 @@
 }
 .ui-growl-message {
     font-size: 14px;
+}
+.ui-corner-all {
+    border-radius: 3px;
 }

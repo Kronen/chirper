@@ -85,7 +85,7 @@
                                       rendered="#{loginManager.userLoggedIn and homePage.profile.id == followersBean.profile.id}"/>
                     </h2>
 
-                    <h:form id="postForm">
+                    <h:form id="followersForm">
                         <p:dataList value="#{followersBean.followers}" var="follower" type="definition">
                             <f:facet name="description">
                                 <p:panel class="mini-profile-info">

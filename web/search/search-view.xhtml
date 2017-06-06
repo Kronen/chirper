@@ -1,0 +1,136 @@
+<ui:composition template="/WEB-INF/templates/main-layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:chirper="http://java.sun.com/jsf/composite/chirper">
+
+    <ui:define name="title">Chirper</ui:define>
+
+    <ui:define name="content">
+        <h:outputStylesheet library="css" name='#{homePage.theme}' />
+
+        <f:metadata>
+            <f:viewParam name="searchText" value="#{searchBean.searchText}" />
+        </f:metadata>
+
+        <chirper:navbar profile="#{homePage.profile}" />
+
+        <div class="wrapper">            
+            <div class="chirp-row">
+                <div class="chirp-quarter">                    
+                    <!-- PROFILE -->
+                    <div class="module mini-profile">
+                        <div class="mini-profile-info">
+                            <div class="mini-profile-photo">                                
+                                <h:graphicImage library="images" name="#{filesHandler.getAvatar(homePage.profile)}" alt="user photo"/>                                
+                            </div>
+                            <p:link href="/user/#{user.userName}" styleClass="mini-profile-name" 
+                                    value="#{homePage.profile.fullName != null ? homePage.profile.fullName : user.userName}" />
+                            <span class="mini-profile-view">@#{user.userName}</span>
+                            <span id="user-location"></span>
+                        </div>
+                        <ul class="module profile-data">
+                            <li>
+                                <a href="#" class="open-profile-modal">
+                                    <h:outputText value="#{homePage.profile.postCollection.size()}" styleClass="posts-count" />
+                                    <span class="label">Chirps</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#following" class="open-following-page">
+                                    <h:outputText value="#{homePage.profile.followees.size()}" styleClass="followees-count"/>
+                                    <span class="label">Following</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="open-followers">
+                                    <h:outputText value="#{homePage.profile.followees.size()}" styleClass="followers-count"/>
+                                    <span class="label">Followers</span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <div class="post-area">                            
+                            <h:form id="form-new-post" styleClass="post-area-new">
+                                <p:inputTextarea id="new-post-text" value="#{homePage.newPost.text}" placeholder="New Post..." 
+                                                 maxlength="256" />
+                                <h:inputHidden id="new-post-lat" value="#{homePage.newPost.latitude}" />
+                                <h:inputHidden id="new-post-lng" value="#{homePage.newPost.longitude}" />
+
+                                <div class="post-area-extras">
+                                    <span class="post-area-attach" style="display: none;">
+                                        <input type="file" id="fileInputAttach" style="font-size: 10px; width: 135px;"/>
+                                    </span>
+                                    <span class="post-area-remaining">256</span>
+                                    <p:commandButton id="post-publish" value="post" class="post-submit" 
+                                                     actionListener="#{homePage.publish}" oncomplete="handlePostSubmited()"/>                                    
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+                <p:panel styleClass="chirp-half">
+                    <p:panel styleClass="postboard">
+                        <h2>
+                            <h:outputText value="Users Found"/>
+                        </h2>
+                        <h:form id="resultsForm">
+                            <p:dataList value="#{searchBean.profilesFound}" var="profile" type="definition">
+                                <f:facet name="description">
+                                    <p:panel class="mini-profile-info">
+                                        <p:panel styleClass="mini-profile-photo">                                
+                                            <h:graphicImage library="images" name="#{filesHandler.getAvatar(profile)}" alt="user photo"/>                                
+                                        </p:panel>
+                                        <p:link href="/user/#{profile.user.userName}" styleClass="mini-profile-name" 
+                                                value="#{profile.fullName != null ? profile.fullName : profile.user.userName}" />
+                                        <h:outputText styleClass="mini-profile-view" value="@#{profile.user.userName}"/>
+                                        <h:outputText styleClass="user-email" value="email: #{profile.email}"/>
+                                    </p:panel>
+                                </f:facet>
+                            </p:dataList>
+                        </h:form>
+                    </p:panel>
+                    <p:panel styleClass="postboard">
+                        <h2>
+                            <h:outputText value="Tags Found"/>
+                        </h2>
+                        <h:form id="tagResultsForm">
+                            <p:dataList value="#{searchBean.tagsFound}" var="tag" type="definition">
+                                <p:link href="/tag/#{tag.tagName.substring(1)}" value="#{tag.tagName}" />
+                            </p:dataList>
+                        </h:form>
+                    </p:panel>
+
+                </p:panel>
+                <div class="chirp-quarter">
+                    <div class="module trending-topics">
+                        <h2><h:outputText value="Trending Topics"/></h2>
+                        <p:dataList value="#{homePage.trendingTopics(1)}" var="tt" type="ordered">
+                            <f:facet name="header">
+                                <h:outputText value="Last 24 Hours"/>
+                            </f:facet>
+                            <p:link class="tt" href="">#{tt[0]}</p:link> <span>#{tt[1]}</span>
+                            <h:outputText value="#{tt[1]}"/>
+                        </p:dataList>
+                        <p:dataList value="#{homePage.trendingTopics(7)}" var="tt" type="ordered">
+                            <f:facet name="header">
+                                <h:outputText value="Last 7 Days"/>
+                            </f:facet>
+                            <p:link class="tt" href="">#{tt[0]}</p:link> <span>#{tt[1]}</span>
+                        </p:dataList>
+                        <p:dataList value="#{homePage.trendingTopics(31)}" var="tt" type="ordered">
+                            <f:facet name="header">
+                                <h:outputText value="Last Month"/>
+                            </f:facet>
+                            <p:link class="tt" href="">#{tt[0]}</p:link> <span>#{tt[1]}</span>
+                        </p:dataList>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

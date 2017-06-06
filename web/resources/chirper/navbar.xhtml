@@ -67,15 +67,12 @@
                 </li>
                 <!-- BUSQUEDA -->
                 <li class="userMenu-search">
-                    <input type="text" class="userMenu-search-field" placeholder="search"/>
-                    <div class="search-results dialog-modal">
-                        <ul class="userMenu-search-sugestions" style="display: none;">
-                            <li><a href="#">Sugestion One</a></li>
-                            <li><a href="#">Sugestion Two</a></li>
-                            <li><a href="#">Sugestion Three</a></li>
-                        </ul>
-                        <ul class="userMenu-search-profiles"></ul>
-                    </div>
+                    <h:form>
+                    <p:autoComplete id="search" styleClass="userMenu-search-field" forceSelection="true"
+                                    minQueryLength="2" cache="true" cacheTimeout="30000"
+                                    value="#{searchBean.searchText}" completeMethod="#{searchBean.complete}"/>
+                    <p:commandButton action="#{searchBean.forwardSearch}" style="display:none;"/>
+                    </h:form>
                 </li>
             </ul>
         </nav>
