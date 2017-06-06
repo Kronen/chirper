@@ -165,9 +165,7 @@ public class LoginManager implements Serializable {
      * @return The currently logged in {@link User}, or {@code null} if no user is logged in.
      */
     public User getUser() {
-        FacesContext context = facesContext();
-        ExternalContext externalContext = context.getExternalContext();
-        return (User) externalContext.getSessionMap().get("user");
+        return (User) externalContext().getSessionMap().get("user");
     }
 
 
@@ -188,9 +186,7 @@ public class LoginManager implements Serializable {
      * @return {@code true} if the user is logged in and has the given Role. {@code false} otherwise.
      */
     public boolean isUserInRole(String role) {
-        FacesContext context = facesContext();
-        ExternalContext externalContext = context.getExternalContext();
-        return externalContext.isUserInRole(role);
+        return externalContext().isUserInRole(role);
     }
     
     /**

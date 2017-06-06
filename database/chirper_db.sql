@@ -117,6 +117,7 @@ CREATE TABLE `profile` (
 INSERT INTO `profile` VALUES
 (1, 'test', 'test@test.com', 'Malaga', NULL, 'Test User', 1, NULL, NULL),
 (2, 'kronen', 'kronenr@gmail.com', 'España', 'http://kronen.github.io', 'Alberto G. Lagos', 0, 'kronen.jpg', NULL),
+(3, 'admin', 'chirper.notifier@gmail.com', NULL, NULL, 'Chirper Admin', 0, NULL, NULL),
 (52, 'myepiskopov0', 'myepiskopov0@shinystat.com', 'myepiskopov0@dropbox.com', 'https://pbs.org/nisi/at/nibh/in/hac/habitasse/platea.jpg', 'Maudie Yepiskopov', 0, 'ac_tellus_semper.tiff', NULL),
 (53, 'jmcvee1', 'jmcvee1@discuz.net', 'jmcvee1@drupal.org', 'https://meetup.com/enim/lorem/ipsum.html', 'Joey McVee', 0, 'tristique.jpeg', NULL),
 (54, 'mpountney2', 'mpountney2@e-recht24.de', 'mpountney2@yandex.ru', 'https://wsj.com/nec/sem/duis/aliquam/convallis.xml', 'Melosa Pountney', 0, 'phasellus.tiff', NULL),

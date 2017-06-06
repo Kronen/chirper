@@ -8,17 +8,20 @@
     <ui:define name="title">Chirper</ui:define>
 
     <ui:define name="content">
-        Yo: 
-        <p:fragment rendered="#{loginManager.userLoggedIn and loginManager.isUserInRole('admin')}">
-            Soy Admin
+        <p:fragment rendered="#{!loginManager.isUserInRole('admin')}">
+            <h:outputText value="Please login with administrator privileges and try again."/>
         </p:fragment>
-        <div style="display: flex;">
+        <p:fragment rendered="#{loginManager.isUserInRole('admin')}">
+        <div style="display: flex;">            
             <div id="admin-menu">
+                <h:form id="form-admin">
                 <ul>
-                    <li ><p:link href="/"><h:outputText value="HOME"/></p:link></li>
+                    <li><p:link href="/"><h:outputText value="HOME"/></p:link></li>
                     <li class="active"><p:link href="#"><h:outputText value="CRUD"/></p:link></li>
-                    <li><p:link href="/admin/stats"><h:outputText value="STATS"/></p:link></li>                
+                    <li><p:link href="/admin/stats"><h:outputText value="STATS"/></p:link></li>
+                    <li><p:commandLink value="Log Out" ajax="false" actionListener="#{loginManager.logout}" /></li>
                 </ul>
+                </h:form>
             </div>
             <div id="admin-content">
                 <h:form id="form">
@@ -128,8 +131,8 @@
                                 </p:column>
                                 <p:column style="width:32px; padding: 4px 5px;">
                                     <p:commandButton icon="ui-icon-trash"
-                                                     title="Delete this tag" style="width: 1.1em;"
-                                                     action="#{tagResource.remove(tag)}" update="tags :form:msgs" />
+                                                     title="Delete this user/role relationship" style="width: 1.1em;"
+                                                     action="#{userRoleResource.remove(tag)}" update="userRoles :form:msgs" />
                                 </p:column>
                             </p:dataTable>                            
                         </p:tab>
@@ -313,6 +316,7 @@
                 </h:form>
             </div>
         </div>
+        </p:fragment>
     </ui:define>
 
 </ui:composition>
