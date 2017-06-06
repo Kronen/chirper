@@ -12,7 +12,7 @@
         <h:outputStylesheet library="css" name='#{homePage.theme}' />
         
         <chirper:navbar profile="#{homePage.profile}" />
-        
+        <p:growl id="messages" showDetail="true" globalOnly="true"/>
         <div class="wrapper">            
             <div class="chirp-row">
                 <div class="chirp-quarter">                    
@@ -56,8 +56,6 @@
                         
                         <p:panel styleClass="post-area">
                             <h:form enctype="multipart/form-data" id="form-new-post" styleClass="post-area-new">
-                                <p:growl id="messages" showDetail="true" globalOnly="true" sticky="true"/>
-                                
                                 <h:inputHidden id="new-post-lat" value="#{homePage.newPost.latitude}" />
                                 <h:inputHidden id="new-post-lng" value="#{homePage.newPost.longitude}" />
                                 
@@ -73,8 +71,9 @@
                                 
                                 <p:panel styleClass="post-area-extras">                                    
                                     <span class="post-area-remaining">256</span>
-                                    <p:commandButton id="post-publish" value="post" class="post-submit" ajax="false"
-                                                     actionListener="#{homePage.publish}" oncomplete="handlePostSubmited()"/>                                    
+                                    <p:commandButton id="post-publish" value="post" styleClass="post-submit" ajax="false"
+                                                     actionListener="#{homePage.publish}" oncomplete="handlePostSubmited()"
+                                                     update="@form" />                                    
                                 </p:panel>
                             </h:form>
                         </p:panel>
@@ -85,10 +84,8 @@
                     <h2><h:outputText value="Chirpboard"/></h2>
                     
                     <ol id="posts" class="postboard-posts">
-                    
-                    <p:dataScroller value="#{homePage.postsFromFollowees}" var="chirp" styleClass="postboard-posts" 
-                                    chunkSize="10" >
-                        <p:growl id="messages" showDetail="true" globalOnly="true" sticky="true"/>
+                    <p:dataScroller value="#{homePage.postsFromFollowees}" var="chirp" 
+                                    styleClass="postboard-posts" chunkSize="10" >                        
                         <f:facet name="loader">                            
                             <p:commandButton type="button" value="View More" styleClass="view-more"/>
                         </f:facet>
@@ -145,25 +142,24 @@
                                     </ul>
                                     <p:panel styleClass="post-reply-content" style="display: block;">
                                         <p:panel styleClass="post-area-reply">
-                                            <h:inputHidden value="#{homePage.newPost.latitude}" />
-                                            <h:inputHidden value="#{homePage.newPost.longitude}" />
-                                            
-                                            <p:inputTextarea placeholder="Reply..." value="#{homePage.newPost.text}"
-                                                             required="true" maxlength="256" 
-                                                             requiredMessage="You must provide a message"/>
-                                            
-                                            <p:panel style="text-align: right">
-                                                <h:outputText styleClass="post-area-remaining">256</h:outputText>
-                                                <p:commandButton styleClass="post-submit" oncomplete="handleReplySubmited()"
-                                                    actionListener="#{homePage.publishReply(chirp.post)}" value="reply" ajax="true"/>                                                                  
-                                            </p:panel>
+                                            <h:form>
+                                                <h:inputHidden value="#{homePage.newReply.latitude}" />
+                                                <h:inputHidden value="#{homePage.newReply.longitude}" />
+
+                                                <p:inputTextarea placeholder="Reply..." value="#{homePage.newReply.text}"
+                                                                 required="true" maxlength="256" autoResize="true"
+                                                                 requiredMessage="You must provide a message"/>
+                                                
+                                                    <h:outputText styleClass="post-area-remaining">256</h:outputText>
+                                                    <p:commandButton styleClass="post-submit" ajax="true" update="@form"
+                                                        actionListener="#{homePage.publishReply(chirp.post)}" value="reply"/>
+                                            </h:form>
                                         </p:panel>
                                     </p:panel>
                                 </div> 
                             </p:panel>
                         </li>
                     </p:dataScroller>
-                    
                     </ol>           
                 </div>
                 <div class="chirp-quarter">

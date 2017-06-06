@@ -37,10 +37,6 @@ function handlePostSubmited(area) {
     $('.post-area-new textarea').val('');
 }
 
-function handleReplySubmited(area) {
-    $('.post-area-reply textarea').val('');
-}
-
 $(function () {    
     $('.post-location, .post-info-time').hide();
 
@@ -62,17 +58,17 @@ $(function () {
     });
     /* Cuenta carácteres restantes */
     $('.post-area-new textarea').keyup(function() {
-        $('.post-area-new .post-area-remaining').text(256 - $(this).val().length);
+        $(this).closest('.post-area-remaining').text(256 - $(this).val().length);
     });
     $('.post-area-reply textarea').keyup(function() {
-        $('.post-area-reply .post-area-remaining').text(256 - $(this).val().length);
+        $(this).closest('.post-area-remaining').text(256 - $(this).val().length);
     });
     /* Abre/Cierra el área para escribir un nuevo mensaje */
     $('.post-area-reply textarea').on("focus", function (e) {
-        $('.post-area-reply').addClass('open');
+        $(this).closest('.post-area-reply').addClass('open');
     });
     $('.post-area-reply textarea').on("blur", function (e) {
-        $('.post-area-reply').removeClass('open');
+        $(this).closest('.post-area-reply').removeClass('open');
     });
 
     /* Abre/Cierra el área para escribir una respuesta y ver estadísticas de chirper */

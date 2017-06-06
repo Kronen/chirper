@@ -567,8 +567,8 @@ input.ui-state-error {
 .ui-messages-fatal, .ui-message-fatal {
     font-family: 'Play', sans-serif;
     font-size: 15px;
-    color: #b94a48;
-    background-color: #f2dede;
+    color: #f2dede;
+    background-color: #b94a48;
     border-radius: 2px;
     margin: 5px;
     padding: 3px 8px 3px;

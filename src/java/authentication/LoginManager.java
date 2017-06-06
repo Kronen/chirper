@@ -20,6 +20,7 @@ import jpa.controllers.UserJpaController;
 import jpa.controllers.exceptions.PreexistingEntityException;
 import jpa.entities.Profile;
 import org.apache.commons.codec.digest.DigestUtils;
+import utils.ContextHandler;
 import utils.MessageHandler;
 
 /**
@@ -38,17 +39,22 @@ public class LoginManager implements Serializable {
     private static final String HOMEPAGE = "/";
     private static final String PAGE_AFTER_LOGOUT = HOMEPAGE;
    
-    private final EntityManagerFactory emf;
+    private EntityManagerFactory emf;
     private String username;
     private String password;
     private String email;
     private String forwardUrl;
     
 
-    public LoginManager() {
-        emf = Persistence.createEntityManagerFactory("ChirperDbPU");
+    public LoginManager() {        
     }
-
+    
+    @PostConstruct
+    public void init() {
+        this.emf = Persistence.createEntityManagerFactory("ChirperDbPU");
+        this.forwardUrl = extractRequestedUrlBeforeLogin();
+    }
+    
     public String getUsername() {
         return username;
     }
@@ -69,11 +75,6 @@ public class LoginManager implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    @PostConstruct
-    public void init() {
-        this.forwardUrl = extractRequestedUrlBeforeLogin();
-    }
            
     /**
      * Extract the current url so we can later redirect to this url when the login was 
@@ -83,20 +84,12 @@ public class LoginManager implements Serializable {
     private String extractRequestedUrlBeforeLogin() {
         // Por si introduzco la posibilidad de login desde otras vistas como por ejemplo la vista de usuario, 
         // así despues de logear nos volverá a reenviar a la vista en la que estábamos.
-        ExternalContext externalContext = externalContext();
-        String requestedUrl = (String) externalContext.getRequestMap().get(RequestDispatcher.FORWARD_REQUEST_URI);
+        ExternalContext externalContext = ContextHandler.externalContext();
+        String requestedUrl = (String)ContextHandler.externalContext().getRequestMap().get(RequestDispatcher.FORWARD_REQUEST_URI);
         if (requestedUrl == null)
             return externalContext.getRequestContextPath() + HOMEPAGE;
         String queryString = (String) externalContext.getRequestMap().get(RequestDispatcher.FORWARD_QUERY_STRING);
         return requestedUrl + (queryString == null ? "" : "?" + queryString);
-    }
-
-    private ExternalContext externalContext() {
-        return facesContext().getExternalContext();
-    }
-
-    private FacesContext facesContext() {
-        return FacesContext.getCurrentInstance();
     }
     
     /**
@@ -106,7 +99,7 @@ public class LoginManager implements Serializable {
      * @throws java.io.IOException for redirect
      */
     public void login() throws IOException {
-        ExternalContext externalContext = externalContext();
+        ExternalContext externalContext = ContextHandler.externalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
         try {
             String hashed_pass = DigestUtils.sha256Hex(password);
@@ -152,7 +145,7 @@ public class LoginManager implements Serializable {
      * @throws java.io.IOException for redirect
      */
     public void logout() throws IOException {
-        ExternalContext externalContext = externalContext();
+        ExternalContext externalContext = ContextHandler.externalContext();
         externalContext.invalidateSession();
         externalContext.redirect(externalContext.getRequestContextPath() + PAGE_AFTER_LOGOUT);
     }
@@ -165,7 +158,7 @@ public class LoginManager implements Serializable {
      * @return The currently logged in {@link User}, or {@code null} if no user is logged in.
      */
     public User getUser() {
-        return (User) externalContext().getSessionMap().get("user");
+        return (User)ContextHandler.externalContext().getSessionMap().get("user");
     }
 
 
@@ -186,7 +179,7 @@ public class LoginManager implements Serializable {
      * @return {@code true} if the user is logged in and has the given Role. {@code false} otherwise.
      */
     public boolean isUserInRole(String role) {
-        return externalContext().isUserInRole(role);
+        return ContextHandler.externalContext().isUserInRole(role);
     }
     
     /**

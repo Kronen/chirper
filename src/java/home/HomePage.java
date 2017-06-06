@@ -13,7 +13,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.mail.MessagingException;
 import javax.persistence.EntityManagerFactory;
@@ -33,6 +32,7 @@ import org.primefaces.model.tagcloud.DefaultTagCloudItem;
 import org.primefaces.model.tagcloud.DefaultTagCloudModel;
 import org.primefaces.model.tagcloud.TagCloudItem;
 import org.primefaces.model.tagcloud.TagCloudModel;
+import utils.ContextHandler;
 import utils.MailHandler;
 import utils.MessageHandler;
 import utils.TextHandler;
@@ -41,21 +41,23 @@ import utils.TextHandler;
 @ViewScoped
 public class HomePage implements Serializable {
     
-    private final EntityManagerFactory emf;
+    transient private EntityManagerFactory emf;
     private User user;
     private Profile profile;
-    private Post newPost;
+    private Post newPost, newReply;
     private TagCloudModel tagCloudModel;
     private UploadedFile image;
 
     public HomePage() {
-        emf = Persistence.createEntityManagerFactory("ChirperDbPU");  
+          
     }
     
     @PostConstruct
     public void init() {
+        emf = Persistence.createEntityManagerFactory("ChirperDbPU");
         newPost = new Post();
-        user = (User)externalContext().getSessionMap().get("user");
+        newReply = new Post();
+        user = (User)ContextHandler.externalContext().getSessionMap().get("user");
         if(user != null)
             loadProfile(user.getUserName()); 
         
@@ -67,14 +69,6 @@ public class HomePage implements Serializable {
         }
     }
     
-    private ExternalContext externalContext() {
-        return facesContext().getExternalContext();
-    }
-
-    private FacesContext facesContext() {
-        return FacesContext.getCurrentInstance();
-    }
-
     public User getUser() {      
         return user;        
     }
@@ -97,6 +91,14 @@ public class HomePage implements Serializable {
 
     public void setNewPost(Post post) {
         this.newPost = post;
+    }
+
+    public Post getNewReply() {
+        return newReply;
+    }
+
+    public void setNewReply(Post newReply) {
+        this.newReply = newReply;
     }
 
     public UploadedFile getImage() {
@@ -123,32 +125,34 @@ public class HomePage implements Serializable {
     }
     
     public String publish() {        
-        createChirps();
-        processTags();
-        processMentions();
+        createChirp(newPost);
+        processTags(newPost);
+        processMentions(newPost);
+        newPost = new Post();
         MessageHandler.addInfoMessage("Your Chirp has been published!", null);
         return null;
     }
     
     public String publishReply(int idPost) {        
-        newPost.setOriginalPost(idPost);
-        createChirps();
-        processTags();
-        processMentions();
+        newReply.setOriginalPost(idPost);
+        createChirp(newReply);
+        processTags(newReply);
+        processMentions(newReply);
+        newReply = new Post();
         MessageHandler.addInfoMessage("Your reply has been published!", null);
         return null;
     }
    
-    private void createChirps() {
+    private void createChirp(Post post) {
         PostJpaController postC = new PostJpaController(emf);                
-        newPost.setAuthor(profile);
-        newPost.setPubDate(new Date());        
+        post.setAuthor(profile);
+        post.setPubDate(new Date());        
         if(image != null && !image.getFileName().isEmpty()) {
             String filename = saveImageToDisk();
-            newPost.setImage(filename);
+            post.setImage(filename);
             image = null;
         }
-        postC.create(newPost);        
+        postC.create(post);        
     }
     
     private String saveImageToDisk() {          
@@ -167,24 +171,23 @@ public class HomePage implements Serializable {
         return null;
     }
     
-    private void processMentions() {
+    private void processMentions(Post post) {
         ProfileJpaController pC = new ProfileJpaController(emf);
-        List<String> users = TextHandler.extractMentions(newPost.getText());
+        List<String> users = TextHandler.extractMentions(post.getText());
         for(String username : users) {
-            System.out.println(username);
             Profile p = pC.findProfileByUserName(username.substring(1));
             if(p != null)
                 sendMentionNotification(p.getEmail());
         }
     }
     
-    private void processTags() {
+    private void processTags(Post post) {
         TagJpaController tagC = new TagJpaController(emf);
-        List<String> tags = TextHandler.extractTags(newPost.getText());        
+        List<String> tags = TextHandler.extractTags(post.getText());        
         
         // Add tags to database with the post associated
         try {
-            tagC.createTagsWithPost(newPost, tags);
+            tagC.createTagsWithPost(post, tags);
         } catch (Exception ex) {
             MessageHandler.addErrorMessage("Error registering tags for this post", null);
         }
@@ -202,7 +205,7 @@ public class HomePage implements Serializable {
             String url_user = "http://localhost/Chirper/user/" + user.getUserName();
             // Uso getResourceAsStream puesto que el fichero no tiene pq estar físicamente en disco,
             // según el servidor usado al desplegar el WAR puede estar en memoria únicamente
-            InputStream content = externalContext().getResourceAsStream("/resources/html/mentions.html");
+            InputStream content = ContextHandler.externalContext().getResourceAsStream("/resources/html/mentions.html");
             System.out.println(content);
             String text = IOUtils.toString(content, "UTF-8");
             text = text.replace("{fullname}", profile.getFullName());

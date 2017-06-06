@@ -336,18 +336,17 @@ a:hover {
     border-radius: 3px;
     display: block;
     font-size: 13px;
-    height: 28px !important;
     outline: none;
     padding: 4px;
     resize: none;
     transition: height .3s linear;
     width: 100%;
 }
-.post-area-new.open textarea, .post-area-reply.open textarea {
+.post-area-new.open textarea {
     height: 100px !important;
 }
 .post-area-new textarea:focus, .post-area-reply textarea:focus {
-    border: solid 1px rgba(227, 79, 66, .5)
+    border: solid 2px rgba(227, 79, 66, .6)
 }
 .post-area-extras {
     height: 40px;

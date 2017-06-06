@@ -56,11 +56,14 @@
                                                      value="Follow" rendered="#{!userPage.followed}" update="@form"/>
                                     <p:commandButton styleClass="button-flat button-red" action="#{userPage.unfollowUser}" 
                                                      value="Unfollow" rendered="#{userPage.followed}" update="@form"/>
-                                    <p:commandButton styleClass="button-flat" action="#{userPage.followUser}" 
+                                    <p:commandButton styleClass="button-flat" onclick="PF('dlg1').show();" 
                                                      value="Message" />
                                 </h:form>
                             </p:panel>
                         </p:outputPanel>
+                        <p:dialog header="Modal Dialog" widgetVar="dlg1" modal="true" height="100">
+                            <h:outputText value="This is a Modal Dialog." />
+                        </p:dialog> 
                     </div>
                 </div>
 

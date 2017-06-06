@@ -19,12 +19,13 @@ retransmiting and direct/private messages, search of words in all posts, trendin
     * Configure tomcat-users.xml with your settings. E.g.:
         <user password="your_pass" roles="admin-gui,manager-gui,manager-script,admin" username="your_username"/>
     * Set environment variables EMAIL_NOTIFIER_HOST, EMAIL_NOTIFIER_PORT, EMAIL_NOTIFIER_USER
-    and EMAIL_NOTIFIER_PASS to your smtp service (SSL) for email notifications. 
+    and EMAIL_NOTIFIER_PASS to your smtp service (SSL) for email notifications and UPLOAD_PATH for image uploads. 
     E.g.:
         EMAIL_NOTIFIER_HOST=smtp.gmail.com
         EMAIL_NOTIFIER_PORT=465
         EMAIL_NOTIFIER_USER=your_gmail_user 
         EMAIL_NOTIFIER_PASS=your_gmail_pass
+        UPLOAD_PATH=C:\Tomcat\webapps\uploads
     * Change META-INF/context.xml to your database settings.
     * A build project for Netbeans is supplied, so open it with Netbeans and build.
 
