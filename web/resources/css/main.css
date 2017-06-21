@@ -177,7 +177,8 @@ a:hover {
     position: absolute;
     right: 0;
     top: 45px;
-    width: 250px
+    width: 250px;
+    z-index: 2;
 }
 .dialog-modal:after {
     background: transparent;
