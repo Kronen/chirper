@@ -63,9 +63,6 @@ public class HomePage implements Serializable {
         for(Object[] tt : tts) {
             tagCloudModel.addTag(new DefaultTagCloudItem((String)tt[1], "/tag/" + tt[0], toIntExact((Long)tt[2])));
         }
-        
-        PostFolloweesJpaController pfC = new PostFolloweesJpaController(emf);
-        postsFromFollowees = pfC.findPostsFollowees(profile.getId());
     }
     
     public User getUser() {      
