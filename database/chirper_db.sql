@@ -9,7 +9,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-DROP DATABASE IF EXISTS `chirper_db`;
 CREATE DATABASE IF NOT EXISTS `chirper_db` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `chirper_db`;
 
@@ -19,10 +18,16 @@ CREATE TABLE `follower_followee` (
   `followee` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `follower_followee` VALUES
+INSERT INTO `follower_followee` (`follower`, `followee`) VALUES
 (1, 2),
 (2, 1),
+(2, 52),
+(2, 53),
+(2, 56),
+(2, 57),
 (2, 102),
+(53, 2),
+(56, 2),
 (102, 1),
 (102, 2);
 
@@ -39,7 +44,7 @@ CREATE TABLE `post` (
   `likes` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `post` VALUES
+INSERT INTO `post` (`id`, `author`, `original_post`, `text`, `image`, `pub_date`, `latitude`, `longitude`, `likes`) VALUES
 (1, 1, NULL, 'Esto es un mensaje', NULL, '2017-03-26 00:00:00', NULL, NULL, 0),
 (2, 1, NULL, 'Este fue el primer post de todos los tiempos.', NULL, '2017-03-25 00:00:00', NULL, NULL, 0),
 (3, 1, NULL, 'Primer post creado dinámicamente.', NULL, '2017-05-07 23:48:43', '36.725047', '-4.452898', 0),
@@ -48,10 +53,6 @@ INSERT INTO `post` VALUES
 (6, 2, NULL, 'Hakuna Matata!', NULL, '2017-05-15 21:26:13', '36.725082', '-4.452858', 0),
 (7, 1, NULL, 'Post reciente', NULL, '2017-05-17 00:20:43', '36.725052', '-4.452892', 0),
 (8, 102, NULL, 'Post de test3', NULL, '2017-05-17 20:48:00', '36.725092', '-4.452861', 0),
-(14, 2, NULL, 'mi #comida', NULL, '2017-05-19 18:34:53', '36.725052', '-4.452961', 0),
-(17, 2, NULL, 'mi segundaaaa #comida', NULL, '2017-05-19 18:47:21', '36.725052', '-4.452961', 0),
-(18, 2, NULL, 'elite 5 #comida\r\n', NULL, '2017-05-19 19:04:02', '36.725052', '-4.452961', 0),
-(22, 2, NULL, 'post nuevo #tag69', NULL, '2017-05-19 21:49:28', '36.725141', '-4.452919', 0),
 (23, 2, NULL, '@kronen wins GG', NULL, '2017-05-23 21:09:10', '36.725089', '-4.452899', 0),
 (24, 2, NULL, '@kronen wins GG intento 2', NULL, '2017-05-23 21:11:03', '36.725089', '-4.452899', 0),
 (25, 2, NULL, 'errr... @kronen wins GG intento 3', NULL, '2017-05-23 21:12:49', '36.725089', '-4.452899', 0),
@@ -64,7 +65,6 @@ INSERT INTO `post` VALUES
 (32, 2, NULL, 'otra prueba envvars @kronen #kronen', NULL, '2017-05-25 21:47:03', '36.725147', '-4.452922', 0),
 (33, 2, NULL, '@kronen prueba\r\n', NULL, '2017-05-25 21:50:42', '36.725130', '-4.452936', 0),
 (34, 2, NULL, 'otra mas @kronen\r\n', NULL, '2017-05-25 22:01:50', '36.725144', '-4.452913', 0),
-(35, 2, NULL, '', NULL, '2017-05-25 22:02:15', '36.725144', '-4.452913', 0),
 (36, 2, NULL, '@kronen lalala', NULL, '2017-05-25 22:07:32', '36.725153', '-4.452922', 0),
 (37, 2, NULL, '@kronen lololo', NULL, '2017-05-25 22:39:55', '36.725144', '-4.452913', 0),
 (38, 2, NULL, '@kronen\r\n', NULL, '2017-05-25 22:42:19', '36.725129', '-4.452941', 0),
@@ -75,8 +75,37 @@ INSERT INTO `post` VALUES
 (69, 2, NULL, 'lalaland2', NULL, '2017-06-01 23:17:41', '36.725132', '-4.452816', 0),
 (85, 2, 4, 'esto es una respuesta a segundo post dinámico', NULL, '2017-06-02 01:27:17', NULL, NULL, 0),
 (96, 2, NULL, 'prueba #prueba @kronen', 'circle-4392947994564255639.png', '2017-06-02 01:45:11', '36.725111', '-4.452890', 0),
-(97, 2, NULL, 'aaaaaaa', NULL, '2017-06-04 19:28:21', '36.725050', '-4.452746', 0);
-
+(97, 2, NULL, 'aaaaaaa', NULL, '2017-06-04 19:28:21', '36.725050', '-4.452746', 0),
+(108, 2, 8, 'Esto es una respuesta', NULL, '2017-06-06 19:12:51', NULL, NULL, 0),
+(171, 2, NULL, 'hola', NULL, '2017-06-06 20:16:17', '36.725058', '-4.452861', 0),
+(172, 2, 67, 'dsdsd', NULL, '2017-06-06 20:18:02', NULL, NULL, 0),
+(173, 2, 67, 'dsdsd', NULL, '2017-06-06 20:18:17', NULL, NULL, 0),
+(174, 2, 8, 'acaca', NULL, '2017-06-06 20:20:56', NULL, NULL, 0),
+(175, 2, NULL, 'cerceda', NULL, '2017-06-06 20:21:06', '36.725081', '-4.452869', 0),
+(176, 2, NULL, 'cerceda', NULL, '2017-06-06 20:22:33', '36.725081', '-4.452869', 0),
+(177, 2, NULL, 'serserser', NULL, '2017-06-06 20:22:59', '36.725081', '-4.452869', 0),
+(178, 2, NULL, 'sdsds', NULL, '2017-06-06 20:25:28', '36.725081', '-4.452869', 0),
+(179, 2, 67, 'sdsdsdsdasd', NULL, '2017-06-06 20:25:43', NULL, NULL, 0),
+(180, 2, NULL, 'jjjj', NULL, '2017-06-06 20:31:15', '36.725082', '-4.452918', 0),
+(181, 2, NULL, 'sdsdsdd', NULL, '2017-06-06 20:33:45', '36.725052', '-4.452882', 0),
+(182, 2, NULL, 'prueba @kronen', NULL, '2017-06-13 21:53:53', '36.725095', '-4.452929', 0),
+(183, 2, NULL, 'aaa', NULL, '2017-06-19 18:31:55', '36.744720', '-5.164653', 0),
+(184, 52, NULL, '–¿Cuáles son tus metas?\r\n–Dormir.\r\n–Pero a largo plazo.\r\n–Desayunar.\r\n\r\n#Divertidos', NULL, '2017-06-20 23:51:35', '36.744718', '-5.164646', 0),
+(185, 52, NULL, 'Vaya mundo que le vamos a dejar a Jordi Hurtado. #Divertidos', NULL, '2017-06-20 23:55:31', '36.744719', '-5.164655', 0),
+(186, 52, NULL, 'Día 7: Aún nadie sospecha que soy una berenjena. #Divertidos\r\n\r\n', 'pepsi-718080323885056996.jpg', '2017-06-21 00:02:12', '36.744733', '-5.164647', 0),
+(187, 53, NULL, 'Una lavadora que tenga sólo un botón. Un botón que ponga en grande: LAVAR. Ya está. Tampoco es tanto pedir. #Divertidos', NULL, '2017-06-21 00:49:14', '36.744706', '-5.164625', 0),
+(188, 54, NULL, 'La mayoría de las patentes son una mierda. Dedicar tiempo a leerlas\r\nes estúpido. Es cosa de los propietarios de las patentes hacerlo y procurar que se respeten #StopPatentes', NULL, '2017-06-21 01:15:38', '36.744712', '-5.164658', 0),
+(189, 54, NULL, 'El problema que hay con los programadores es que nunca puedes contar lo que un programador está haciendo hasta que es demasiado tarde #Programadores', NULL, '2017-06-21 01:17:20', '36.744735', '-5.164651', 0),
+(190, 54, NULL, 'La formación en informática no puede convertir a nadie en experto programador, de la misma forma que estudiar pinceles y pigmentos puede hacer a alguien un experto pintor #Programadores\r\n', NULL, '2017-06-21 01:17:42', '36.744736', '-5.164625', 0),
+(191, 54, NULL, '\"No te preocupes si no funciona bien. Si todo estuviera correcto, serías despedido de tu trabajo\"\r\n-- Ley de Mosher de la Ingeniería del Software\r\n#Programadores', NULL, '2017-06-21 01:18:39', '36.744735', '-5.164612', 0),
+(192, 56, NULL, 'Hay sólo dos clases de lenguajes de programación: aquellos de los que la gente está siempre quejándose y aquellos que nadie usa #Programadores', NULL, '2017-06-21 01:19:43', '36.744717', '-5.164667', 0),
+(193, 56, NULL, 'Java podría ser un buen ejemplo de cómo debería ser un lenguaje de programación. Sin embargo, las aplicaciones Java son buenos ejemplos de cómo las aplicaciones no deberían ser\r\n', NULL, '2017-06-21 01:21:52', '36.744717', '-5.164667', 0),
+(194, 56, NULL, '\"Java es, en muchos sentidos, C++-\"\r\n-- Michael Feldman #Java', NULL, '2017-06-21 01:22:21', '36.744739', '-5.164653', 0),
+(195, 56, NULL, '\"Si Java dispusiera de un mecanismo real de recolección de basura, la mayoría de los programas deberían autoeliminarse al ser ejecutados\"\r\n-- Robert Sewell #Java', NULL, '2017-06-21 01:22:38', '36.744737', '-5.164659', 0),
+(198, 57, NULL, 'Cisne Negro. Aronofsky parece haber logrado aquí la síntesis perfecta de su poética. El clímax final conquista la grandeza de lo inefable: una apoteosis de cine puro. #Cine', NULL, '2017-06-21 01:56:42', '36.744713', '-5.164622', 0),
+(199, 57, NULL, 'Hacia rutas salvajes;\r\nUna película cautivadora y que abarca muchas facetas. (...) Una inquietante y conmovedora experiencia.\" (...) Puntuación: ????½ (sobre 5).', NULL, '2017-06-21 02:08:35', '36.744741', '-5.164635', 0),
+(200, 57, NULL, 'Soñadores. Sentida evocación de Bertolucci. Es una película brillante y sugerente, con capacidad para implicar al receptor de cualquier época, parida con las entrañas pero también con una inteligencia perturbadora. #Cine', NULL, '2017-06-21 02:21:55', '36.744742', '-5.164639', 0),
+(201, 2, NULL, 'Presentación del Proyecto Integrado para el Ciclo Superior Desarrollo de Aplicaciones Web #Proyecto', NULL, '2017-06-21 02:30:57', '36.744734', '-5.164652', 0);
 
 DROP TABLE IF EXISTS `post_tag`;
 CREATE TABLE `post_tag` (
@@ -84,13 +113,23 @@ CREATE TABLE `post_tag` (
   `tag` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `post_tag` VALUES
-(14, 4),
-(17, 4),
-(18, 4),
-(22, 5),
+INSERT INTO `post_tag` (`post`, `tag`) VALUES
 (32, 6),
-(96, 7);
+(96, 7),
+(184, 8),
+(185, 8),
+(186, 8),
+(187, 8),
+(188, 9),
+(189, 10),
+(190, 10),
+(191, 10),
+(192, 10),
+(194, 11),
+(195, 11),
+(198, 12),
+(200, 12),
+(201, 13);
 
 DROP TABLE IF EXISTS `private`;
 CREATE TABLE `private` (
@@ -100,6 +139,12 @@ CREATE TABLE `private` (
   `text` varchar(256) NOT NULL,
   `marked_read` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `private` (`id`, `sender`, `receiver`, `text`, `marked_read`) VALUES
+(1, 2, 1, 'jhjhjhj', 0),
+(2, 2, 1, 'ghhghgh', 0),
+(3, 2, 1, 'Primer Mensaje', 0),
+(4, 1, 2, 'Enviado por Test para Alberto(@kronen)', 0);
 
 DROP TABLE IF EXISTS `profile`;
 CREATE TABLE `profile` (
@@ -114,17 +159,17 @@ CREATE TABLE `profile` (
   `theme` varchar(256) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `profile` VALUES
+INSERT INTO `profile` (`id`, `user`, `email`, `location`, `website`, `full_name`, `num_posts`, `photo`, `theme`) VALUES
 (1, 'test', 'test@test.com', 'Malaga', NULL, 'Test User', 1, NULL, NULL),
-(2, 'kronen', 'kronenr@gmail.com', 'España', 'http://kronen.github.io', 'Alberto G. Lagos', 0, 'kronen.jpg', NULL),
+(2, 'kronen', 'kronenr@gmail.com', 'España', 'http://kronen.github.io', 'Alberto G. Lagos', 0, 'kronen.png', 'theme-blue'),
 (3, 'admin', 'chirper.notifier@gmail.com', NULL, NULL, 'Chirper Admin', 0, NULL, NULL),
-(52, 'myepiskopov0', 'myepiskopov0@shinystat.com', 'myepiskopov0@dropbox.com', 'https://pbs.org/nisi/at/nibh/in/hac/habitasse/platea.jpg', 'Maudie Yepiskopov', 0, 'ac_tellus_semper.tiff', NULL),
-(53, 'jmcvee1', 'jmcvee1@discuz.net', 'jmcvee1@drupal.org', 'https://meetup.com/enim/lorem/ipsum.html', 'Joey McVee', 0, 'tristique.jpeg', NULL),
-(54, 'mpountney2', 'mpountney2@e-recht24.de', 'mpountney2@yandex.ru', 'https://wsj.com/nec/sem/duis/aliquam/convallis.xml', 'Melosa Pountney', 0, 'phasellus.tiff', NULL),
-(55, 'sciciari3', 'sciciari3@narod.ru', 'sciciari3@squarespace.com', 'http://alibaba.com/sed/vestibulum.xml', 'Simone Ciciari', 0, 'quisque_erat_eros.tiff', NULL),
-(56, 'dmountstephen4', 'dmountstephen4@cnn.com', 'dmountstephen4@pen.io', 'http://tmall.com/nullam/sit/amet/turpis/elementum/ligula/vehicula.jsp', 'Dirk Mountstephen', 0, 'amet_sapien_dignissim.tif', NULL),
-(57, 'rmurkus5', 'rmurkus5@auda.org.au', 'rmurkus5@statcounter.com', 'https://opensource.org/sem/praesent.json', 'Rory Murkus', 0, 'vestibulum.png', NULL),
-(58, 'vjedrysik6', 'vjedrysik6@google.com.br', 'vjedrysik6@nymag.com', 'https://home.pl/in/libero/ut/massa/volutpat.aspx', 'Vida Jedrysik', 0, 'sed.png', NULL),
+(52, 'myepiskopov0', 'myepiskopov0@shinystat.com', 'myepiskopov0@dropbox.com', 'https://pbs.org/nisi/at/nibh/in/hac/habitasse/platea.jpg', 'Maudie Yepiskopov', 0, '9.jpg', NULL),
+(53, 'jmcvee1', 'jmcvee1@discuz.net', 'jmcvee1@drupal.org', 'https://meetup.com/enim/lorem/ipsum.html', 'Joey McVee', 0, '40.jpg', NULL),
+(54, 'mpountney2', 'mpountney2@e-recht24.de', 'mpountney2@yandex.ru', 'https://wsj.com/nec/sem/duis/aliquam/convallis.xml', 'Melosa Pountney', 0, '17.jpg', NULL),
+(55, 'sciciari3', 'sciciari3@narod.ru', 'sciciari3@squarespace.com', 'http://alibaba.com/sed/vestibulum.xml', 'Simone Ciciari', 0, '21.jpg', NULL),
+(56, 'dmountstephen4', 'dmountstephen4@cnn.com', 'dmountstephen4@pen.io', 'http://tmall.com/nullam/sit/amet/turpis/elementum/ligula/vehicula.jsp', 'Dirk Mountstephen', 0, '81.jpg', NULL),
+(57, 'rmurkus5', 'rmurkus5@auda.org.au', 'rmurkus5@statcounter.com', 'https://opensource.org/sem/praesent.json', 'Rory Murkus', 0, '54.jpg', NULL),
+(58, 'vjedrysik6', 'vjedrysik6@google.com.br', 'vjedrysik6@nymag.com', 'https://home.pl/in/libero/ut/massa/volutpat.aspx', 'Vida Jedrysik', 0, '50.jpg', NULL),
 (59, 'dskewis7', 'dskewis7@freewebs.com', 'dskewis7@cargocollective.com', 'http://livejournal.com/semper/sapien/a/libero/nam/dui/proin.html', 'Drugi Skewis', 0, 'vel_pede_morbi.png', NULL),
 (60, 'crosberg8', 'crosberg8@is.gd', 'crosberg8@comcast.net', 'https://google.com.br/dapibus/dolor.xml', 'Christal Rosberg', 0, 'non_mi.png', NULL),
 (61, 'dbennison9', 'dbennison9@reverbnation.com', 'dbennison9@gizmodo.com', 'http://opensource.org/ornare/imperdiet.json', 'Dwayne Bennison', 0, 'suspendisse.gif', NULL),
@@ -175,7 +220,7 @@ CREATE TABLE `role` (
   `role_name` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `role` VALUES
+INSERT INTO `role` (`role_name`) VALUES
 ('admin'),
 ('autorizado');
 
@@ -185,10 +230,16 @@ CREATE TABLE `tag` (
   `tag_name` varchar(81) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `tag` VALUES
+INSERT INTO `tag` (`id`, `tag_name`) VALUES
+(12, '#Cine'),
 (4, '#comida'),
+(8, '#Divertidos'),
+(11, '#Java'),
 (6, '#kronen'),
+(10, '#Programadores'),
+(13, '#Proyecto'),
 (7, '#prueba'),
+(9, '#StopPatentes'),
 (5, '#tag69');
 
 DROP TABLE IF EXISTS `user`;
@@ -197,7 +248,7 @@ CREATE TABLE `user` (
   `password` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `user` VALUES
+INSERT INTO `user` (`user_name`, `password`) VALUES
 ('admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918'),
 ('aweldont', '56c9c31e97818eb524477058a38a59ad20cf1310d92d6f428ad30fd645a41f39'),
 ('bdavidovicsu', '7ed1337265d2b8d3d00723467c541aebb5cfd0ee1511fe7096fe5f40e6252dd9'),
@@ -259,13 +310,12 @@ CREATE TABLE `user_role` (
   `role_name` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `user_role` VALUES
+INSERT INTO `user_role` (`user_name`, `role_name`) VALUES
 ('admin', 'admin'),
 ('test', 'autorizado');
 
 DROP VIEW IF EXISTS `post_followees`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`proyecto`@`localhost` SQL SECURITY DEFINER VIEW `post_followees`  AS  (select uuid() AS `id`,`p1`.`id` AS `id_follower`,`p1`.`user` AS `follower_name`,`p2`.`id` AS `id_followee`,`p2`.`user` AS `followee_name`,`p2`.`full_name` AS `followee_full_name`,`p2`.`photo` AS `followee_photo`,`p`.`id` AS `post`,`p`.`text` AS `text`,`p`.`image` AS `image`,`p`.`original_post` AS `original_post`,`p`.`pub_date` AS `pub_date`,`p`.`latitude` AS `latitude`,`p`.`longitude` AS `longitude`,`p`.`likes` AS `likes` from (((`profile` `p1` join `follower_followee` `f` on((`p1`.`id` = `f`.`follower`))) join `profile` `p2` on((`p2`.`id` = `f`.`followee`))) join `post` `p` on((`p`.`author` = `p2`.`id`)))) ;
-
 DROP VIEW IF EXISTS `trending_topics`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`proyecto`@`localhost` SQL SECURITY DEFINER VIEW `trending_topics`  AS  select uuid() AS `id`,`t`.`id` AS `id_tag`,`t`.`tag_name` AS `tag_name`,count(`pt`.`tag`) AS `post_count` from (`post_tag` `pt` left join `tag` `t` on((`pt`.`tag` = `t`.`id`))) group by `pt`.`tag` ;
 
@@ -306,13 +356,13 @@ ALTER TABLE `user_role`
 
 
 ALTER TABLE `post`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=202;
 ALTER TABLE `private`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 ALTER TABLE `profile`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 ALTER TABLE `tag`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 ALTER TABLE `follower_followee`
   ADD CONSTRAINT `followee_ibfk_2` FOREIGN KEY (`followee`) REFERENCES `profile` (`id`),

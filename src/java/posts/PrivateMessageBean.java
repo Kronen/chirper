@@ -9,6 +9,7 @@ import javax.faces.bean.RequestScoped;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import jpa.controllers.ProfileJpaController;
+import jpa.entities.Private;
 import jpa.entities.Profile;
 import jpa.entities.User;
 import utils.ContextHandler;
@@ -56,6 +57,6 @@ public class PrivateMessageBean {
     }
     
     public List getReceivedPrivateMessages() {        
-        return new ArrayList(profile.getPrivateCollection());
+        return new ArrayList(profile.getPrivateCollection1());
     }
 }

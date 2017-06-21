@@ -3,6 +3,7 @@ package posts;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.persistence.EntityManagerFactory;
@@ -18,11 +19,15 @@ import jpa.entities.Post;
 @ViewScoped
 @URLMapping(id="viewPost", pattern="/post/#{ postId : postBean.postId}", viewId="/faces/post/post-view.xhtml")
 public class PostBean {
-    private final EntityManagerFactory emf;
+    private EntityManagerFactory emf;
     private Integer postId;
     private Post post;
     
     public PostBean() {
+    }
+    
+    @PostConstruct
+    public void init() {
         emf = Persistence.createEntityManagerFactory("ChirperDbPU");
     }
 

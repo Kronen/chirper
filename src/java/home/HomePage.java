@@ -4,18 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import static java.lang.Math.toIntExact;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import javax.mail.MessagingException;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -24,9 +17,9 @@ import jpa.controllers.PostJpaController;
 import jpa.controllers.ProfileJpaController;
 import jpa.controllers.TagJpaController;
 import jpa.entities.Post;
+import jpa.entities.PostFollowees;
 import jpa.entities.Profile;
 import jpa.entities.User;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.UploadedFile;
@@ -35,6 +28,7 @@ import org.primefaces.model.tagcloud.DefaultTagCloudModel;
 import org.primefaces.model.tagcloud.TagCloudItem;
 import org.primefaces.model.tagcloud.TagCloudModel;
 import utils.ContextHandler;
+import utils.FilesHandler;
 import utils.MailHandler;
 import utils.MessageHandler;
 import utils.TextHandler;
@@ -49,9 +43,9 @@ public class HomePage implements Serializable {
     private Post newPost, newReply;
     private TagCloudModel tagCloudModel;
     private UploadedFile image;
+    private List<PostFollowees> postsFromFollowees;
 
-    public HomePage() {
-          
+    public HomePage() {          
     }
     
     @PostConstruct
@@ -67,8 +61,11 @@ public class HomePage implements Serializable {
         List<Object[]> tts = tC.findTrendingTopics(30);
         tagCloudModel = new DefaultTagCloudModel();
         for(Object[] tt : tts) {
-            tagCloudModel.addTag(new DefaultTagCloudItem((String)tt[0], toIntExact((Long)tt[1])));
+            tagCloudModel.addTag(new DefaultTagCloudItem((String)tt[1], "/tag/" + tt[0], toIntExact((Long)tt[2])));
         }
+        
+        PostFolloweesJpaController pfC = new PostFolloweesJpaController(emf);
+        postsFromFollowees = pfC.findPostsFollowees(profile.getId());
     }
     
     public User getUser() {      
@@ -113,7 +110,8 @@ public class HomePage implements Serializable {
            
     public List getPostsFromFollowees() {
         PostFolloweesJpaController pfC = new PostFolloweesJpaController(emf);
-        return pfC.findPostsFollowees(profile.getId());
+        postsFromFollowees = pfC.findPostsFollowees(profile.getId());
+        return postsFromFollowees;
     }
     
     public String getTheme() {
@@ -150,29 +148,18 @@ public class HomePage implements Serializable {
         post.setAuthor(profile);
         post.setPubDate(new Date());        
         if(image != null && !image.getFileName().isEmpty()) {
-            String filename = saveImageToDisk();
+            String filename = FilesHandler.saveImageToDisk(image);
             post.setImage(filename);
             image = null;
         }
         postC.create(post);        
     }
     
-    private String saveImageToDisk() {          
-        String filename = FilenameUtils.getBaseName(image.getFileName()); 
-        String extension = FilenameUtils.getExtension(image.getFileName());            
-
-        try {
-            Path folder = Paths.get(System.getenv("UPLOAD_PATH"));
-            Path file = Files.createTempFile(folder, filename + "-", "." + extension);
-            InputStream input = image.getInputstream();
-            Files.copy(input, file, StandardCopyOption.REPLACE_EXISTING);
-            return file.getFileName().toString();
-        } catch (IOException ex) {
-            MessageHandler.addErrorMessage("Error uploading file", null);
-        }
-        return null;
-    }
-    
+    /** 
+     * Extract mentions from the message.
+     *
+     * @param post the post entity containing the message
+     */
     private void processMentions(Post post) {
         ProfileJpaController pC = new ProfileJpaController(emf);
         List<String> users = TextHandler.extractMentions(post.getText());
@@ -183,6 +170,11 @@ public class HomePage implements Serializable {
         }
     }
     
+    /** 
+     * Extract tags from the message.
+     *
+     * @param post the post entity containing the message
+     */
     private void processTags(Post post) {
         TagJpaController tagC = new TagJpaController(emf);
         List<String> tags = TextHandler.extractTags(post.getText());        
@@ -200,6 +192,12 @@ public class HomePage implements Serializable {
         return tC.findTrendingTopics(dias);
     }
     
+    /** 
+     * Sends an email notification with the content of the message for every mention (@username)
+     * in a Chirp.
+     *
+     * @param email email address to which the notification will be sent 
+     */
     public void sendMentionNotification(String email) {
         try {
             MailHandler mh = new MailHandler();
@@ -229,9 +227,9 @@ public class HomePage implements Serializable {
     }
      
     /** 
-     *  Redirects to corresponding tag view when a tag was selected in the Tag Cloud
+     * Redirects to corresponding tag view when a tag was selected in the Tag Cloud
      *
-     * @param event Event with information about the item selected in the TagCloud
+     * @param event a SelectEvent with information about the item selected in the TagCloud
      */
     public void onSelect(SelectEvent event) {
         try {

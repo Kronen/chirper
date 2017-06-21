@@ -9,7 +9,7 @@
     <ui:define name="title">Chirper</ui:define>
   
     <ui:define name="content">
-        <h:outputStylesheet library="css" name='#{homePage.theme}' />
+        
         
         <chirper:navbar profile="#{homePage.profile}" />
         <p:growl id="messages" showDetail="true" globalOnly="true"/>
@@ -19,8 +19,8 @@
                     <!-- PROFILE -->
                     <p:panel styleClass="module mini-profile" rendered="#{loginManager.userLoggedIn}">
                         <p:panel class="mini-profile-info">
-                            <p:panel styleClass="mini-profile-photo">                                
-                                <h:graphicImage library="images" name="#{filesHandler.getAvatar(homePage.profile)}" alt="user photo"/>                                
+                            <p:panel styleClass="mini-profile-photo">
+                                <img class="avatar" src="#{filesHandler.getAvatar(homePage.profile.photo)}" alt="user photo"/>
                             </p:panel>
                             <p:link href="/user/#{user.userName}" styleClass="mini-profile-name" 
                                 value="#{homePage.profile.fullName != null ? homePage.profile.fullName : user.userName}" />
@@ -93,8 +93,7 @@
 
                             <p:panel styleClass="post-data">
                                 <p:panel styleClass="post-photo">
-                                    <p:graphicImage library="images" name="#{filesHandler.getAvatar(chirp.followeePhoto)}" 
-                                                    styleClass="avatar" alt="user-photo"/>                                
+                                    <img class="avatar" src="#{filesHandler.getAvatar(chirp.followeePhoto)}" alt="followee photo"/>
                                 </p:panel>
                                 <p:panel styleClass="post-info">
                                     <p:link href="/user/#{chirp.followeeName}" styleClass="post-info-name" 
@@ -116,7 +115,7 @@
                                 <h:outputText styleClass="post-expand" value="Expand"/>
 
                                 <p:panel class="post-interactions">
-                                    <h:outputText styleClass="post-propagate" value="Retransmit"/>
+                                    <p:link styleClass="post-permalink" href="post/#{chirp.post}" value="Chirp Permalink"/>
                                     <h:outputText styleClass="post-favorite" value="Favorite"/>
                                 </p:panel>
                                 <div class="expanded-content">
@@ -132,11 +131,10 @@
                                         <li class="avatar-row">
                                             <!-- use "avatar-row-template" here -->
                                             <p:link href="/user/#{homePage.user.userName}">
-                                               <h:graphicImage library="images" styleClass="size24" alt="user photo"
-                                                    name="#{filesHandler.getAvatar(homePage.profile)}"/> 
-                                               <h:outputText styleClass="user-name-tooltip" 
-                                                     value="#{homePage.profile.fullName != null ? 
-                                                              homePage.profile.fullName : user.userName}"/>
+                                                <img class="avatar" src="#{filesHandler.getAvatar(homePage.profile.photo)}" alt="user photo"/>
+                                                <h:outputText styleClass="user-name-tooltip" 
+                                                    value="#{homePage.profile.fullName != null ? 
+                                                             homePage.profile.fullName : user.userName}"/>
                                             </p:link>
                                         </li>
                                     </ul>
@@ -178,19 +176,19 @@
                             <f:facet name="header">
                                 <h:outputText value="Last 24 Hours"/>
                             </f:facet>
-                            <p:link class="tt" href="">#{tt[0]}</p:link> <span>#{tt[1]}</span>
+                            <p:link class="tt" href="/tag/#{tt[0]}">#{tt[1]}</p:link> <span>#{tt[2]}</span>
                         </p:dataList>
                         <p:dataList value="#{homePage.trendingTopics(7)}" var="tt" type="ordered">
                             <f:facet name="header">
                                 <h:outputText value="Last 7 Days"/>
                             </f:facet>
-                            <p:link class="tt" href="">#{tt[0]}</p:link> <span>#{tt[1]}</span>
+                            <p:link class="tt" href="/tag/#{tt[0]}">#{tt[1]}</p:link> <span>#{tt[2]}</span>
                         </p:dataList>
                         <p:dataList value="#{homePage.trendingTopics(31)}" var="tt" type="ordered">
                             <f:facet name="header">
                                 <h:outputText value="Last Month"/>
                             </f:facet>
-                            <p:link class="tt" href="">#{tt[0]}</p:link> <span>#{tt[1]}</span>
+                            <p:link class="tt" href="/tag/#{tt[0]}">#{tt[1]}</p:link> <span>#{tt[2]}</span>
                         </p:dataList>
                     </div>
                 </div>

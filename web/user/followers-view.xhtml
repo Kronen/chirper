@@ -9,7 +9,6 @@
     <ui:define name="title">@#{homePage.user.userName} Followees | Chirper</ui:define>
 
     <ui:define name="content">
-        <h:outputStylesheet library="css" name="#{homePage.theme}" />
 
         <chirper:navbar profile="#{homePage.profile}" />
 
@@ -18,8 +17,8 @@
                 <div class="chirp-quarter">                    
                     <p:panel styleClass="module mini-profile" rendered="#{loginManager.userLoggedIn}">
                         <p:panel class="mini-profile-info">
-                            <p:panel styleClass="mini-profile-photo">                                
-                                <h:graphicImage library="images" name="#{filesHandler.getAvatar(homePage.profile)}" alt="user photo"/>                                
+                            <p:panel styleClass="mini-profile-photo">
+                                <img class="avatar" src="#{filesHandler.getAvatar(homePage.profile.photo)}" alt="user photo"/>
                             </p:panel>
                             <p:link href="/user/#{user.userName}" styleClass="mini-profile-name" 
                                     value="#{homePage.profile.fullName != null ? homePage.profile.fullName : user.userName}" />
@@ -28,21 +27,25 @@
                         </p:panel>
                         <ul class="module profile-data">
                             <li>
-                                <a href="#" class="open-profile-modal">
+                                <p:link href="/user/#{user.userName}" class="open-profile-modal">
                                     <h:outputText value="#{homePage.profile.postCollection.size()}" styleClass="posts-count" />
                                     <h:outputText styleClass="label" value="Chirps"/>
-                                </a>
+                                </p:link>
                             </li>
                             <li>
-                                <a href="#following" class="open-following-page">
+                                <p:link styleClass="followees" href="/followees/#{homePage.profile.id}">
+                                    <p:panel>
                                     <h:outputText value="#{homePage.profile.followees.size()}" styleClass="followees-count"/>
                                     <h:outputText styleClass="label" value="Following"/>
-                                </a>
+                                    </p:panel>
+                                </p:link>
                             </li>
                             <li>
                                 <p:link styleClass="followers" href="/followers/#{homePage.profile.id}">
-                                    <h:outputText value="#{homePage.profile.followees.size()}" styleClass="followers-count"/>
+                                    <p:panel>
+                                    <h:outputText value="#{homePage.profile.followers.size()}" styleClass="followers-count"/>
                                     <h:outputText styleClass="label" value="Followers"/>
+                                    </p:panel>
                                 </p:link>
                             </li>
                         </ul>
@@ -89,10 +92,10 @@
                         <p:dataList value="#{followersBean.followers}" var="follower" type="definition">
                             <f:facet name="description">
                                 <p:panel class="mini-profile-info">
-                                    <p:panel styleClass="mini-profile-photo">                                
-                                       <h:graphicImage library="images" name="#{filesHandler.getAvatar(follower)}" alt="user photo"/>                                
+                                    <p:panel styleClass="mini-profile-photo">
+                                        <img class="avatar" src="#{filesHandler.getAvatar(follower.photo)}" alt="followee photo"/>                               
                                     </p:panel>
-                                    <p:link href="/user/#{follower.user.userName}" styleClass="mini-profile-name" 
+                                    <p:link href="/Chirper/user/#{follower.user.userName}" styleClass="mini-profile-name" 
                                             value="#{follower.fullName != null ? follower.fullName : follower.user.userName}" />
                                     <h:outputText styleClass="mini-profile-view" value="@#{follower.user.userName}"/>
                                     <h:outputText styleClass="user-email" value="email: #{follower.email}"/>

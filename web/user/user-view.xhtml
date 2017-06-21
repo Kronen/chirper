@@ -6,11 +6,9 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:chirper="http://java.sun.com/jsf/composite/chirper" >
     
-    <ui:define name="title">#{userPage.profile.fullName}(@#{userPage.userName}) | Chirper</ui:define>
+    <ui:define name="title">Chirper | @#{userPage.userName}) Profile</ui:define>
   
-    <ui:define name="content">
-        <h:outputStylesheet library="css" name="#{homePage.theme}" />
-        
+    <ui:define name="content">        
         <chirper:navbar profile="#{homePage.profile}" />
         
         <div class="wrapper">            
@@ -21,8 +19,8 @@
                     <!-- PROFILE -->
                     <div class="module mini-profile">
                         <div class="mini-profile-info">
-                            <div class="mini-profile-photo">                                
-                                <h:graphicImage library="images" name="#{filesHandler.getAvatar(userPage.profile.photo)}" alt="user photo"/>                                
+                            <div class="mini-profile-photo">
+                                <img src="#{filesHandler.getAvatar(userPage.profile.photo)}" alt="user photo"/> 
                             </div>
                             <p:link href="/user/#{userPage.userName}" styleClass="mini-profile-name" 
                                 value="#{userPage.name}" />
@@ -31,22 +29,34 @@
                         </div>
                         <ul class="module profile-data">
                             <li>
-                                <a href="#" class="open-profile-modal">
+                                <p:link styleClass="posts" href="/user/#{userPage.profile.user.userName}">
+                                    <p:panel>
                                     <h:outputText value="#{userPage.profile.postCollection.size()}" styleClass="posts-count" />
-                                    <span class="label">Chirps</span>
-                                </a>
+                                    <h:outputText styleClass="label" value="Chirps"/>
+                                    </p:panel>
+                                </p:link>
                             </li>
                             <li>
-                                <a href="#following" class="open-following-page">
-                                    <h:outputText value="#{userPage.profile.followees.size()}" styleClass="followees-count"/>
-                                    <span class="label">Following</span>
-                                </a>
+                                <p:link styleClass="followees" href="/followees/#{userPage.profile.id}">
+                                    <p:panel>
+                                    <h:outputText value="#{homePage.profile.followees.size()}" styleClass="followers-count"
+                                                  rendered="#{not empty homePage.profile.followees}"/>
+                                    <h:outputText value="0" styleClass="followers-count"
+                                                  rendered="#{empty homePage.profile.followees}"/>
+                                    <h:outputText styleClass="label" value="Following"/>
+                                    </p:panel>
+                                </p:link>
                             </li>
                             <li>
-                                <a class="open-followers">
-                                    <h:outputText value="#{userPage.profile.followers.size()}" styleClass="followers-count"/>
-                                    <span class="label">Followers</span>
-                                </a>
+                                <p:link styleClass="followers" href="/followers/#{userPage.profile.id}">
+                                    <p:panel>
+                                    <h:outputText value="#{homePage.profile.followers.size()}" styleClass="followers-count"
+                                                  rendered="#{not empty homePage.profile.followers}"/>
+                                    <h:outputText value="0" styleClass="followers-count"
+                                                  rendered="#{empty homePage.profile.followers}"/>
+                                    <h:outputText styleClass="label" value="Followers"/>
+                                    </p:panel>
+                                </p:link>
                             </li>
                         </ul>
                         <p:outputPanel id="buttonArea">
@@ -56,7 +66,7 @@
                                                      value="Follow" rendered="#{!userPage.followed}" update="@form"/>
                                     <p:commandButton styleClass="button-flat button-red" action="#{userPage.unfollowUser}" 
                                                      value="Unfollow" rendered="#{userPage.followed}" update="@form"/>
-                                    <p:commandButton styleClass="button-flat" onclick="PF('dlg1').show();" 
+                                    <p:commandButton styleClass="button-flat" actionListener="#{userPage.showPrivateMessageDialog}" 
                                                      value="Message" />
                                 </h:form>
                             </p:panel>
@@ -74,7 +84,7 @@
                     </h2>
 
                     <h:form id="postForm">
-                        <p:dataScroller value="#{userPage.profile.postCollection}" var="chirp" styleClass="postboard-posts" 
+                        <p:dataScroller value="#{userPage.userPosts}" var="chirp" styleClass="postboard-posts" 
                                         chunkSize="10" >
                             <f:facet name="loader">
                                 <p:commandButton type="button" value="View More" styleClass="view-more" />
@@ -82,8 +92,7 @@
                             <li id="post-template" class="module post">
                                 <p:panel class="post-data">
                                     <p:panel styleClass="post-photo">
-                                        <p:graphicImage library="images" name="#{filesHandler.getAvatar(chirp.author.photo)}" 
-                                                        styleClass="avatar" alt="user-photo"/>                                
+                                        <img class="avatar" src="#{filesHandler.getAvatar(chirp.author.photo)}" alt="user photo"/>                              
                                     </p:panel>
                                     <div class="post-info">
                                         <p:link href="/user/#{chirp.author.user.userName}" styleClass="post-info-name" 
@@ -122,22 +131,28 @@
                                             </li>
                                             <li class="avatar-row">                                                    
                                                 <p:link href="/user/#{homePage.user.userName}" rendered="#{loginManager.userLoggedIn}">
-                                                    <h:graphicImage library="images" name="#{filesHandler.getAvatar(homePage.profile)}" 
-                                                        styleClass="size24" alt="user photo"/>
-                                                   <h:outputText styleClass="user-name-tooltip" 
+                                                    <img class="avatar" src="#{filesHandler.getAvatar(homePage.profile.photo)}" alt="user photo"/>
+                                                    <h:outputText styleClass="user-name-tooltip" 
                                                         value="#{homePage.profile.fullName != null ? homePage.profile.fullName : user.userName}"/>
                                                 </p:link>
                                             </li>
                                         </ul>
-                                        <p:panel styleClass="post-reply-content" rendered="#{user != null}">
-                                            <div class="post-area-reply">
-                                                <textarea placeholder="Reply..."></textarea>
-                                                <div class="post-area-extras">
-                                                    <span class="post-area-remaining">256</span>
-                                                    <button class="post-submit">post</button>
-                                                </div>
-                                            </div>
+                                        <p:panel styleClass="post-reply-content" style="display: block;">
+                                        <p:panel styleClass="post-area-reply">
+                                            <h:form>
+                                                <h:inputHidden value="#{homePage.newReply.latitude}" />
+                                                <h:inputHidden value="#{homePage.newReply.longitude}" />
+
+                                                <p:inputTextarea placeholder="Reply..." value="#{homePage.newReply.text}"
+                                                                 required="true" maxlength="256" autoResize="true"
+                                                                 requiredMessage="You must provide a message"/>
+                                                
+                                                    <h:outputText styleClass="post-area-remaining">256</h:outputText>
+                                                    <p:commandButton styleClass="post-submit" ajax="true" update="@form"
+                                                        actionListener="#{homePage.publishReply(chirp.id)}" value="reply"/>
+                                            </h:form>
                                         </p:panel>
+                                    </p:panel>
                                     </div> 
                                 </p:panel> 
                             </li> 
@@ -145,30 +160,37 @@
                     </h:form>
                 </div>
                 <div class="chirp-quarter">
-                    <div class="module trending-topics">
+                    <div class="module user-data">
                         <h2><h:outputText value="User Data"/></h2>
-                        <h:panelGrid columns="2" cellpadding="5">
-                            <f:facet name="header">
-                                <p:graphicImage library="images" name="#{filesHandler.getAvatar(userPage.profile.photo)}" />
-                            </f:facet>
-                            <h:outputText value="Name:" />
-                            <h:outputText value="#{userPage.profile.user.userName}" />
-                            
-                            <h:outputText value="Full Name:" rendered="#{not empty userPage.profile.fullName}"/>
-                            <h:outputText value="#{userPage.profile.fullName}" 
-                                          rendered="#{not empty userPage.profile.fullName}"/>
-                            
-                            <h:outputText value="Email:" />
-                            <h:outputText value="#{userPage.profile.email}" />
-                            
-                            <h:outputText value="Location:" rendered="#{not empty userPage.profile.location}"/>
-                            <h:outputText value="#{userPage.profile.location}" 
-                                          rendered="#{not empty userPage.profile.location}"/>
-                            
-                            <h:outputText value="Website:" rendered="#{not empty userPage.profile.website}"/>
-                            <h:outputText value="#{userPage.profile.website}" 
-                                          rendered="#{not empty userPage.profile.website}"/>
-                        </h:panelGrid>
+                        <div class="user-info">
+                            <img class="avatar" src="#{filesHandler.getAvatar(userPage.profile.photo)}" alt="user photo"/>
+                            <ui:fragment rendered="#{not empty userPage.profile.fullName}">
+                                <p class="user-info-field">
+                                    <h:outputText id="infoFullName" value="#{userPage.profile.fullName}" rendered="#{not empty userPage.profile.fullName}"/>
+                                    <p:tooltip for="infoFullName" value="Fullname" trackMouse="true" />
+                                </p>
+                            </ui:fragment>
+                            <p class="user-info-field">
+                                <h:outputText id="infoUserName" value="@#{userPage.profile.user.userName}" />
+                                <p:tooltip for="infoUserName" value="Username" trackMouse="true" />
+                            </p>
+                            <p class="user-info-field">
+                                <h:outputText id="infoEmail" value="#{userPage.profile.email}" />
+                                <p:tooltip for="infoEmail" value="Email" trackMouse="true" />
+                            </p>
+                            <ui:fragment rendered="#{not empty userPage.profile.location}">
+                                <p class="user-info-field">
+                                    <h:outputText id="infoLocation" value="#{userPage.profile.location}"/>
+                                    <p:tooltip for="infoLocation" value="Location" trackMouse="true" />
+                                </p>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{not empty userPage.profile.website}">
+                                <p class="user-info-field">
+                                    <p:link id="infoWebsite" href="#{userPage.profile.website}" value="#{userPage.profile.website}"/>
+                                    <p:tooltip for="infoWebsite" value="Website" trackMouse="true" />
+                                </p>
+                            </ui:fragment>
+                        </div>
                     </div>
                 </div>
                 </p:panel>

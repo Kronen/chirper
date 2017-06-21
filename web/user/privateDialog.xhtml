@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+     
+    <h:head>
+        <title>Private Message</title>
+        <style>
+            .private-message {
+                text-align: center;
+            }
+            .private-message textarea {
+                border: solid 1px rgba(0, 0, 0, .3);
+                border-radius: 3px;
+                display: block;
+                font-size: 13px;
+                outline: none;
+                padding: 4px;
+                width: 80%;
+                margin: 0 auto
+            }
+            .post-submit {
+                background: #45474d;
+                padding: 5px 10px;
+                border: none;
+                color: rgba(255, 255, 255, .8);
+                cursor: pointer;
+                display: inline-block;
+                margin-top: 8px;
+            }
+            .ui-corner-all {
+                border-radius: 3px;
+            }
+            .ui-draggable .ui-dialog-titlebar {
+                text-align: center;
+                color: white;
+                background-color: #6496c8;
+            }
+        </style>
+    </h:head>
+     
+    <h:body>
+        <f:metadata>
+            <f:viewParam name="username" value="#{userPage.userName}"/>
+        </f:metadata>
+        <h:form styleClass="private-message">
+            <p:inputTextarea placeholder="Private Message..." value="#{userPage.newPrivate.text}"
+                    required="true" maxlength="256" autoResize="true"
+                    requiredMessage="You must provide a message"/>
+            <p:commandButton styleClass="post-submit" ajax="true" update="@form"
+                             actionListener="#{userPage.sendPrivate}" value="Send Message"/>
+        </h:form>
+    </h:body>
+     
+</html>

@@ -39,7 +39,7 @@ function handlePostSubmited(area) {
 
 $(function () {    
     $('.post-location, .post-info-time').hide();
-
+    $('.post-area-remaining').text('256');
     $('.userMenu-config').click(function(e) {
         e.stopPropagation();
         $('.dialog-modal.config-menu').slideDown();
@@ -58,10 +58,10 @@ $(function () {
     });
     /* Cuenta carácteres restantes */
     $('.post-area-new textarea').keyup(function() {
-        $(this).closest('.post-area-remaining').text(256 - $(this).val().length);
+        $('.post-area-new .post-area-remaining').text(256 - $(this).val().length);
     });
     $('.post-area-reply textarea').keyup(function() {
-        $(this).closest('.post-area-remaining').text(256 - $(this).val().length);
+        $(this).closest('.post-area-reply').find('.post-area-remaining').text(256 - $(this).val().length);
     });
     /* Abre/Cierra el área para escribir un nuevo mensaje */
     $('.post-area-reply textarea').on("focus", function (e) {
@@ -90,7 +90,7 @@ $(function () {
         }
     });
     
-    $('.post-upload .ui-c').text('Upload Image');
+    $('.mini-profile .post-upload .ui-c').text('Upload Image');
     
     tagsAndMentionsToLinks();
     
@@ -136,10 +136,7 @@ $(function () {
 function tagsAndMentionsToLinks() {
     var tagPattern = /\B#([a-zA-Z0-9_-]{4,81})/gi;
     var mentionPattern = /\B@([a-zA-Z0-9_-]{4,21})/gi;
-    $.each($('a.tt'), function() {
-        if(!$(this).find("a.tag").length )
-            $(this).html($(this).html().replace(tagPattern, "<a class='tag' href='/Chirper/tag/$1'>#$1</a>"));
-    });
+
     $.each($('.post-text'), function() {
         /* Don't add link if it already has been added */
         if(!$(this).find("a.tag").length )

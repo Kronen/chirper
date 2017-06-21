@@ -23,9 +23,9 @@
         <h:outputStylesheet library="css" name="normalize.css" />
         <h:outputStylesheet library="css" name="reset-primefaces.css" />
         <h:outputStylesheet library="css" name="main.css" />
+        <h:outputStylesheet library="css" name="#{homePage.profile.theme}.css" rendered="#{not empty homePage.profile.theme}"/>
 
         <ui:insert name="content">Error loading content</ui:insert> 
-
           
         <h:outputScript library="js" name="notify.min.js" />
         <h:outputScript library="js" name="home.js" />    

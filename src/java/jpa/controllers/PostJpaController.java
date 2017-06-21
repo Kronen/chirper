@@ -217,5 +217,19 @@ public class PostJpaController implements Serializable {
             em.close();
         }
     }
+
+    public List<Post> findPostsByAuthor(Integer authorId) {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Post> tq = em.createNamedQuery("Post.findByAuthor", Post.class)
+                    .setParameter("authorId", authorId);
+
+            return tq.getResultList();
+        } catch(NoResultException e) {
+            return null;
+        } finally {
+            em.close();
+        }
+    }
     
 }

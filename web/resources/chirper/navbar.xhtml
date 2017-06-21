@@ -23,54 +23,44 @@
                 </li>
                 </ui:fragment>
                 
+                <ui:fragment rendered="#{loginManager.userLoggedIn}">
                 <li class="userMenu-config">
                     <a class="userMenu-config-dropdown">
-                        <p:panel styleClass="config-menu dialog-modal" rendered="#{loginManager.userLoggedIn}">
+                        <p:panel styleClass="config-menu dialog-modal">
                             <p:panel styleClass="mini-profile-info selectable_theme theme_original">
                                 <div class="mini-profile-photo">
-                                    <h:graphicImage library="images" name="#{filesHandler.getAvatar(cc.attrs.profile)}" 
-                                         alt="user-photo"/>
+                                    <img src="#{filesHandler.getAvatar(cc.attrs.profile.photo)}" alt="user-photo"/>
                                 </div>
                                 <p:link href="user/#{user.userName}" styleClass="mini-profile-name"
                                         value="#{cc.attrs.profile.fullName != null ? cc.attrs.profile.fullName : user.userName}"/>
                                 <h:outputText styleClass="mini-profile-view" value="@#{user.userName}" />
                             </p:panel>
                             <h:form id="form-settings">
-                                <a class="dropdown-menu-item uri-shortener">URI shortener</a>
-                                <a class="dropdown-menu-item" href="options.html">Options</a>
-                                <a class="dropdown-menu-item" href="#">view..iewId #{view.viewId}</a>
-                                <a class="dropdown-menu-item" href="profile-edit.html">Setup account</a>
-                                <a class="dropdown-menu-item dropdown-menu-following" href="#following">Following users</a>
-                                <a class="dropdown-menu-item" href="login.html">Change user</a>
-                                <a class="dropdown-menu-item promoted-posts-only" href="#">Switch to Promoted posts</a>
-                                <a class="dropdown-menu-item direct-messages" href="#">Direct Messages</a>
+                                <p:link class="dropdown-menu-item" href="/settings" value="Profile Settings" />
                                 <p:commandLink id="logout" value="Log Out" styleClass="dropdown-menu-item" ajax="false" 
                                     actionListener="#{loginManager.logout}" />
                             </h:form>
                         </p:panel>
                     </a>
                 </li>
-                <li class="userMenu-connections">
-                    <a href="#">
-                        <span class="messages-qtd" style="display:none;">0</span>
-                    </a>
+                </ui:fragment>
+                <li class="userMenu-connections #{view.viewId eq '/post/mentions-view.xhtml' ? 'current' : ''}">
+                    <p:link href="/mentions">
+                        <span class="messages-qtd">0</span>
+                    </p:link>
                 </li>
                 <li class="userMenu-messages">
-                    <a href="#">
-                        <span class="messages-qtd" style="display:none;">0</span>
-                    </a>
-                </li>
-                <li class="userMenu-groupmessages">
-                    <a href="#">
-                        <span class="messages-qtd" style="display:none;">0</span>
-                    </a>
+                    <p:link href="/privates">
+                        <span class="messages-qtd">0</span>
+                    </p:link>
                 </li>
                 <!-- BUSQUEDA -->
                 <li class="userMenu-search">
                     <h:form>
-                    <p:autoComplete id="search" styleClass="userMenu-search-field" forceSelection="true"
-                                    minQueryLength="2" cache="true" cacheTimeout="30000"
-                                    value="#{searchBean.searchText}" completeMethod="#{searchBean.complete}"/>
+                    <p:autoComplete id="search" styleClass="userMenu-search-field"  placeholder="search"
+                                    minQueryLength="2" cache="true" cacheTimeout="30000" forceSelection="false"
+                                    value="#{searchBean.searchText}" completeMethod="#{searchBean.complete}"
+                                    emptyMessage="No users or tags found. Try anyway for searching inside chirps."/>
                     <p:commandButton action="#{searchBean.forwardSearch}" style="display:none;"/>
                     </h:form>
                 </li>

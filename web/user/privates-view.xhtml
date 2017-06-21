@@ -5,18 +5,12 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:chirper="http://java.sun.com/jsf/composite/chirper">
-
+    
     <ui:define name="title">Chirper</ui:define>
-
-    <ui:define name="content">
-        <h:outputStylesheet library="css" name='#{homePage.theme}' />
-
-        <f:metadata>
-            <f:viewParam name="searchText" value="#{searchBean.searchText}" />
-        </f:metadata>
-
+  
+    <ui:define name="content">        
         <chirper:navbar profile="#{homePage.profile}" />
-
+        
         <div class="wrapper">            
             <div class="chirp-row">
                 <div class="chirp-quarter">                    
@@ -33,12 +27,12 @@
                         </p:panel>
                         <ul class="module profile-data">
                             <li>
-                                <a styleClass="posts" href="/user/#{user.userName}">
+                                <p:link styleClass="posts" href="/user/#{user.userName}">
                                     <p:panel>
                                     <h:outputText value="#{homePage.profile.postCollection.size()}" styleClass="posts-count" />
                                     <h:outputText styleClass="label" value="Chirps"/>
                                     </p:panel>
-                                </a>
+                                </p:link>
                             </li>
                             <li>
                                 <p:link styleClass="followees" href="/followees/#{homePage.profile.id}">
@@ -83,38 +77,61 @@
                         </p:panel>
                     </p:panel>
                 </div>
-                <p:panel styleClass="chirp-half">
+                <p:panel styleClass="chirp-half">                    
                     <p:panel styleClass="postboard">
-                        <h2>
-                            <h:outputText value="Users Found"/>
-                        </h2>
-                        <h:form id="resultsForm">
-                            <p:dataList value="#{searchBean.profilesFound}" var="profile" type="definition">
-                                <f:facet name="description">
-                                    <p:panel class="mini-profile-info">
-                                        <p:panel styleClass="mini-profile-photo">
-                                            <img src="#{filesHandler.getAvatar(profile.photo)}" alt="user photo"/>                               
+                        <h2><h:outputText value="Private Messages"/></h2>
+                        <h:form id="privateForm">
+                            <!-- Replies -->
+                            <p:dataList value="#{privateMessageBean.receivedPrivateMessages}" var="pMessage" itemType="none" paginator="true"
+                                        styleClass="postboard-posts" rendered="#{not empty privateMessageBean.receivedPrivateMessages}" 
+                                        paginatorPosition="bottom" rows="10">
+                                <p>
+                                    
+                                </p>
+                                <li id="post-template" class="module post">
+                                    <div class="post-data">
+                                        <p:panel styleClass="post-photo"> 
+                                            <img class="avatar" src="#{filesHandler.getAvatar(pMessage.sender.photo)}" alt="reply author photo"/>
                                         </p:panel>
-                                        <p:link href="/user/#{profile.user.userName}" styleClass="mini-profile-name" 
-                                                value="#{profile.fullName != null ? profile.fullName : profile.user.userName}" />
-                                        <h:outputText styleClass="mini-profile-view" value="@#{profile.user.userName}"/>
-                                        <h:outputText styleClass="user-email" value="email: #{profile.email}"/>
-                                    </p:panel>
-                                </f:facet>
+                                        <div class="post-info">
+                                            <p:link href="/user/#{pMessage.sender.user.userName}" styleClass="post-info-name" 
+                                                    value="#{pMessage.sender.fullName}" />
+                                            <h:outputText styleClass="post-info-tag" value="@#{pMessage.sender.user.userName}" />
+                                        </div>
+
+                                        <h:outputText styleClass="post-text" value="#{pMessage.text}" />
+                                    </div> 
+                                </li> 
                             </p:dataList>
                         </h:form>
                     </p:panel>
                     <p:panel styleClass="postboard">
-                        <h2>
-                            <h:outputText value="Tags Found"/>
-                        </h2>
-                        <h:form id="tagResultsForm">
-                            <p:dataList value="#{searchBean.tagsFound}" var="tag" type="definition">
-                                <p:link href="/tag/#{tag.id}" value="#{tag.tagName}" />
+                        <h2><h:outputText value="Sent Private Messages"/></h2>
+                        <h:form id="sentPrivateForm">
+                            <!-- Replies -->
+                            <p:dataList value="#{privateMessageBean.sentPrivateMessages}" var="pMessage" itemType="none" paginator="true"
+                                        styleClass="postboard-posts" rendered="#{not empty privateMessageBean.sentPrivateMessages}" 
+                                        paginatorPosition="bottom" rows="10">
+                                <p>
+                                    
+                                </p>
+                                <li id="post-template" class="module post">
+                                    <div class="post-data">
+                                        <p:panel styleClass="post-photo"> 
+                                            <img class="avatar" src="#{filesHandler.getAvatar(pMessage.receiver.photo)}" alt="reply author photo"/>
+                                        </p:panel>
+                                        <div class="post-info">
+                                            <p:link href="/user/#{pMessage.receiver.user.userName}" styleClass="post-info-name" 
+                                                    value="#{pMessage.receiver.fullName}" />
+                                            <h:outputText styleClass="post-info-tag" value="@#{pMessage.receiver.user.userName}" />
+                                        </div>
+
+                                        <h:outputText styleClass="post-text" value="#{pMessage.text}" />
+                                    </div> 
+                                </li> 
                             </p:dataList>
                         </h:form>
                     </p:panel>
-
                 </p:panel>
                 <div class="chirp-quarter">
                     <div class="module trending-topics">
@@ -141,7 +158,7 @@
                 </div>
             </div>
         </div>
-
+              
     </ui:define>
 
 </ui:composition>

@@ -38,7 +38,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Post.findByLatitude", query = "SELECT p FROM Post p WHERE p.latitude = :latitude")
     , @NamedQuery(name = "Post.findByLongitude", query = "SELECT p FROM Post p WHERE p.longitude = :longitude")
     , @NamedQuery(name = "Post.findByLikes", query = "SELECT p FROM Post p WHERE p.likes = :likes")
-    , @NamedQuery(name = "Post.findByOriginalPostOrdered", query = "SELECT p FROM Post p WHERE p.originalPost = :originalPost ORDER BY p.pubDate ASC")})
+    , @NamedQuery(name = "Post.findByOriginalPostOrdered", query = "SELECT p FROM Post p WHERE p.originalPost = :originalPost ORDER BY p.pubDate DESC")
+    , @NamedQuery(name = "Post.findByAuthor", query = "SELECT p FROM Post p WHERE p.author.id = :authorId ORDER BY p.pubDate DESC")})
 public class Post implements Serializable {
 
     private static final long serialVersionUID = 1L;

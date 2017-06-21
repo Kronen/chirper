@@ -66,3 +66,10 @@
 .ui-corner-all {
     border-radius: 3px;
 }
+.ui-autocomplete-emptyMessage {
+    font-size: 12px;
+}
+
+.ui-selectonemenu .ui-selectonemenu-trigger, .ui-selectcheckboxmenu .ui-selectcheckboxmenu-trigger {
+    border-color: #fff;
+}

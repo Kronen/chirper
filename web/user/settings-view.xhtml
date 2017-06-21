@@ -1,0 +1,88 @@
+<ui:composition template="/WEB-INF/templates/main-layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"                
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:chirper="http://java.sun.com/jsf/composite/chirper">
+    
+    <ui:define name="title">Chirper</ui:define>
+  
+    <ui:define name="content">
+        <h:outputStylesheet library="css" name='settings.css' />
+        
+        <chirper:navbar profile="#{homePage.profile}" />
+        
+        <div class="wrapper">            
+            <div class="fields-container">
+                <h1>Profile Settings</h1>
+                <h:form styleClass="slide-form" id="avatar-form">
+                    <p:growl globalOnly="true" showDetail="true" />
+                    
+                    <p:panel styleClass="slide-form-container">
+                        <h:outputLabel for="avatar" value="Avatar:"/>   
+                        <p:fileUpload id="avatar" styleClass="post-upload" sizeLimit="150000"
+                                      fileUploadListener="#{settingsBean.handleFileUpload}"
+                            allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                            invalidFileMessage="Invalid File Type. Try with (gif/jpg/png)"
+                            invalidSizeMessage="Invalid Size. Max: 150kb"/>    
+                    </p:panel>
+                </h:form>
+                <h:form styleClass="slide-form" id="placeholder-slide">
+                    <p:panel styleClass="slide-form-container">
+                        <h:outputLabel for="username" value="Username:"/>                    
+                        <p:inputText id="username" value="#{homePage.profile.user.userName}" label="UserName" disabled="true"/>
+                        <p:message for="username" />                        
+                    </p:panel>
+                    <p:panel styleClass="slide-form-container">
+                        <h:outputLabel for="pwd1" value="New Password:" />
+                        <p:password id="pwd1" value="#{settingsBean.password}" match="pwd2" label="New Password"/>
+                    </p:panel>
+                    <p:panel styleClass="slide-form-container">
+                        <h:outputLabel for="pwd2" value="Repeat Password:" />
+                        <p:password id="pwd2" value="#{settingsBean.password}" label="Repeat Password"/>
+                    </p:panel>
+                    <p:panel styleClass="slide-form-container">
+                        <h:outputLabel for="fullname" value="Full Name:"/>                    
+                        <p:inputText id="fullname" value="#{homePage.profile.fullName}" label="FullName"/>
+                        <p:message for="fullname" />                        
+                    </p:panel>
+                    <p:panel styleClass="slide-form-container">
+                        <h:outputLabel for="email" value="Email:"/>                   
+                        <p:inputText id="email" value="#{homePage.profile.email}" validatorMessage="Invalid email format.">
+                            <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                        </p:inputText>
+                        <p:message for="email" />                         
+                    </p:panel>
+                    <p:panel styleClass="slide-form-container">
+                        <h:outputLabel for="location" value="Location:"/>                    
+                        <p:inputText id="location" value="#{homePage.profile.location}" label="Location"/>
+                        <p:message for="location" />                        
+                    </p:panel>                    
+                    <p:panel styleClass="slide-form-container">
+                        <h:outputLabel for="website" value="Website:"/>                   
+                        <p:inputText id="website" value="#{homePage.profile.website}" validatorMessage="Invalid website format.">
+                            <f:validateRegex pattern="^(http:\/\/|https:\/\/)?(www.)?([a-zA-Z0-9]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)?$" />
+                        </p:inputText>
+                        <p:message for="website" />                         
+                    </p:panel>
+                    <p:panel styleClass="slide-form-container">
+                        <p:outputLabel for="theme" value="Theme:" />
+                        <h:selectOneMenu id="theme" value="#{homePage.profile.theme}"> 
+                            <f:selectItem itemLabel="Select One" itemValue="" />
+                            <f:selectItem itemLabel="Blue Theme" itemValue="theme-blue" />
+                            <f:selectItem itemLabel="Red Theme" itemValue="theme-red" />
+                        </h:selectOneMenu>
+                    </p:panel>
+                    <p:panel styleClass="slide-form-container">
+                    <p:commandButton value="Update Profile" update="@form" styleClass="post-submit" validateClient="true"
+                                     action="#{settingsBean.updateProfile()}"/>
+                    </p:panel>
+                </h:form>
+            </div>
+        </div>
+              
+    </ui:define>
+
+</ui:composition>

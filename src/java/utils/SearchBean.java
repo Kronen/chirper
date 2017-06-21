@@ -81,7 +81,9 @@ public class SearchBean {
         String[] words = searchText.split(" ");
         
         for(String word : words) {
-            if (word.length() > 2) {
+            if(word.length() > 1) {
+                if(word.startsWith("@"))
+                    word = word.substring(1);
                 for(User user : users) {
                     if (user.getUserName().toLowerCase().contains(word.toLowerCase()))
                         result.add(getProfileByUserName(user.getUserName()));
