@@ -37,6 +37,7 @@
                             </p:panel>
                             <h:form id="form-settings">
                                 <p:link class="dropdown-menu-item" href="/settings" value="Profile Settings" />
+                                <p:link class="dropdown-menu-item" href="/admin" value="Administration" rendered="#{loginManager.isUserInRole('admin')}"/>
                                 <p:commandLink id="logout" value="Log Out" styleClass="dropdown-menu-item" ajax="false" 
                                     actionListener="#{loginManager.logout}" />
                             </h:form>
